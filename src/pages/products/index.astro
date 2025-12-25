@@ -1,0 +1,195 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+
+const title = 'Products | Xtend-AI';
+const description = 'Explore AI-powered mobile apps from Xtend-AI. Discover My AI Bartender and upcoming experiences in beauty and wine.';
+---
+
+<BaseLayout title={title} description={description}>
+  <Header slot="header" />
+
+  <!-- Page Header -->
+  <section class="page-header">
+    <div class="container">
+      <h1>Our Products</h1>
+      <p class="page-header__subtitle">AI-powered mobile experiences designed for discovery</p>
+    </div>
+  </section>
+
+  <!-- Featured Product -->
+  <section class="section">
+    <div class="container">
+      <div class="product-card product-card--featured">
+        <div class="product-card__content">
+          <span class="product-card__badge">Now Available</span>
+          <h2 class="product-card__title">My AI Bartender</h2>
+          <p class="product-card__description">
+            Your personal AI bartender that helps you discover cocktails, make smarter substitutions,
+            and use what you already have. Chat with your bartender, talk hands-free, scan your home bar,
+            and refine your own creations.
+          </p>
+          <div class="product-card__features">
+            <span class="product-card__feature">Chat</span>
+            <span class="product-card__feature">Voice</span>
+            <span class="product-card__feature">Scanner</span>
+            <span class="product-card__feature">Create</span>
+            <span class="product-card__feature">Share</span>
+          </div>
+          <a href="/products/my-ai-bartender" class="btn btn--primary">Learn More</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Coming Soon Section -->
+  <section class="section section--alt" id="coming-soon">
+    <div class="container">
+      <h2 class="section__title text-center">Coming Soon</h2>
+      <p class="section__subtitle text-center">More AI-powered experiences are in development</p>
+
+      <div class="grid grid--2">
+        <div class="product-card">
+          <span class="product-card__badge product-card__badge--soon">In Development</span>
+          <h3 class="product-card__title">Beauty & Cosmetics</h3>
+          <p class="product-card__description">
+            An AI-powered companion for beauty enthusiasts. Get personalized recommendations,
+            explore new looks, and discover products that match your style and skin type.
+          </p>
+        </div>
+
+        <div class="product-card">
+          <span class="product-card__badge product-card__badge--soon">In Development</span>
+          <h3 class="product-card__title">Wine Connoisseur</h3>
+          <p class="product-card__description">
+            Your personal sommelier in your pocket. Discover wines, get food pairing suggestions,
+            and build your knowledge through conversational AI guidance.
+          </p>
+        </div>
+      </div>
+
+      <div class="section__cta text-center">
+        <p>Interested in partnering with us on upcoming products?</p>
+        <a href="/contact" class="btn btn--secondary">Get in Touch</a>
+      </div>
+    </div>
+  </section>
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  .page-header {
+    padding: var(--space-16) 0;
+    background: var(--xt-gradient-soft);
+    text-align: center;
+  }
+
+  .page-header h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    margin-bottom: var(--space-4);
+  }
+
+  .page-header__subtitle {
+    font-size: 1.125rem;
+    color: var(--xt-navy-900);
+    opacity: 0.8;
+    margin: 0;
+  }
+
+  .section__title {
+    margin-bottom: var(--space-2);
+  }
+
+  .section__subtitle {
+    font-size: 1.125rem;
+    color: var(--xt-navy-900);
+    opacity: 0.8;
+    margin-bottom: var(--space-12);
+  }
+
+  .section__cta {
+    margin-top: var(--space-12);
+  }
+
+  .section__cta p {
+    margin-bottom: var(--space-4);
+    color: var(--xt-navy-900);
+  }
+
+  /* Product Cards */
+  .product-card {
+    background: var(--xt-white);
+    border: 1px solid var(--xt-slate-300);
+    border-radius: var(--radius-lg);
+    padding: var(--space-8);
+  }
+
+  .product-card--featured {
+    background: var(--xt-gradient-brand);
+    border: none;
+    color: var(--xt-white);
+  }
+
+  .product-card--featured .product-card__title,
+  .product-card--featured .product-card__description {
+    color: var(--xt-white);
+  }
+
+  .product-card__badge {
+    display: inline-block;
+    padding: var(--space-1) var(--space-3);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: var(--xt-blue-500);
+    color: var(--xt-white);
+    border-radius: 100px;
+    margin-bottom: var(--space-4);
+  }
+
+  .product-card__badge--soon {
+    background: var(--xt-slate-300);
+    color: var(--xt-navy-900);
+  }
+
+  .product-card__title {
+    font-size: 1.5rem;
+    margin-bottom: var(--space-4);
+  }
+
+  .product-card--featured .product-card__title {
+    font-size: clamp(1.75rem, 4vw, 2.25rem);
+  }
+
+  .product-card__description {
+    line-height: 1.7;
+    margin-bottom: var(--space-6);
+  }
+
+  .product-card__features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-bottom: var(--space-6);
+  }
+
+  .product-card__feature {
+    padding: var(--space-1) var(--space-3);
+    font-size: 0.875rem;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 100px;
+  }
+
+  .product-card--featured .btn--primary {
+    background: var(--xt-white);
+    color: var(--xt-navy-900);
+    border-color: var(--xt-white);
+  }
+
+  .product-card--featured .btn--primary:hover {
+    background: var(--xt-slate-050);
+  }
+</style>

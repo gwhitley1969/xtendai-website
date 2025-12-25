@@ -1,0 +1,213 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import FeatureCard from '../components/FeatureCard.astro';
+
+const title = 'Xtend-AI | AI-Powered Mobile Apps That Feel Personal';
+const description = 'Xtend-AI creates AI companion apps that extend what you can do — helping users discover, create, and share in the real world through friendly, capable mobile experiences.';
+---
+
+<BaseLayout title={title} description={description}>
+  <Header slot="header" />
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero__container container">
+      <h1 class="hero__title">AI-powered mobile apps that feel personal.</h1>
+      <p class="hero__subtitle">
+        Xtend-AI builds consumer mobile apps that blend chat, voice, and camera intelligence
+        to help people discover, create, and share—starting with My AI Bartender.
+      </p>
+      <div class="hero__actions">
+        <a href="/products" class="btn btn--primary btn--large">Explore Our Apps</a>
+        <a href="/contact" class="btn btn--secondary btn--large">Contact Xtend-AI</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- What We Do Section -->
+  <section class="section section--alt">
+    <div class="container">
+      <h2 class="section__title">Built mobile-first. Powered by AI.</h2>
+      <p class="section__text">
+        Xtend-AI creates B2C mobile apps for people who love discovering new experiences —
+        whether that's crafting cocktails, exploring beauty routines, or learning wine.
+        We focus on products where AI improves the experience through conversation, scanning,
+        and creative help — not complexity.
+      </p>
+    </div>
+  </section>
+
+  <!-- Featured Product Section -->
+  <section class="section">
+    <div class="container">
+      <div class="featured">
+        <div class="featured__content">
+          <h2 class="featured__title">My AI Bartender</h2>
+          <p class="featured__description">
+            Your personal AI bartender that helps you discover cocktails, make smarter substitutions,
+            and use what you already have. Chat with your bartender, talk hands-free, scan your home bar,
+            and refine your own creations.
+          </p>
+          <ul class="featured__list">
+            <li><strong>Chat:</strong> Ask for cocktails, ideas, substitutions, and step-by-step help.</li>
+            <li><strong>Voice:</strong> Real-time voice bartender conversations (hands-free).</li>
+            <li><strong>Scanner:</strong> Use your camera to identify bottles and build "My Bar."</li>
+            <li><strong>Create:</strong> Build your own recipe and get AI suggestions to improve it.</li>
+            <li><strong>Share:</strong> Share recipes with friends using simple codes/links.</li>
+          </ul>
+          <a href="/products/my-ai-bartender" class="btn btn--primary">Learn about My AI Bartender</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why We're Different Section -->
+  <section class="section section--gradient">
+    <div class="container">
+      <h2 class="section__title text-center">We don't build "AI features." We build AI experiences.</h2>
+      <div class="grid grid--3">
+        <FeatureCard
+          icon="multimodal"
+          title="Multi-modal by design"
+          description="Voice + chat + camera working together seamlessly for natural interactions."
+        />
+        <FeatureCard
+          icon="purpose"
+          title="Purpose-built, not generic"
+          description="Each app is domain-focused, designed for specific real-world use cases."
+        />
+        <FeatureCard
+          icon="human"
+          title="Human UX first"
+          description="AI should feel natural and fast — invisible technology, visible results."
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- What's Next Section -->
+  <section class="section section--alt">
+    <div class="container text-center">
+      <h2 class="section__title">More AI-enabled apps are on the way</h2>
+      <p class="section__text section__text--centered">
+        We're building new mobile experiences in <strong>beauty/cosmetics</strong> and <strong>wine discovery</strong> —
+        designed with the same principles: excellent UX, practical AI, and user-first experiences.
+      </p>
+      <a href="/contact" class="btn btn--primary btn--large">Contact Xtend-AI</a>
+    </div>
+  </section>
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  /* Hero */
+  .hero {
+    padding: var(--space-20) 0;
+    background: var(--xt-gradient-soft);
+  }
+
+  @media (min-width: 768px) {
+    .hero {
+      padding: var(--space-24) 0;
+    }
+  }
+
+  .hero__container {
+    max-width: 800px;
+    text-align: center;
+  }
+
+  .hero__title {
+    font-size: clamp(2.25rem, 6vw, 3.5rem);
+    margin-bottom: var(--space-6);
+    background: var(--xt-gradient-brand);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero__subtitle {
+    font-size: clamp(1.125rem, 2.5vw, 1.25rem);
+    color: var(--xt-navy-900);
+    margin-bottom: var(--space-8);
+    line-height: 1.7;
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    align-items: center;
+  }
+
+  @media (min-width: 480px) {
+    .hero__actions {
+      flex-direction: row;
+      justify-content: center;
+    }
+  }
+
+  /* Section Titles */
+  .section__title {
+    margin-bottom: var(--space-6);
+  }
+
+  .section__text {
+    font-size: 1.125rem;
+    max-width: 800px;
+    line-height: 1.8;
+  }
+
+  .section__text--centered {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: var(--space-8);
+  }
+
+  /* Featured Product */
+  .featured {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+  }
+
+  @media (min-width: 768px) {
+    .featured {
+      flex-direction: row;
+      align-items: flex-start;
+    }
+  }
+
+  .featured__content {
+    flex: 1;
+  }
+
+  .featured__title {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    margin-bottom: var(--space-4);
+    color: var(--xt-blue-600);
+  }
+
+  .featured__description {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    margin-bottom: var(--space-6);
+  }
+
+  .featured__list {
+    margin-bottom: var(--space-8);
+    padding-left: var(--space-6);
+  }
+
+  .featured__list li {
+    margin-bottom: var(--space-3);
+    line-height: 1.6;
+  }
+
+  .featured__list strong {
+    color: var(--xt-navy-950);
+  }
+</style>

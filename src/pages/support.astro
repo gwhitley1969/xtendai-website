@@ -1,0 +1,247 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const title = 'Support | Xtend-AI';
+const description = 'Get help with Xtend-AI products. Find answers to common questions or contact our support team.';
+
+const faqs = [
+  {
+    question: 'How do I get started with My AI Bartender?',
+    answer: 'Download the app from the App Store or Google Play, create an account, and start by scanning your bottles or manually adding what you have at home. Then just ask the bartender for recommendations!'
+  },
+  {
+    question: 'Is My AI Bartender free?',
+    answer: 'My AI Bartender offers a free tier with basic features. Premium features are available through a subscription for users who want the full experience.'
+  },
+  {
+    question: 'What devices are supported?',
+    answer: 'My AI Bartender is available on iOS (iPhone and iPad) and Android devices. We recommend using a device with a camera for the bottle scanning feature.'
+  },
+  {
+    question: 'How do I share a recipe with friends?',
+    answer: 'Open any recipe in your vault and tap the Share button. You can generate a simple code or link that your friends can use to add the recipe to their own collection.'
+  },
+  {
+    question: 'I found a bug. How do I report it?',
+    answer: 'We appreciate bug reports! Please email us at our support address with details about what happened, your device type, and app version. Screenshots are helpful too.'
+  }
+];
+---
+
+<BaseLayout title={title} description={description}>
+  <Header slot="header" />
+
+  <!-- Page Header -->
+  <section class="page-header">
+    <div class="container">
+      <h1>Support</h1>
+      <p class="page-header__subtitle">We're here to help</p>
+    </div>
+  </section>
+
+  <!-- Contact Support -->
+  <section class="section">
+    <div class="container">
+      <div class="support-grid">
+        <div class="support-card support-card--primary">
+          <div class="support-card__icon">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+              <path d="M4 8L16 16L28 8M4 8V24H28V8M4 8H28" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h2 class="support-card__title">Email Support</h2>
+          <p class="support-card__text">
+            Have a question or issue? Our support team is ready to help.
+          </p>
+          <a href="mailto:xtendai2017@gmail.com" class="btn btn--primary">
+            Email Us
+          </a>
+        </div>
+
+        <div class="support-card">
+          <div class="support-card__icon">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+              <circle cx="16" cy="16" r="12" stroke="currentColor" stroke-width="2"/>
+              <path d="M16 10V16L20 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h2 class="support-card__title">Response Time</h2>
+          <p class="support-card__text">
+            We typically respond within 24-48 hours during business days.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="section section--alt">
+    <div class="container">
+      <h2 class="section__title text-center">Frequently Asked Questions</h2>
+      <div class="faq-list">
+        {faqs.map((faq) => (
+          <details class="faq-item">
+            <summary class="faq-question">{faq.question}</summary>
+            <p class="faq-answer">{faq.answer}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Still Need Help -->
+  <section class="section">
+    <div class="container text-center">
+      <h2>Still need help?</h2>
+      <p class="cta-text">Can't find what you're looking for? Reach out and we'll get back to you.</p>
+      <a href="/contact" class="btn btn--primary btn--large">Contact Us</a>
+    </div>
+  </section>
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  .page-header {
+    padding: var(--space-16) 0;
+    background: var(--xt-gradient-soft);
+    text-align: center;
+  }
+
+  .page-header h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    margin-bottom: var(--space-4);
+  }
+
+  .page-header__subtitle {
+    font-size: 1.125rem;
+    color: var(--xt-navy-900);
+    opacity: 0.8;
+    margin: 0;
+  }
+
+  .section__title {
+    margin-bottom: var(--space-12);
+  }
+
+  /* Support Grid */
+  .support-grid {
+    display: grid;
+    gap: var(--space-6);
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  @media (min-width: 640px) {
+    .support-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .support-card {
+    padding: var(--space-8);
+    background: var(--xt-white);
+    border: 1px solid var(--xt-slate-300);
+    border-radius: var(--radius-lg);
+    text-align: center;
+  }
+
+  .support-card--primary {
+    background: var(--xt-gradient-brand);
+    border: none;
+    color: var(--xt-white);
+  }
+
+  .support-card--primary .support-card__title,
+  .support-card--primary .support-card__text {
+    color: var(--xt-white);
+  }
+
+  .support-card__icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto var(--space-4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--xt-blue-600);
+  }
+
+  .support-card--primary .support-card__icon {
+    color: var(--xt-white);
+  }
+
+  .support-card__title {
+    font-size: 1.25rem;
+    margin-bottom: var(--space-3);
+  }
+
+  .support-card__text {
+    margin-bottom: var(--space-6);
+    opacity: 0.9;
+  }
+
+  .support-card--primary .btn--primary {
+    background: var(--xt-white);
+    color: var(--xt-navy-900);
+    border-color: var(--xt-white);
+  }
+
+  .support-card--primary .btn--primary:hover {
+    background: var(--xt-slate-050);
+  }
+
+  /* FAQ */
+  .faq-list {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .faq-item {
+    padding: var(--space-4) 0;
+    border-bottom: 1px solid var(--xt-slate-300);
+  }
+
+  .faq-question {
+    font-family: var(--font-heading);
+    font-size: 1.0625rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: var(--space-2) 0;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .faq-question::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-question::after {
+    content: '+';
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--xt-blue-600);
+    transition: transform var(--transition-fast);
+  }
+
+  .faq-item[open] .faq-question::after {
+    content: '−';
+  }
+
+  .faq-answer {
+    padding-top: var(--space-3);
+    color: var(--xt-navy-900);
+    opacity: 0.85;
+    line-height: 1.7;
+  }
+
+  .cta-text {
+    font-size: 1.125rem;
+    margin-bottom: var(--space-8);
+    opacity: 0.8;
+  }
+</style>

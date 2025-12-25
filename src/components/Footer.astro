@@ -1,0 +1,162 @@
+---
+const currentYear = new Date().getFullYear();
+
+const navLinks = [
+  { label: 'Products', href: '/products' },
+  { label: 'About', href: '/about' },
+  { label: 'Support', href: '/support' },
+  { label: 'Contact', href: '/contact' }
+];
+
+const legalLinks = [
+  { label: 'Privacy', href: '/privacy' },
+  { label: 'Terms', href: '/terms' }
+];
+---
+
+<footer class="footer">
+  <div class="footer__container container">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <a href="/" class="footer__logo" aria-label="Xtend-AI Home">
+          <img src="/images/xtend-ai_logo_transparent_cropped.png" alt="Xtend-AI" width="120" height="34">
+        </a>
+        <p class="footer__tagline">Your next favorite app, made smarter</p>
+      </div>
+
+      <nav class="footer__nav" aria-label="Footer navigation">
+        <ul class="footer__list">
+          {navLinks.map((link) => (
+            <li>
+              <a href={link.href} class="footer__link">{link.label}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </div>
+
+    <div class="footer__bottom">
+      <p class="footer__copy">
+        &copy; {currentYear} Xtend-AI. All rights reserved.
+      </p>
+      <ul class="footer__legal">
+        {legalLinks.map((link) => (
+          <li>
+            <a href={link.href} class="footer__legal-link">{link.label}</a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: var(--xt-navy-950);
+    color: var(--xt-white);
+    padding: var(--space-16) 0 var(--space-8);
+  }
+
+  .footer__top {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+    padding-bottom: var(--space-8);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  @media (min-width: 768px) {
+    .footer__top {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+  }
+
+  .footer__brand {
+    max-width: 300px;
+  }
+
+  .footer__logo img {
+    height: 32px;
+    width: auto;
+    filter: brightness(0) invert(1);
+  }
+
+  .footer__tagline {
+    margin-top: var(--space-3);
+    font-size: 0.9375rem;
+    color: var(--xt-blue-200);
+    margin-bottom: 0;
+  }
+
+  .footer__nav {
+    margin-top: var(--space-4);
+  }
+
+  @media (min-width: 768px) {
+    .footer__nav {
+      margin-top: 0;
+    }
+  }
+
+  .footer__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4) var(--space-8);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .footer__link {
+    color: var(--xt-white);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  .footer__link:hover {
+    color: var(--xt-blue-500);
+  }
+
+  .footer__bottom {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    padding-top: var(--space-8);
+  }
+
+  @media (min-width: 768px) {
+    .footer__bottom {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+
+  .footer__copy {
+    font-size: 0.875rem;
+    color: var(--xt-blue-200);
+    margin: 0;
+  }
+
+  .footer__legal {
+    display: flex;
+    gap: var(--space-6);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .footer__legal-link {
+    font-size: 0.875rem;
+    color: var(--xt-blue-200);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  .footer__legal-link:hover {
+    color: var(--xt-white);
+  }
+</style>

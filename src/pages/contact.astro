@@ -1,0 +1,289 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const title = 'Contact | Xtend-AI';
+const description = 'Get in touch with Xtend-AI. We\'d love to hear from you about partnerships, feedback, or questions.';
+---
+
+<BaseLayout title={title} description={description}>
+  <Header slot="header" />
+
+  <!-- Page Header -->
+  <section class="page-header">
+    <div class="container">
+      <h1>Contact Us</h1>
+      <p class="page-header__subtitle">We'd love to hear from you</p>
+    </div>
+  </section>
+
+  <!-- Contact Form Section -->
+  <section class="section">
+    <div class="container">
+      <div class="contact-grid">
+        <div class="contact-form-wrapper">
+          <form id="contact-form" class="contact-form">
+            <div class="form-group">
+              <label for="name" class="form-label">Name</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                class="form-input"
+                placeholder="Your name"
+                autocomplete="name"
+              >
+            </div>
+
+            <div class="form-group">
+              <label for="email" class="form-label">
+                Email <span class="required">*</span>
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                class="form-input"
+                placeholder="you@example.com"
+                required
+                autocomplete="email"
+              >
+            </div>
+
+            <div class="form-group">
+              <label for="message" class="form-label">
+                Message <span class="required">*</span>
+              </label>
+              <textarea
+                id="message"
+                name="message"
+                class="form-textarea"
+                placeholder="How can we help?"
+                required
+              ></textarea>
+            </div>
+
+            <!-- Honeypot -->
+            <div class="form-group" style="display: none;" aria-hidden="true">
+              <label for="website">Website</label>
+              <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+            </div>
+
+            <button type="submit" class="btn btn--primary btn--large form-submit">
+              Send Message
+            </button>
+
+            <div id="form-status" class="form-status" aria-live="polite"></div>
+          </form>
+        </div>
+
+        <div class="contact-info">
+          <div class="info-card">
+            <h2 class="info-card__title">Other ways to reach us</h2>
+
+            <div class="info-item">
+              <div class="info-item__icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M3 8L12 13L21 8M3 8V18H21V8M3 8H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="info-item__label">Email</h3>
+                <a href="mailto:xtendai2017@gmail.com" class="info-item__value">
+                  xtendai2017@gmail.com
+                </a>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <div class="info-item__icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/>
+                  <path d="M12 7V12L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="info-item__label">Response Time</h3>
+                <p class="info-item__value">Within 24-48 hours</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  .page-header {
+    padding: var(--space-16) 0;
+    background: var(--xt-gradient-soft);
+    text-align: center;
+  }
+
+  .page-header h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    margin-bottom: var(--space-4);
+  }
+
+  .page-header__subtitle {
+    font-size: 1.125rem;
+    color: var(--xt-navy-900);
+    opacity: 0.8;
+    margin: 0;
+  }
+
+  /* Contact Grid */
+  .contact-grid {
+    display: grid;
+    gap: var(--space-12);
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  @media (min-width: 768px) {
+    .contact-grid {
+      grid-template-columns: 1.5fr 1fr;
+      align-items: start;
+    }
+  }
+
+  /* Form */
+  .contact-form-wrapper {
+    padding: var(--space-8);
+    background: var(--xt-white);
+    border: 1px solid var(--xt-slate-300);
+    border-radius: var(--radius-lg);
+  }
+
+  .required {
+    color: #dc2626;
+  }
+
+  .form-submit {
+    width: 100%;
+  }
+
+  .form-status {
+    margin-top: var(--space-4);
+    padding: var(--space-4);
+    border-radius: var(--radius);
+    display: none;
+  }
+
+  .form-status--success {
+    display: block;
+    background: #dcfce7;
+    color: #166534;
+  }
+
+  .form-status--error {
+    display: block;
+    background: #fee2e2;
+    color: #991b1b;
+  }
+
+  .form-status--loading {
+    display: block;
+    background: var(--xt-slate-100);
+    color: var(--xt-navy-900);
+  }
+
+  /* Info Card */
+  .info-card {
+    padding: var(--space-8);
+    background: var(--xt-slate-050);
+    border-radius: var(--radius-lg);
+  }
+
+  .info-card__title {
+    font-size: 1.125rem;
+    margin-bottom: var(--space-6);
+  }
+
+  .info-item {
+    display: flex;
+    gap: var(--space-4);
+    padding: var(--space-4) 0;
+    border-bottom: 1px solid var(--xt-slate-300);
+  }
+
+  .info-item:last-child {
+    border-bottom: none;
+  }
+
+  .info-item__icon {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--xt-blue-600);
+    background: var(--xt-white);
+    border-radius: var(--radius);
+  }
+
+  .info-item__label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--xt-navy-900);
+    opacity: 0.7;
+    margin-bottom: var(--space-1);
+  }
+
+  .info-item__value {
+    font-weight: 500;
+    color: var(--xt-navy-900);
+  }
+
+  a.info-item__value:hover {
+    color: var(--xt-blue-600);
+  }
+</style>
+
+<script>
+  const form = document.getElementById('contact-form') as HTMLFormElement;
+  const status = document.getElementById('form-status') as HTMLDivElement;
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+
+    // Check honeypot
+    if (formData.get('website')) {
+      return;
+    }
+
+    // Show loading
+    status.className = 'form-status form-status--loading';
+    status.textContent = 'Sending...';
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.get('name'),
+          email: formData.get('email'),
+          message: formData.get('message')
+        })
+      });
+
+      if (response.ok) {
+        status.className = 'form-status form-status--success';
+        status.textContent = 'Thanks for your message! We\'ll get back to you soon.';
+        form.reset();
+      } else {
+        throw new Error('Failed to send');
+      }
+    } catch (error) {
+      status.className = 'form-status form-status--error';
+      status.textContent = 'Something went wrong. Please try emailing us directly.';
+    }
+  });
+</script>

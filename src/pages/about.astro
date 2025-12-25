@@ -1,0 +1,154 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const title = 'About | Xtend-AI';
+const description = 'Learn about Xtend-AI, the company behind AI companion apps that help users discover, create, and share in the real world.';
+
+const values = [
+  'User experience comes first',
+  'AI should be helpful, not hype',
+  'Build for trust and simplicity',
+  'Iterate fast, polish hard'
+];
+---
+
+<BaseLayout title={title} description={description}>
+  <Header slot="header" />
+
+  <!-- Page Header -->
+  <section class="page-header">
+    <div class="container">
+      <h1>About Xtend-AI</h1>
+    </div>
+  </section>
+
+  <!-- About Content -->
+  <section class="section">
+    <div class="container">
+      <div class="about-content">
+        <div class="about-text">
+          <p class="lead">
+            Xtend-AI creates AI companion apps that extend what you can do — helping users discover,
+            create, and share in the real world through friendly, capable mobile experiences.
+          </p>
+          <p>
+            We believe the best AI doesn't feel like technology — it feels like having a knowledgeable
+            friend who's always ready to help. Our apps combine conversational AI, voice interaction,
+            and camera intelligence to create experiences that are genuinely useful in everyday moments.
+          </p>
+          <p>
+            Starting with My AI Bartender, we're building a family of mobile apps for people who love
+            discovering new experiences. Each app is purpose-built for its domain, designed to be
+            intuitive from the first moment, and powered by AI that enhances rather than complicates.
+          </p>
+        </div>
+
+        <div class="values-card">
+          <h2 class="values-title">Our Values</h2>
+          <ul class="values-list">
+            {values.map((value) => (
+              <li class="values-item">
+                <svg class="values-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <circle cx="10" cy="10" r="10" fill="var(--xt-blue-600)"/>
+                  <path d="M6 10L9 13L14 7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                {value}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="section section--alt">
+    <div class="container text-center">
+      <h2>Interested in what we're building?</h2>
+      <p class="cta-text">We'd love to hear from you — whether you're a user, partner, or just curious.</p>
+      <a href="/contact" class="btn btn--primary btn--large">Get in Touch</a>
+    </div>
+  </section>
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  .page-header {
+    padding: var(--space-16) 0;
+    background: var(--xt-gradient-soft);
+  }
+
+  .page-header h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    margin: 0;
+  }
+
+  .about-content {
+    display: grid;
+    gap: var(--space-12);
+    max-width: 900px;
+  }
+
+  @media (min-width: 768px) {
+    .about-content {
+      grid-template-columns: 1.5fr 1fr;
+      align-items: start;
+    }
+  }
+
+  .about-text {
+    font-size: 1.0625rem;
+    line-height: 1.8;
+  }
+
+  .lead {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--xt-navy-950);
+    margin-bottom: var(--space-6);
+  }
+
+  .values-card {
+    padding: var(--space-8);
+    background: var(--xt-white);
+    border: 1px solid var(--xt-slate-300);
+    border-radius: var(--radius-lg);
+  }
+
+  .values-title {
+    font-size: 1.25rem;
+    margin-bottom: var(--space-6);
+  }
+
+  .values-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .values-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) 0;
+    border-bottom: 1px solid var(--xt-slate-100);
+    font-weight: 500;
+  }
+
+  .values-item:last-child {
+    border-bottom: none;
+  }
+
+  .values-icon {
+    flex-shrink: 0;
+  }
+
+  .cta-text {
+    font-size: 1.125rem;
+    margin-bottom: var(--space-8);
+    opacity: 0.8;
+  }
+</style>

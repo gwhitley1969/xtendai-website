@@ -1,0 +1,30 @@
+/* Xtend-AI Web Brand Tokens (v1)
+   Source: extracted from provided logo PNG
+*/
+
+:root {
+  /* Brand */
+  --xt-navy-950: #00052A; /* deepest navy */
+  --xt-navy-900: #022A56; /* primary text / headers */
+  --xt-blue-500: #188CFF; /* primary accent (use for large text/graphics) */
+  --xt-blue-600: #0B6FE6; /* accessible link/interactive on white */
+  --xt-blue-200: #98B7D2; /* soft background tint */
+
+  /* Neutrals */
+  --xt-white: #FFFFFF;
+  --xt-slate-050: #F6F9FF;
+  --xt-slate-100: #EEF3FB;
+  --xt-slate-300: #C9D4E5;
+
+  /* Typography */
+  --xt-font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Inter, Arial, "Noto Sans", "Liberation Sans", sans-serif;
+
+  /* Gradients */
+  --xt-gradient-brand: linear-gradient(135deg, var(--xt-navy-900) 0%, var(--xt-blue-500) 100%);
+  --xt-gradient-soft: linear-gradient(180deg, rgba(24,140,255,0.10) 0%, rgba(2,42,86,0.00) 65%);
+}
+
+/* Suggested defaults */
+body { color: var(--xt-navy-900); background: var(--xt-white); font-family: var(--xt-font-sans); }
+a { color: var(--xt-blue-600); }
+a:hover { color: var(--xt-blue-500); }

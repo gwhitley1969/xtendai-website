@@ -1,0 +1,211 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const title = 'Terms of Service | Xtend-AI';
+const description = 'Terms of Service for Xtend-AI and its products including My AI Bartender.';
+const lastUpdated = 'December 2024';
+---
+
+<BaseLayout title={title} description={description}>
+  <Header slot="header" />
+
+  <section class="section">
+    <div class="container">
+      <article class="legal-content">
+        <header class="legal-header">
+          <p class="legal-notice">
+            <strong>Note:</strong> This is a template terms of service. Please have this document reviewed by legal counsel before publishing.
+          </p>
+          <h1>Terms of Service</h1>
+          <p class="legal-meta">Last updated: {lastUpdated}</p>
+        </header>
+
+        <section class="legal-section">
+          <h2>1. Acceptance of Terms</h2>
+          <p>
+            By accessing or using Xtend-AI's services, including our mobile applications and website
+            (collectively, the "Services"), you agree to be bound by these Terms of Service.
+            If you do not agree to these terms, please do not use our Services.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>2. Eligibility</h2>
+          <p>
+            You must be at least 21 years old to use My AI Bartender and other alcohol-related features.
+            For other services, you must be at least 13 years old. By using our Services, you represent
+            that you meet these age requirements.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>3. Account Registration</h2>
+          <p>
+            To access certain features, you may need to create an account. You agree to:
+          </p>
+          <ul>
+            <li>Provide accurate and complete information</li>
+            <li>Maintain the security of your account credentials</li>
+            <li>Notify us immediately of any unauthorized access</li>
+            <li>Accept responsibility for all activities under your account</li>
+          </ul>
+        </section>
+
+        <section class="legal-section">
+          <h2>4. Acceptable Use</h2>
+          <p>You agree not to:</p>
+          <ul>
+            <li>Use the Services for any unlawful purpose</li>
+            <li>Violate any applicable laws or regulations</li>
+            <li>Infringe on the rights of others</li>
+            <li>Attempt to gain unauthorized access to our systems</li>
+            <li>Interfere with the proper functioning of the Services</li>
+            <li>Use automated systems to access the Services without permission</li>
+          </ul>
+        </section>
+
+        <section class="legal-section">
+          <h2>5. Intellectual Property</h2>
+          <p>
+            The Services and their contents, including but not limited to text, graphics, logos, and software,
+            are owned by Xtend-AI and protected by copyright and other intellectual property laws.
+            You may not reproduce, distribute, or create derivative works without our permission.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>6. User Content</h2>
+          <p>
+            You retain ownership of content you create, such as custom recipes. By submitting content,
+            you grant us a non-exclusive, royalty-free license to use, display, and distribute your
+            content in connection with the Services.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>7. AI-Generated Content</h2>
+          <p>
+            Our Services use artificial intelligence to provide recommendations and suggestions.
+            AI-generated content is for informational purposes only. We do not guarantee the accuracy,
+            completeness, or suitability of AI suggestions. Always use your own judgment, especially
+            regarding food allergies and alcohol consumption.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>8. Disclaimer of Warranties</h2>
+          <p>
+            THE SERVICES ARE PROVIDED "AS IS" WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED.
+            WE DO NOT WARRANT THAT THE SERVICES WILL BE UNINTERRUPTED, ERROR-FREE, OR SECURE.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>9. Limitation of Liability</h2>
+          <p>
+            TO THE MAXIMUM EXTENT PERMITTED BY LAW, XTEND-AI SHALL NOT BE LIABLE FOR ANY INDIRECT,
+            INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES ARISING FROM YOUR USE OF THE SERVICES.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>10. Responsible Alcohol Use</h2>
+          <p>
+            My AI Bartender is designed for legal-age adults. We encourage responsible alcohol consumption.
+            Never drink and drive. If you or someone you know has a drinking problem, please seek help
+            from a qualified professional.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>11. Changes to Terms</h2>
+          <p>
+            We may modify these terms at any time. Continued use of the Services after changes
+            constitutes acceptance of the modified terms.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>12. Termination</h2>
+          <p>
+            We may terminate or suspend your access to the Services at any time, without prior notice,
+            for conduct that we believe violates these terms or is harmful to other users or us.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>13. Governing Law</h2>
+          <p>
+            These terms shall be governed by and construed in accordance with the laws of the United States,
+            without regard to conflict of law principles.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>14. Contact</h2>
+          <p>
+            For questions about these Terms of Service, please contact us at:
+          </p>
+          <p>
+            <a href="mailto:xtendai2017@gmail.com">xtendai2017@gmail.com</a>
+          </p>
+        </section>
+      </article>
+    </div>
+  </section>
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  .legal-content {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .legal-header {
+    margin-bottom: var(--space-12);
+  }
+
+  .legal-notice {
+    padding: var(--space-4);
+    background: #fef3c7;
+    border: 1px solid #f59e0b;
+    border-radius: var(--radius);
+    color: #92400e;
+    margin-bottom: var(--space-8);
+  }
+
+  .legal-header h1 {
+    margin-bottom: var(--space-2);
+  }
+
+  .legal-meta {
+    color: var(--xt-navy-900);
+    opacity: 0.7;
+    margin: 0;
+  }
+
+  .legal-section {
+    margin-bottom: var(--space-8);
+  }
+
+  .legal-section h2 {
+    font-size: 1.25rem;
+    margin-bottom: var(--space-4);
+  }
+
+  .legal-section p {
+    line-height: 1.8;
+  }
+
+  .legal-section ul {
+    margin-bottom: var(--space-4);
+  }
+
+  .legal-section li {
+    line-height: 1.7;
+  }
+</style>

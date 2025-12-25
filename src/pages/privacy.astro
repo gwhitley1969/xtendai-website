@@ -1,0 +1,184 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const title = 'Privacy Policy | Xtend-AI';
+const description = 'Privacy Policy for Xtend-AI and its products including My AI Bartender.';
+const lastUpdated = 'December 2024';
+---
+
+<BaseLayout title={title} description={description}>
+  <Header slot="header" />
+
+  <section class="section">
+    <div class="container">
+      <article class="legal-content">
+        <header class="legal-header">
+          <p class="legal-notice">
+            <strong>Note:</strong> This is a template privacy policy. Please have this document reviewed by legal counsel before publishing.
+          </p>
+          <h1>Privacy Policy</h1>
+          <p class="legal-meta">Last updated: {lastUpdated}</p>
+        </header>
+
+        <section class="legal-section">
+          <h2>Introduction</h2>
+          <p>
+            Xtend-AI ("we," "our," or "us") respects your privacy and is committed to protecting your personal data.
+            This privacy policy explains how we collect, use, and safeguard your information when you use our mobile
+            applications and website.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>Information We Collect</h2>
+          <h3>Information You Provide</h3>
+          <ul>
+            <li>Account information (email address, name)</li>
+            <li>User-generated content (recipes, bar inventory)</li>
+            <li>Communications with us (support inquiries, feedback)</li>
+          </ul>
+
+          <h3>Information Collected Automatically</h3>
+          <ul>
+            <li>Device information (device type, operating system)</li>
+            <li>Usage data (app features used, session duration)</li>
+            <li>Log data (IP address, access times)</li>
+          </ul>
+        </section>
+
+        <section class="legal-section">
+          <h2>How We Use Your Information</h2>
+          <p>We use your information to:</p>
+          <ul>
+            <li>Provide and improve our services</li>
+            <li>Personalize your experience</li>
+            <li>Communicate with you about updates and support</li>
+            <li>Analyze usage patterns to improve our apps</li>
+            <li>Ensure security and prevent fraud</li>
+          </ul>
+        </section>
+
+        <section class="legal-section">
+          <h2>Data Sharing</h2>
+          <p>
+            We do not sell your personal information. We may share data with:
+          </p>
+          <ul>
+            <li>Service providers who help us operate our services</li>
+            <li>Legal authorities when required by law</li>
+            <li>Business partners with your consent</li>
+          </ul>
+        </section>
+
+        <section class="legal-section">
+          <h2>Data Security</h2>
+          <p>
+            We implement appropriate technical and organizational measures to protect your personal data.
+            However, no method of transmission over the internet is 100% secure.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>Your Rights</h2>
+          <p>Depending on your location, you may have the right to:</p>
+          <ul>
+            <li>Access your personal data</li>
+            <li>Correct inaccurate data</li>
+            <li>Delete your data</li>
+            <li>Opt out of certain data processing</li>
+            <li>Data portability</li>
+          </ul>
+        </section>
+
+        <section class="legal-section">
+          <h2>Children's Privacy</h2>
+          <p>
+            Our services are not intended for users under 21 years of age for alcohol-related apps,
+            or under 13 for other services. We do not knowingly collect data from children.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>Changes to This Policy</h2>
+          <p>
+            We may update this privacy policy from time to time. We will notify you of any changes by
+            posting the new policy on this page and updating the "Last updated" date.
+          </p>
+        </section>
+
+        <section class="legal-section">
+          <h2>Contact Us</h2>
+          <p>
+            If you have questions about this privacy policy, please contact us at:
+          </p>
+          <p>
+            <a href="mailto:xtendai2017@gmail.com">xtendai2017@gmail.com</a>
+          </p>
+        </section>
+      </article>
+    </div>
+  </section>
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  .legal-content {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .legal-header {
+    margin-bottom: var(--space-12);
+  }
+
+  .legal-notice {
+    padding: var(--space-4);
+    background: #fef3c7;
+    border: 1px solid #f59e0b;
+    border-radius: var(--radius);
+    color: #92400e;
+    margin-bottom: var(--space-8);
+  }
+
+  .legal-header h1 {
+    margin-bottom: var(--space-2);
+  }
+
+  .legal-meta {
+    color: var(--xt-navy-900);
+    opacity: 0.7;
+    margin: 0;
+  }
+
+  .legal-section {
+    margin-bottom: var(--space-8);
+  }
+
+  .legal-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: var(--space-4);
+    padding-bottom: var(--space-2);
+    border-bottom: 1px solid var(--xt-slate-300);
+  }
+
+  .legal-section h3 {
+    font-size: 1.125rem;
+    margin-top: var(--space-6);
+    margin-bottom: var(--space-3);
+  }
+
+  .legal-section p {
+    line-height: 1.8;
+  }
+
+  .legal-section ul {
+    margin-bottom: var(--space-4);
+  }
+
+  .legal-section li {
+    line-height: 1.7;
+  }
+</style>
