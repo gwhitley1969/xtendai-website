@@ -12,9 +12,13 @@ const description = 'Explore AI-powered mobile apps from Xtend-AI. Discover My A
 
   <!-- Page Header -->
   <section class="page-header">
+    <div class="page-header__bg">
+      <div class="page-header__glow"></div>
+    </div>
     <div class="container">
-      <h1>Our Products</h1>
-      <p class="page-header__subtitle">AI-powered mobile experiences designed for discovery</p>
+      <span class="badge">Our Products</span>
+      <h1>AI-powered apps for <span class="text-gradient">real life</span></h1>
+      <p class="page-header__subtitle">Discover mobile experiences designed for discovery</p>
     </div>
   </section>
 
@@ -22,8 +26,9 @@ const description = 'Explore AI-powered mobile apps from Xtend-AI. Discover My A
   <section class="section">
     <div class="container">
       <div class="product-card product-card--featured">
+        <div class="product-card__glow"></div>
         <div class="product-card__content">
-          <span class="product-card__badge">Now Available</span>
+          <span class="badge badge--gold">Now Available</span>
           <h2 class="product-card__title">My AI Bartender</h2>
           <p class="product-card__description">
             Your personal AI bartender that helps you discover cocktails, make smarter substitutions,
@@ -31,38 +36,45 @@ const description = 'Explore AI-powered mobile apps from Xtend-AI. Discover My A
             and refine your own creations.
           </p>
           <div class="product-card__features">
-            <span class="product-card__feature">Chat</span>
-            <span class="product-card__feature">Voice</span>
-            <span class="product-card__feature">Scanner</span>
-            <span class="product-card__feature">Create</span>
-            <span class="product-card__feature">Share</span>
+            <span class="product-card__feature">💬 Chat</span>
+            <span class="product-card__feature">🎙️ Voice</span>
+            <span class="product-card__feature">📷 Scanner</span>
+            <span class="product-card__feature">✨ Create</span>
+            <span class="product-card__feature">🔗 Share</span>
           </div>
-          <a href="/products/my-ai-bartender" class="btn btn--primary">Learn More</a>
+          <a href="/products/my-ai-bartender" class="btn btn--primary btn--large">
+            Learn More
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M4 10H16M16 10L11 5M16 10L11 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
         </div>
       </div>
     </div>
   </section>
 
   <!-- Coming Soon Section -->
-  <section class="section section--alt" id="coming-soon">
+  <section class="section section--glow" id="coming-soon">
     <div class="container">
-      <h2 class="section__title text-center">Coming Soon</h2>
-      <p class="section__subtitle text-center">More AI-powered experiences are in development</p>
+      <div class="section-header text-center">
+        <span class="badge">Coming Soon</span>
+        <h2>More experiences in development</h2>
+      </div>
 
       <div class="grid grid--2">
-        <div class="product-card">
-          <span class="product-card__badge product-card__badge--soon">In Development</span>
-          <h3 class="product-card__title">Beauty & Cosmetics</h3>
-          <p class="product-card__description">
+        <div class="card card--glow">
+          <div class="icon-circle icon-circle--coral">💄</div>
+          <h3>Beauty & Cosmetics</h3>
+          <p>
             An AI-powered companion for beauty enthusiasts. Get personalized recommendations,
             explore new looks, and discover products that match your style and skin type.
           </p>
         </div>
 
-        <div class="product-card">
-          <span class="product-card__badge product-card__badge--soon">In Development</span>
-          <h3 class="product-card__title">Wine Connoisseur</h3>
-          <p class="product-card__description">
+        <div class="card card--glow">
+          <div class="icon-circle icon-circle--purple">🍷</div>
+          <h3>Wine Connoisseur</h3>
+          <p>
             Your personal sommelier in your pocket. Discover wines, get food pairing suggestions,
             and build your knowledge through conversational AI guidance.
           </p>
@@ -71,7 +83,7 @@ const description = 'Explore AI-powered mobile apps from Xtend-AI. Discover My A
 
       <div class="section__cta text-center">
         <p>Interested in partnering with us on upcoming products?</p>
-        <a href="/contact" class="btn btn--secondary">Get in Touch</a>
+        <a href="/contact" class="btn btn--secondary btn--large">Get in Touch</a>
       </div>
     </div>
   </section>
@@ -81,32 +93,50 @@ const description = 'Explore AI-powered mobile apps from Xtend-AI. Discover My A
 
 <style>
   .page-header {
-    padding: var(--space-16) 0;
-    background: var(--xt-gradient-soft);
+    position: relative;
+    padding: var(--space-20) 0;
     text-align: center;
+    overflow: hidden;
+  }
+
+  .page-header__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .page-header__glow {
+    position: absolute;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 400px;
+    background: radial-gradient(ellipse at center, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
+  }
+
+  .page-header .container {
+    position: relative;
+    z-index: 1;
   }
 
   .page-header h1 {
-    font-size: clamp(2rem, 5vw, 3rem);
-    margin-bottom: var(--space-4);
+    margin: var(--space-4) 0;
+    font-size: clamp(2.5rem, 6vw, 4rem);
   }
 
   .page-header__subtitle {
-    font-size: 1.125rem;
-    color: var(--xt-navy-900);
-    opacity: 0.8;
+    font-size: 1.25rem;
+    color: var(--xt-text-secondary);
     margin: 0;
   }
 
-  .section__title {
-    margin-bottom: var(--space-2);
+  .section-header {
+    margin-bottom: var(--space-12);
   }
 
-  .section__subtitle {
-    font-size: 1.125rem;
-    color: var(--xt-navy-900);
-    opacity: 0.8;
-    margin-bottom: var(--space-12);
+  .section-header h2 {
+    margin-top: var(--space-4);
   }
 
   .section__cta {
@@ -115,57 +145,42 @@ const description = 'Explore AI-powered mobile apps from Xtend-AI. Discover My A
 
   .section__cta p {
     margin-bottom: var(--space-4);
-    color: var(--xt-navy-900);
   }
 
   /* Product Cards */
-  .product-card {
-    background: var(--xt-white);
-    border: 1px solid var(--xt-slate-300);
-    border-radius: var(--radius-lg);
-    padding: var(--space-8);
-  }
-
   .product-card--featured {
-    background: var(--xt-gradient-brand);
-    border: none;
-    color: var(--xt-white);
+    position: relative;
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(59, 130, 246, 0.1) 100%);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    border-radius: var(--radius-xl);
+    padding: var(--space-12);
+    overflow: hidden;
   }
 
-  .product-card--featured .product-card__title,
-  .product-card--featured .product-card__description {
-    color: var(--xt-white);
+  .product-card__glow {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle at center, rgba(139, 92, 246, 0.2) 0%, transparent 70%);
+    pointer-events: none;
   }
 
-  .product-card__badge {
-    display: inline-block;
-    padding: var(--space-1) var(--space-3);
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    background: var(--xt-blue-500);
-    color: var(--xt-white);
-    border-radius: 100px;
-    margin-bottom: var(--space-4);
-  }
-
-  .product-card__badge--soon {
-    background: var(--xt-slate-300);
-    color: var(--xt-navy-900);
+  .product-card__content {
+    position: relative;
+    z-index: 1;
+    max-width: 700px;
   }
 
   .product-card__title {
-    font-size: 1.5rem;
-    margin-bottom: var(--space-4);
-  }
-
-  .product-card--featured .product-card__title {
-    font-size: clamp(1.75rem, 4vw, 2.25rem);
+    font-size: clamp(2rem, 5vw, 3rem);
+    margin: var(--space-4) 0;
   }
 
   .product-card__description {
-    line-height: 1.7;
+    font-size: 1.125rem;
+    line-height: 1.8;
     margin-bottom: var(--space-6);
   }
 
@@ -173,23 +188,25 @@ const description = 'Explore AI-powered mobile apps from Xtend-AI. Discover My A
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-2);
-    margin-bottom: var(--space-6);
+    margin-bottom: var(--space-8);
   }
 
   .product-card__feature {
-    padding: var(--space-1) var(--space-3);
-    font-size: 0.875rem;
-    background: rgba(255, 255, 255, 0.2);
+    padding: var(--space-2) var(--space-4);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 100px;
+    color: var(--xt-text-primary);
   }
 
-  .product-card--featured .btn--primary {
-    background: var(--xt-white);
-    color: var(--xt-navy-900);
-    border-color: var(--xt-white);
+  /* Cards */
+  .card .icon-circle {
+    margin-bottom: var(--space-4);
+    font-size: 1.5rem;
   }
 
-  .product-card--featured .btn--primary:hover {
-    background: var(--xt-slate-050);
+  .card h3 {
+    margin-bottom: var(--space-3);
   }
 </style>

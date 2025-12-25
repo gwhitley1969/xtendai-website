@@ -10,102 +10,62 @@ const description = 'Get in touch with Xtend-AI. We\'d love to hear from you abo
 <BaseLayout title={title} description={description}>
   <Header slot="header" />
 
-  <!-- Page Header -->
   <section class="page-header">
+    <div class="page-header__glow"></div>
     <div class="container">
-      <h1>Contact Us</h1>
+      <span class="badge">Contact</span>
+      <h1>Let's <span class="text-gradient">connect</span></h1>
       <p class="page-header__subtitle">We'd love to hear from you</p>
     </div>
   </section>
 
-  <!-- Contact Form Section -->
   <section class="section">
     <div class="container">
       <div class="contact-grid">
-        <div class="contact-form-wrapper">
+        <div class="contact-form-wrapper card">
           <form id="contact-form" class="contact-form">
             <div class="form-group">
               <label for="name" class="form-label">Name</label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                class="form-input"
-                placeholder="Your name"
-                autocomplete="name"
-              >
+              <input type="text" id="name" name="name" class="form-input" placeholder="Your name" autocomplete="name">
             </div>
 
             <div class="form-group">
-              <label for="email" class="form-label">
-                Email <span class="required">*</span>
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                class="form-input"
-                placeholder="you@example.com"
-                required
-                autocomplete="email"
-              >
+              <label for="email" class="form-label">Email <span class="required">*</span></label>
+              <input type="email" id="email" name="email" class="form-input" placeholder="you@example.com" required autocomplete="email">
             </div>
 
             <div class="form-group">
-              <label for="message" class="form-label">
-                Message <span class="required">*</span>
-              </label>
-              <textarea
-                id="message"
-                name="message"
-                class="form-textarea"
-                placeholder="How can we help?"
-                required
-              ></textarea>
+              <label for="message" class="form-label">Message <span class="required">*</span></label>
+              <textarea id="message" name="message" class="form-textarea" placeholder="How can we help?" required></textarea>
             </div>
 
-            <!-- Honeypot -->
             <div class="form-group" style="display: none;" aria-hidden="true">
               <label for="website">Website</label>
               <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
             </div>
 
-            <button type="submit" class="btn btn--primary btn--large form-submit">
-              Send Message
-            </button>
-
+            <button type="submit" class="btn btn--primary btn--large form-submit">Send Message</button>
             <div id="form-status" class="form-status" aria-live="polite"></div>
           </form>
         </div>
 
         <div class="contact-info">
-          <div class="info-card">
-            <h2 class="info-card__title">Other ways to reach us</h2>
+          <div class="info-card card card--glow">
+            <h2>Other ways to reach us</h2>
 
             <div class="info-item">
-              <div class="info-item__icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <path d="M3 8L12 13L21 8M3 8V18H21V8M3 8H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </div>
+              <div class="icon-circle icon-circle--purple">✉️</div>
               <div>
-                <h3 class="info-item__label">Email</h3>
-                <a href="mailto:xtendai2017@gmail.com" class="info-item__value">
-                  xtendai2017@gmail.com
-                </a>
+                <h3>Email</h3>
+                <a href="mailto:xtendai2017@gmail.com">xtendai2017@gmail.com</a>
               </div>
             </div>
 
             <div class="info-item">
-              <div class="info-item__icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/>
-                  <path d="M12 7V12L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-              </div>
+              <div class="icon-circle icon-circle--blue">⏱️</div>
               <div>
-                <h3 class="info-item__label">Response Time</h3>
-                <p class="info-item__value">Within 24-48 hours</p>
+                <h3>Response Time</h3>
+                <p>Within 24-48 hours</p>
               </div>
             </div>
           </div>
@@ -119,27 +79,42 @@ const description = 'Get in touch with Xtend-AI. We\'d love to hear from you abo
 
 <style>
   .page-header {
-    padding: var(--space-16) 0;
-    background: var(--xt-gradient-soft);
+    position: relative;
+    padding: var(--space-20) 0;
     text-align: center;
+    overflow: hidden;
+  }
+
+  .page-header__glow {
+    position: absolute;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 400px;
+    background: radial-gradient(ellipse at center, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .page-header .container {
+    position: relative;
+    z-index: 1;
   }
 
   .page-header h1 {
+    margin: var(--space-4) 0 var(--space-2);
     font-size: clamp(2rem, 5vw, 3rem);
-    margin-bottom: var(--space-4);
   }
 
   .page-header__subtitle {
     font-size: 1.125rem;
-    color: var(--xt-navy-900);
-    opacity: 0.8;
+    color: var(--xt-text-secondary);
     margin: 0;
   }
 
-  /* Contact Grid */
   .contact-grid {
     display: grid;
-    gap: var(--space-12);
+    gap: var(--space-8);
     max-width: 900px;
     margin: 0 auto;
   }
@@ -151,16 +126,12 @@ const description = 'Get in touch with Xtend-AI. We\'d love to hear from you abo
     }
   }
 
-  /* Form */
   .contact-form-wrapper {
     padding: var(--space-8);
-    background: var(--xt-white);
-    border: 1px solid var(--xt-slate-300);
-    border-radius: var(--radius-lg);
   }
 
   .required {
-    color: #dc2626;
+    color: var(--xt-coral);
   }
 
   .form-submit {
@@ -176,30 +147,29 @@ const description = 'Get in touch with Xtend-AI. We\'d love to hear from you abo
 
   .form-status--success {
     display: block;
-    background: #dcfce7;
-    color: #166534;
+    background: rgba(52, 211, 153, 0.2);
+    color: var(--xt-green);
+    border: 1px solid rgba(52, 211, 153, 0.3);
   }
 
   .form-status--error {
     display: block;
-    background: #fee2e2;
-    color: #991b1b;
+    background: rgba(244, 114, 182, 0.2);
+    color: var(--xt-coral);
+    border: 1px solid rgba(244, 114, 182, 0.3);
   }
 
   .form-status--loading {
     display: block;
-    background: var(--xt-slate-100);
-    color: var(--xt-navy-900);
+    background: rgba(139, 92, 246, 0.2);
+    color: var(--xt-purple-light);
   }
 
-  /* Info Card */
   .info-card {
     padding: var(--space-8);
-    background: var(--xt-slate-050);
-    border-radius: var(--radius-lg);
   }
 
-  .info-card__title {
+  .info-card h2 {
     font-size: 1.125rem;
     margin-bottom: var(--space-6);
   }
@@ -208,40 +178,31 @@ const description = 'Get in touch with Xtend-AI. We\'d love to hear from you abo
     display: flex;
     gap: var(--space-4);
     padding: var(--space-4) 0;
-    border-bottom: 1px solid var(--xt-slate-300);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   }
 
   .info-item:last-child {
     border-bottom: none;
   }
 
-  .info-item__icon {
-    flex-shrink: 0;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--xt-blue-600);
-    background: var(--xt-white);
-    border-radius: var(--radius);
+  .info-item .icon-circle {
+    width: 44px;
+    height: 44px;
+    font-size: 1.25rem;
   }
 
-  .info-item__label {
+  .info-item h3 {
     font-size: 0.875rem;
     font-weight: 500;
-    color: var(--xt-navy-900);
-    opacity: 0.7;
+    color: var(--xt-text-muted);
     margin-bottom: var(--space-1);
   }
 
-  .info-item__value {
+  .info-item a,
+  .info-item p {
     font-weight: 500;
-    color: var(--xt-navy-900);
-  }
-
-  a.info-item__value:hover {
-    color: var(--xt-blue-600);
+    color: var(--xt-text-primary);
+    margin: 0;
   }
 </style>
 
@@ -251,15 +212,10 @@ const description = 'Get in touch with Xtend-AI. We\'d love to hear from you abo
 
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
-
     const formData = new FormData(form);
 
-    // Check honeypot
-    if (formData.get('website')) {
-      return;
-    }
+    if (formData.get('website')) return;
 
-    // Show loading
     status.className = 'form-status form-status--loading';
     status.textContent = 'Sending...';
 

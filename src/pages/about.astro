@@ -7,28 +7,28 @@ const title = 'About | Xtend-AI';
 const description = 'Learn about Xtend-AI, the company behind AI companion apps that help users discover, create, and share in the real world.';
 
 const values = [
-  'User experience comes first',
-  'AI should be helpful, not hype',
-  'Build for trust and simplicity',
-  'Iterate fast, polish hard'
+  { icon: '✨', text: 'User experience comes first' },
+  { icon: '🎯', text: 'AI should be helpful, not hype' },
+  { icon: '🤝', text: 'Build for trust and simplicity' },
+  { icon: '🚀', text: 'Iterate fast, polish hard' }
 ];
 ---
 
 <BaseLayout title={title} description={description}>
   <Header slot="header" />
 
-  <!-- Page Header -->
   <section class="page-header">
+    <div class="page-header__glow"></div>
     <div class="container">
-      <h1>About Xtend-AI</h1>
+      <span class="badge">About Us</span>
+      <h1>Building the future of <span class="text-gradient">AI companions</span></h1>
     </div>
   </section>
 
-  <!-- About Content -->
   <section class="section">
     <div class="container">
-      <div class="about-content">
-        <div class="about-text">
+      <div class="about-grid">
+        <div class="about-content">
           <p class="lead">
             Xtend-AI creates AI companion apps that extend what you can do — helping users discover,
             create, and share in the real world through friendly, capable mobile experiences.
@@ -45,16 +45,13 @@ const values = [
           </p>
         </div>
 
-        <div class="values-card">
-          <h2 class="values-title">Our Values</h2>
+        <div class="values-card card card--glow">
+          <h2>Our Values</h2>
           <ul class="values-list">
             {values.map((value) => (
               <li class="values-item">
-                <svg class="values-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                  <circle cx="10" cy="10" r="10" fill="var(--xt-blue-600)"/>
-                  <path d="M6 10L9 13L14 7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                {value}
+                <span class="values-icon">{value.icon}</span>
+                <span>{value.text}</span>
               </li>
             ))}
           </ul>
@@ -63,8 +60,7 @@ const values = [
     </div>
   </section>
 
-  <!-- CTA Section -->
-  <section class="section section--alt">
+  <section class="section section--glow">
     <div class="container text-center">
       <h2>Interested in what we're building?</h2>
       <p class="cta-text">We'd love to hear from you — whether you're a user, partner, or just curious.</p>
@@ -77,29 +73,45 @@ const values = [
 
 <style>
   .page-header {
-    padding: var(--space-16) 0;
-    background: var(--xt-gradient-soft);
+    position: relative;
+    padding: var(--space-20) 0;
+    overflow: hidden;
+  }
+
+  .page-header__glow {
+    position: absolute;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 400px;
+    background: radial-gradient(ellipse at center, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .page-header .container {
+    position: relative;
+    z-index: 1;
   }
 
   .page-header h1 {
+    margin-top: var(--space-4);
     font-size: clamp(2rem, 5vw, 3rem);
-    margin: 0;
   }
 
-  .about-content {
+  .about-grid {
     display: grid;
     gap: var(--space-12);
-    max-width: 900px;
   }
 
-  @media (min-width: 768px) {
-    .about-content {
+  @media (min-width: 900px) {
+    .about-grid {
       grid-template-columns: 1.5fr 1fr;
       align-items: start;
     }
   }
 
-  .about-text {
+  .about-content {
     font-size: 1.0625rem;
     line-height: 1.8;
   }
@@ -107,18 +119,15 @@ const values = [
   .lead {
     font-size: 1.25rem;
     font-weight: 500;
-    color: var(--xt-navy-950);
+    color: var(--xt-text-primary);
     margin-bottom: var(--space-6);
   }
 
   .values-card {
     padding: var(--space-8);
-    background: var(--xt-white);
-    border: 1px solid var(--xt-slate-300);
-    border-radius: var(--radius-lg);
   }
 
-  .values-title {
+  .values-card h2 {
     font-size: 1.25rem;
     margin-bottom: var(--space-6);
   }
@@ -134,8 +143,9 @@ const values = [
     align-items: center;
     gap: var(--space-3);
     padding: var(--space-3) 0;
-    border-bottom: 1px solid var(--xt-slate-100);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     font-weight: 500;
+    color: var(--xt-text-primary);
   }
 
   .values-item:last-child {
@@ -143,12 +153,11 @@ const values = [
   }
 
   .values-icon {
-    flex-shrink: 0;
+    font-size: 1.25rem;
   }
 
   .cta-text {
     font-size: 1.125rem;
     margin-bottom: var(--space-8);
-    opacity: 0.8;
   }
 </style>

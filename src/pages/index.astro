@@ -2,10 +2,37 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import FeatureCard from '../components/FeatureCard.astro';
 
 const title = 'Xtend-AI | AI-Powered Mobile Apps That Feel Personal';
 const description = 'Xtend-AI creates AI companion apps that extend what you can do — helping users discover, create, and share in the real world through friendly, capable mobile experiences.';
+
+const features = [
+  { icon: 'chat', color: 'purple', title: 'Chat', desc: 'Natural conversations with AI' },
+  { icon: 'voice', color: 'blue', title: 'Voice', desc: 'Hands-free interaction' },
+  { icon: 'scanner', color: 'coral', title: 'Scanner', desc: 'Camera-powered recognition' },
+  { icon: 'create', color: 'gold', title: 'Create', desc: 'Build your own recipes' },
+];
+
+const differentiators = [
+  {
+    icon: 'multimodal',
+    color: 'purple',
+    title: 'Multi-modal by design',
+    description: 'Voice + chat + camera working together seamlessly for natural interactions.'
+  },
+  {
+    icon: 'purpose',
+    color: 'cyan',
+    title: 'Purpose-built, not generic',
+    description: 'Each app is domain-focused, designed for specific real-world use cases.'
+  },
+  {
+    icon: 'human',
+    color: 'coral',
+    title: 'Human UX first',
+    description: 'AI should feel natural and fast — invisible technology, visible results.'
+  }
+];
 ---
 
 <BaseLayout title={title} description={description}>
@@ -13,89 +40,197 @@ const description = 'Xtend-AI creates AI companion apps that extend what you can
 
   <!-- Hero Section -->
   <section class="hero">
+    <div class="hero__bg">
+      <div class="hero__glow hero__glow--1"></div>
+      <div class="hero__glow hero__glow--2"></div>
+      <div class="hero__grid"></div>
+    </div>
     <div class="hero__container container">
-      <h1 class="hero__title">AI-powered mobile apps that feel personal.</h1>
-      <p class="hero__subtitle">
-        Xtend-AI builds consumer mobile apps that blend chat, voice, and camera intelligence
-        to help people discover, create, and share—starting with My AI Bartender.
-      </p>
-      <div class="hero__actions">
-        <a href="/products" class="btn btn--primary btn--large">Explore Our Apps</a>
-        <a href="/contact" class="btn btn--secondary btn--large">Contact Xtend-AI</a>
+      <div class="hero__content">
+        <span class="badge">AI-Powered Mobile Experiences</span>
+        <h1 class="hero__title">
+          Apps that feel like <span class="text-gradient">magic</span>
+        </h1>
+        <p class="hero__subtitle">
+          We build consumer mobile apps that blend chat, voice, and camera intelligence
+          to help people discover, create, and share — starting with My AI Bartender.
+        </p>
+        <div class="hero__actions">
+          <a href="/products" class="btn btn--primary btn--large">
+            <span>Explore Our Apps</span>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M4 10H16M16 10L11 5M16 10L11 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+          <a href="/contact" class="btn btn--secondary btn--large">Contact Us</a>
+        </div>
+      </div>
+      <div class="hero__visual">
+        <div class="hero__phone">
+          <img src="/images/app-preview.png" alt="My AI Bartender app" class="hero__phone-img" onerror="this.style.display='none'">
+          <div class="hero__phone-fallback">
+            <div class="phone-ui">
+              <div class="phone-ui__header">
+                <span class="phone-ui__icon">🍸</span>
+                <span>My AI Bartender</span>
+              </div>
+              <div class="phone-ui__card">
+                <span class="phone-ui__badge">AI Cocktail Concierge</span>
+                <p>Sophisticated cocktail intelligence for the evening</p>
+              </div>
+              <div class="phone-ui__grid">
+                <div class="phone-ui__btn phone-ui__btn--purple">Chat</div>
+                <div class="phone-ui__btn phone-ui__btn--blue">Voice</div>
+                <div class="phone-ui__btn phone-ui__btn--coral">Scanner</div>
+                <div class="phone-ui__btn phone-ui__btn--gold">Create</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Bar -->
+  <section class="features-bar">
+    <div class="container">
+      <div class="features-bar__grid">
+        {features.map((feature) => (
+          <div class="feature-pill">
+            <div class={`feature-pill__icon icon-circle icon-circle--${feature.color}`}>
+              {feature.icon === 'chat' && '💬'}
+              {feature.icon === 'voice' && '🎙️'}
+              {feature.icon === 'scanner' && '📷'}
+              {feature.icon === 'create' && '✨'}
+            </div>
+            <div class="feature-pill__text">
+              <strong>{feature.title}</strong>
+              <span>{feature.desc}</span>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   </section>
 
   <!-- What We Do Section -->
-  <section class="section section--alt">
+  <section class="section section--glow">
     <div class="container">
-      <h2 class="section__title">Built mobile-first. Powered by AI.</h2>
-      <p class="section__text">
-        Xtend-AI creates B2C mobile apps for people who love discovering new experiences —
-        whether that's crafting cocktails, exploring beauty routines, or learning wine.
-        We focus on products where AI improves the experience through conversation, scanning,
-        and creative help — not complexity.
-      </p>
+      <div class="split">
+        <div class="split__content">
+          <span class="badge badge--gold">What We Do</span>
+          <h2>Built mobile-first.<br><span class="text-gradient">Powered by AI.</span></h2>
+          <p>
+            Xtend-AI creates B2C mobile apps for people who love discovering new experiences —
+            whether that's crafting cocktails, exploring beauty routines, or learning wine.
+          </p>
+          <p>
+            We focus on products where AI improves the experience through conversation, scanning,
+            and creative help — not complexity.
+          </p>
+        </div>
+      </div>
     </div>
   </section>
 
   <!-- Featured Product Section -->
   <section class="section">
     <div class="container">
-      <div class="featured">
-        <div class="featured__content">
-          <h2 class="featured__title">My AI Bartender</h2>
-          <p class="featured__description">
-            Your personal AI bartender that helps you discover cocktails, make smarter substitutions,
-            and use what you already have. Chat with your bartender, talk hands-free, scan your home bar,
-            and refine your own creations.
-          </p>
-          <ul class="featured__list">
-            <li><strong>Chat:</strong> Ask for cocktails, ideas, substitutions, and step-by-step help.</li>
-            <li><strong>Voice:</strong> Real-time voice bartender conversations (hands-free).</li>
-            <li><strong>Scanner:</strong> Use your camera to identify bottles and build "My Bar."</li>
-            <li><strong>Create:</strong> Build your own recipe and get AI suggestions to improve it.</li>
-            <li><strong>Share:</strong> Share recipes with friends using simple codes/links.</li>
-          </ul>
-          <a href="/products/my-ai-bartender" class="btn btn--primary">Learn about My AI Bartender</a>
+      <div class="featured-product">
+        <div class="featured-product__header">
+          <span class="badge">Featured Product</span>
+          <h2>My AI Bartender</h2>
+          <p class="featured-product__tagline">Your personal AI bartender in your pocket</p>
+        </div>
+
+        <div class="featured-product__card">
+          <div class="featured-product__content">
+            <p class="featured-product__desc">
+              Discover cocktails, make smarter substitutions, and use what you already have.
+              Chat with your bartender, talk hands-free, scan your home bar, and refine your own creations.
+            </p>
+
+            <ul class="featured-product__features">
+              <li>
+                <div class="icon-circle icon-circle--purple">💬</div>
+                <div>
+                  <strong>Chat</strong>
+                  <span>Ask for cocktails, ideas, substitutions, and step-by-step help.</span>
+                </div>
+              </li>
+              <li>
+                <div class="icon-circle icon-circle--blue">🎙️</div>
+                <div>
+                  <strong>Voice</strong>
+                  <span>Real-time voice bartender conversations (hands-free).</span>
+                </div>
+              </li>
+              <li>
+                <div class="icon-circle icon-circle--coral">📷</div>
+                <div>
+                  <strong>Scanner</strong>
+                  <span>Use your camera to identify bottles and build "My Bar."</span>
+                </div>
+              </li>
+              <li>
+                <div class="icon-circle icon-circle--gold">✨</div>
+                <div>
+                  <strong>Create</strong>
+                  <span>Build your own recipe and get AI suggestions to improve it.</span>
+                </div>
+              </li>
+            </ul>
+
+            <a href="/products/my-ai-bartender" class="btn btn--primary btn--large">
+              Learn More
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M4 10H16M16 10L11 5M16 10L11 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- Why We're Different Section -->
-  <section class="section section--gradient">
+  <section class="section section--glow">
     <div class="container">
-      <h2 class="section__title text-center">We don't build "AI features." We build AI experiences.</h2>
+      <div class="section-header text-center">
+        <h2>We don't build "AI features."<br><span class="text-gradient">We build AI experiences.</span></h2>
+      </div>
+
       <div class="grid grid--3">
-        <FeatureCard
-          icon="multimodal"
-          title="Multi-modal by design"
-          description="Voice + chat + camera working together seamlessly for natural interactions."
-        />
-        <FeatureCard
-          icon="purpose"
-          title="Purpose-built, not generic"
-          description="Each app is domain-focused, designed for specific real-world use cases."
-        />
-        <FeatureCard
-          icon="human"
-          title="Human UX first"
-          description="AI should feel natural and fast — invisible technology, visible results."
-        />
+        {differentiators.map((item) => (
+          <div class="card card--glow">
+            <div class={`icon-circle icon-circle--${item.color}`}>
+              {item.icon === 'multimodal' && '🔮'}
+              {item.icon === 'purpose' && '🎯'}
+              {item.icon === 'human' && '✋'}
+            </div>
+            <h3>{item.title}</h3>
+            <p>{item.description}</p>
+          </div>
+        ))}
       </div>
     </div>
   </section>
 
   <!-- What's Next Section -->
-  <section class="section section--alt">
-    <div class="container text-center">
-      <h2 class="section__title">More AI-enabled apps are on the way</h2>
-      <p class="section__text section__text--centered">
-        We're building new mobile experiences in <strong>beauty/cosmetics</strong> and <strong>wine discovery</strong> —
-        designed with the same principles: excellent UX, practical AI, and user-first experiences.
-      </p>
-      <a href="/contact" class="btn btn--primary btn--large">Contact Xtend-AI</a>
+  <section class="section">
+    <div class="container">
+      <div class="cta-card">
+        <div class="cta-card__glow"></div>
+        <div class="cta-card__content">
+          <span class="badge">Coming Soon</span>
+          <h2>More AI-enabled apps are on the way</h2>
+          <p>
+            We're building new mobile experiences in <strong>beauty/cosmetics</strong> and <strong>wine discovery</strong> —
+            designed with the same principles: excellent UX, practical AI, and user-first experiences.
+          </p>
+          <a href="/contact" class="btn btn--primary btn--large">Get in Touch</a>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -105,35 +240,99 @@ const description = 'Xtend-AI creates AI companion apps that extend what you can
 <style>
   /* Hero */
   .hero {
-    padding: var(--space-20) 0;
-    background: var(--xt-gradient-soft);
+    position: relative;
+    min-height: calc(100vh - var(--header-height));
+    display: flex;
+    align-items: center;
+    padding: var(--space-12) 0;
+    overflow: hidden;
   }
 
-  @media (min-width: 768px) {
-    .hero {
-      padding: var(--space-24) 0;
-    }
+  .hero__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .hero__glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.5;
+  }
+
+  .hero__glow--1 {
+    width: 600px;
+    height: 600px;
+    background: var(--xt-purple);
+    top: -200px;
+    left: -200px;
+    opacity: 0.15;
+  }
+
+  .hero__glow--2 {
+    width: 500px;
+    height: 500px;
+    background: var(--xt-blue);
+    bottom: -150px;
+    right: -150px;
+    opacity: 0.1;
+  }
+
+  .hero__grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(139, 92, 246, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(139, 92, 246, 0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
   }
 
   .hero__container {
-    max-width: 800px;
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: var(--space-12);
+    align-items: center;
+  }
+
+  @media (min-width: 1024px) {
+    .hero__container {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .hero__content {
     text-align: center;
   }
 
+  @media (min-width: 1024px) {
+    .hero__content {
+      text-align: left;
+    }
+  }
+
   .hero__title {
-    font-size: clamp(2.25rem, 6vw, 3.5rem);
-    margin-bottom: var(--space-6);
-    background: var(--xt-gradient-brand);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    font-size: clamp(2.5rem, 7vw, 4.5rem);
+    font-weight: 700;
+    line-height: 1.1;
+    margin: var(--space-6) 0;
   }
 
   .hero__subtitle {
-    font-size: clamp(1.125rem, 2.5vw, 1.25rem);
-    color: var(--xt-navy-900);
-    margin-bottom: var(--space-8);
+    font-size: clamp(1.125rem, 2vw, 1.25rem);
+    color: var(--xt-text-secondary);
     line-height: 1.7;
+    margin-bottom: var(--space-8);
+    max-width: 540px;
+  }
+
+  @media (min-width: 1024px) {
+    .hero__subtitle {
+      margin-left: 0;
+      margin-right: auto;
+    }
   }
 
   .hero__actions {
@@ -146,68 +345,321 @@ const description = 'Xtend-AI creates AI companion apps that extend what you can
   @media (min-width: 480px) {
     .hero__actions {
       flex-direction: row;
-      justify-content: center;
     }
   }
 
-  /* Section Titles */
-  .section__title {
-    margin-bottom: var(--space-6);
+  @media (min-width: 1024px) {
+    .hero__actions {
+      justify-content: flex-start;
+    }
   }
 
-  .section__text {
-    font-size: 1.125rem;
-    max-width: 800px;
-    line-height: 1.8;
+  /* Hero Visual / Phone */
+  .hero__visual {
+    display: flex;
+    justify-content: center;
   }
 
-  .section__text--centered {
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: var(--space-8);
+  .hero__phone {
+    position: relative;
+    width: 280px;
+    height: 560px;
+    background: var(--xt-bg-card);
+    border-radius: 40px;
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    padding: 12px;
+    box-shadow:
+      0 50px 100px -20px rgba(0, 0, 0, 0.5),
+      0 0 0 1px rgba(139, 92, 246, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    animation: float 6s ease-in-out infinite;
   }
 
-  /* Featured Product */
-  .featured {
+  .hero__phone-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 28px;
+  }
+
+  .hero__phone-fallback {
+    width: 100%;
+    height: 100%;
+    background: var(--xt-bg-secondary);
+    border-radius: 28px;
+    padding: var(--space-4);
     display: flex;
     flex-direction: column;
-    gap: var(--space-8);
+  }
+
+  .phone-ui {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    height: 100%;
+  }
+
+  .phone-ui__header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-weight: 600;
+    color: var(--xt-text-primary);
+  }
+
+  .phone-ui__icon {
+    font-size: 1.5rem;
+  }
+
+  .phone-ui__card {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(59, 130, 246, 0.1) 100%);
+    border-radius: var(--radius);
+    padding: var(--space-4);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+  }
+
+  .phone-ui__badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--xt-purple-light);
+  }
+
+  .phone-ui__card p {
+    font-size: 0.8rem;
+    margin: var(--space-1) 0 0;
+    color: var(--xt-text-secondary);
+  }
+
+  .phone-ui__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-2);
+    margin-top: auto;
+  }
+
+  .phone-ui__btn {
+    padding: var(--space-3);
+    border-radius: var(--radius);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-align: center;
+    color: white;
+  }
+
+  .phone-ui__btn--purple { background: var(--xt-purple); }
+  .phone-ui__btn--blue { background: var(--xt-blue); }
+  .phone-ui__btn--coral { background: var(--xt-coral); }
+  .phone-ui__btn--gold { background: var(--xt-gold); color: #000; }
+
+  /* Features Bar */
+  .features-bar {
+    padding: var(--space-8) 0;
+    background: var(--xt-bg-secondary);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .features-bar__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-4);
   }
 
   @media (min-width: 768px) {
-    .featured {
-      flex-direction: row;
-      align-items: flex-start;
+    .features-bar__grid {
+      grid-template-columns: repeat(4, 1fr);
     }
   }
 
-  .featured__content {
-    flex: 1;
+  .feature-pill {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
   }
 
-  .featured__title {
-    font-size: clamp(1.75rem, 4vw, 2.5rem);
-    margin-bottom: var(--space-4);
-    color: var(--xt-blue-600);
+  .feature-pill__icon {
+    width: 44px;
+    height: 44px;
+    font-size: 1.25rem;
   }
 
-  .featured__description {
+  .feature-pill__text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .feature-pill__text strong {
+    color: var(--xt-text-primary);
+    font-size: 0.9375rem;
+  }
+
+  .feature-pill__text span {
+    color: var(--xt-text-muted);
+    font-size: 0.8125rem;
+  }
+
+  /* Split Content */
+  .split {
+    max-width: 700px;
+  }
+
+  .split__content h2 {
+    margin: var(--space-4) 0 var(--space-6);
+  }
+
+  .split__content p {
     font-size: 1.125rem;
     line-height: 1.8;
-    margin-bottom: var(--space-6);
   }
 
-  .featured__list {
+  /* Section Header */
+  .section-header {
+    margin-bottom: var(--space-12);
+  }
+
+  .section-header h2 {
+    margin-bottom: var(--space-4);
+  }
+
+  /* Featured Product */
+  .featured-product__header {
+    text-align: center;
     margin-bottom: var(--space-8);
-    padding-left: var(--space-6);
   }
 
-  .featured__list li {
-    margin-bottom: var(--space-3);
-    line-height: 1.6;
+  .featured-product__header h2 {
+    margin: var(--space-4) 0 var(--space-2);
+    font-size: clamp(2rem, 5vw, 3rem);
   }
 
-  .featured__list strong {
-    color: var(--xt-navy-950);
+  .featured-product__tagline {
+    font-size: 1.125rem;
+    color: var(--xt-text-secondary);
+  }
+
+  .featured-product__card {
+    background: var(--xt-bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-xl);
+    padding: var(--space-8);
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .featured-product__desc {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    margin-bottom: var(--space-8);
+    text-align: center;
+  }
+
+  .featured-product__features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--space-8);
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  @media (min-width: 640px) {
+    .featured-product__features {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .featured-product__features li {
+    display: flex;
+    gap: var(--space-4);
+    align-items: flex-start;
+    padding: var(--space-4);
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: var(--radius);
+    margin: 0;
+  }
+
+  .featured-product__features li .icon-circle {
+    width: 48px;
+    height: 48px;
+    font-size: 1.25rem;
+  }
+
+  .featured-product__features li strong {
+    display: block;
+    color: var(--xt-text-primary);
+    margin-bottom: var(--space-1);
+  }
+
+  .featured-product__features li span {
+    font-size: 0.875rem;
+    color: var(--xt-text-secondary);
+  }
+
+  .featured-product__card > .btn {
+    display: flex;
+    margin: 0 auto;
+    width: fit-content;
+  }
+
+  /* Cards with icons */
+  .card .icon-circle {
+    margin-bottom: var(--space-4);
+    font-size: 1.5rem;
+  }
+
+  .card h3 {
+    margin-bottom: var(--space-2);
+  }
+
+  .card p {
+    margin: 0;
+  }
+
+  /* CTA Card */
+  .cta-card {
+    position: relative;
+    background: var(--xt-bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-xl);
+    padding: var(--space-12) var(--space-8);
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .cta-card__glow {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 400px;
+    height: 200px;
+    background: radial-gradient(ellipse at center, rgba(139, 92, 246, 0.2) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .cta-card__content {
+    position: relative;
+    z-index: 1;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .cta-card h2 {
+    margin: var(--space-4) 0 var(--space-6);
+  }
+
+  .cta-card p {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    margin-bottom: var(--space-8);
+  }
+
+  .cta-card strong {
+    color: var(--xt-purple-light);
+  }
+
+  /* Float Animation */
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
   }
 </style>

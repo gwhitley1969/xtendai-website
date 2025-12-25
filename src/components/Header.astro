@@ -98,8 +98,9 @@ function isActive(href: string): boolean {
     left: 0;
     right: 0;
     height: var(--header-height);
-    background: var(--xt-white);
-    border-bottom: 1px solid var(--xt-slate-100);
+    background: rgba(10, 10, 15, 0.8);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     z-index: 100;
   }
 
@@ -142,7 +143,7 @@ function isActive(href: string): boolean {
     align-items: center;
     gap: var(--space-1);
     padding: var(--space-2) var(--space-4);
-    color: var(--xt-navy-900);
+    color: var(--xt-text-secondary);
     font-weight: 500;
     text-decoration: none;
     border-radius: var(--radius);
@@ -150,12 +151,12 @@ function isActive(href: string): boolean {
   }
 
   .nav__link:hover {
-    background: var(--xt-slate-050);
-    color: var(--xt-blue-600);
+    color: var(--xt-text-primary);
+    background: rgba(139, 92, 246, 0.1);
   }
 
   .nav__link--active {
-    color: var(--xt-blue-600);
+    color: var(--xt-purple-light);
   }
 
   .nav__chevron {
@@ -172,10 +173,10 @@ function isActive(href: string): boolean {
     left: 0;
     min-width: 200px;
     padding: var(--space-2) 0;
-    background: var(--xt-white);
-    border: 1px solid var(--xt-slate-100);
+    background: var(--xt-bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: var(--radius);
-    box-shadow: 0 4px 24px rgba(0, 5, 42, 0.1);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
     list-style: none;
     opacity: 0;
     visibility: hidden;
@@ -192,14 +193,14 @@ function isActive(href: string): boolean {
   .nav__dropdown-link {
     display: block;
     padding: var(--space-2) var(--space-4);
-    color: var(--xt-navy-900);
+    color: var(--xt-text-secondary);
     text-decoration: none;
     transition: all var(--transition-fast);
   }
 
   .nav__dropdown-link:hover {
-    background: var(--xt-slate-050);
-    color: var(--xt-blue-600);
+    background: rgba(139, 92, 246, 0.1);
+    color: var(--xt-purple-light);
   }
 
   /* Mobile Toggle */
@@ -225,7 +226,7 @@ function isActive(href: string): boolean {
   .header__toggle-bar {
     width: 24px;
     height: 2px;
-    background: var(--xt-navy-900);
+    background: var(--xt-text-primary);
     border-radius: 1px;
     transition: all var(--transition-fast);
   }
@@ -249,7 +250,7 @@ function isActive(href: string): boolean {
     left: 0;
     right: 0;
     bottom: 0;
-    background: var(--xt-white);
+    background: var(--xt-bg-primary);
     padding: var(--space-4);
     transform: translateX(100%);
     transition: transform var(--transition-base);
@@ -276,22 +277,22 @@ function isActive(href: string): boolean {
   .mobile-menu__link {
     display: block;
     padding: var(--space-4);
-    color: var(--xt-navy-900);
+    color: var(--xt-text-primary);
     font-size: 1.125rem;
     font-weight: 500;
     text-decoration: none;
-    border-bottom: 1px solid var(--xt-slate-100);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
 
   .mobile-menu__link--sub {
     padding-left: var(--space-8);
     font-size: 1rem;
     font-weight: 400;
-    color: var(--xt-navy-900);
+    color: var(--xt-text-secondary);
   }
 
   .mobile-menu__link:hover {
-    color: var(--xt-blue-600);
+    color: var(--xt-purple-light);
   }
 
   /* Spacer for fixed header */

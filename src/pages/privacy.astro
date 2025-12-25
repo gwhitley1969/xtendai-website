@@ -15,20 +15,16 @@ const lastUpdated = 'December 2024';
     <div class="container">
       <article class="legal-content">
         <header class="legal-header">
-          <p class="legal-notice">
+          <div class="legal-notice">
             <strong>Note:</strong> This is a template privacy policy. Please have this document reviewed by legal counsel before publishing.
-          </p>
+          </div>
           <h1>Privacy Policy</h1>
           <p class="legal-meta">Last updated: {lastUpdated}</p>
         </header>
 
         <section class="legal-section">
           <h2>Introduction</h2>
-          <p>
-            Xtend-AI ("we," "our," or "us") respects your privacy and is committed to protecting your personal data.
-            This privacy policy explains how we collect, use, and safeguard your information when you use our mobile
-            applications and website.
-          </p>
+          <p>Xtend-AI ("we," "our," or "us") respects your privacy and is committed to protecting your personal data. This privacy policy explains how we collect, use, and safeguard your information when you use our mobile applications and website.</p>
         </section>
 
         <section class="legal-section">
@@ -39,7 +35,6 @@ const lastUpdated = 'December 2024';
             <li>User-generated content (recipes, bar inventory)</li>
             <li>Communications with us (support inquiries, feedback)</li>
           </ul>
-
           <h3>Information Collected Automatically</h3>
           <ul>
             <li>Device information (device type, operating system)</li>
@@ -62,9 +57,7 @@ const lastUpdated = 'December 2024';
 
         <section class="legal-section">
           <h2>Data Sharing</h2>
-          <p>
-            We do not sell your personal information. We may share data with:
-          </p>
+          <p>We do not sell your personal information. We may share data with:</p>
           <ul>
             <li>Service providers who help us operate our services</li>
             <li>Legal authorities when required by law</li>
@@ -74,10 +67,7 @@ const lastUpdated = 'December 2024';
 
         <section class="legal-section">
           <h2>Data Security</h2>
-          <p>
-            We implement appropriate technical and organizational measures to protect your personal data.
-            However, no method of transmission over the internet is 100% secure.
-          </p>
+          <p>We implement appropriate technical and organizational measures to protect your personal data. However, no method of transmission over the internet is 100% secure.</p>
         </section>
 
         <section class="legal-section">
@@ -93,29 +83,9 @@ const lastUpdated = 'December 2024';
         </section>
 
         <section class="legal-section">
-          <h2>Children's Privacy</h2>
-          <p>
-            Our services are not intended for users under 21 years of age for alcohol-related apps,
-            or under 13 for other services. We do not knowingly collect data from children.
-          </p>
-        </section>
-
-        <section class="legal-section">
-          <h2>Changes to This Policy</h2>
-          <p>
-            We may update this privacy policy from time to time. We will notify you of any changes by
-            posting the new policy on this page and updating the "Last updated" date.
-          </p>
-        </section>
-
-        <section class="legal-section">
           <h2>Contact Us</h2>
-          <p>
-            If you have questions about this privacy policy, please contact us at:
-          </p>
-          <p>
-            <a href="mailto:xtendai2017@gmail.com">xtendai2017@gmail.com</a>
-          </p>
+          <p>If you have questions about this privacy policy, please contact us at:</p>
+          <p><a href="mailto:xtendai2017@gmail.com">xtendai2017@gmail.com</a></p>
         </section>
       </article>
     </div>
@@ -136,10 +106,10 @@ const lastUpdated = 'December 2024';
 
   .legal-notice {
     padding: var(--space-4);
-    background: #fef3c7;
-    border: 1px solid #f59e0b;
+    background: rgba(251, 191, 36, 0.1);
+    border: 1px solid rgba(251, 191, 36, 0.3);
     border-radius: var(--radius);
-    color: #92400e;
+    color: var(--xt-gold);
     margin-bottom: var(--space-8);
   }
 
@@ -148,8 +118,7 @@ const lastUpdated = 'December 2024';
   }
 
   .legal-meta {
-    color: var(--xt-navy-900);
-    opacity: 0.7;
+    color: var(--xt-text-muted);
     margin: 0;
   }
 
@@ -161,7 +130,7 @@ const lastUpdated = 'December 2024';
     font-size: 1.5rem;
     margin-bottom: var(--space-4);
     padding-bottom: var(--space-2);
-    border-bottom: 1px solid var(--xt-slate-300);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   }
 
   .legal-section h3 {
