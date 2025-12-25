@@ -70,19 +70,70 @@ const differentiators = [
           <img src="/images/app-preview.png" alt="My AI Bartender app" class="hero__phone-img" onerror="this.style.display='none'">
           <div class="hero__phone-fallback">
             <div class="phone-ui">
+              <!-- App Header -->
               <div class="phone-ui__header">
-                <span class="phone-ui__icon">🍸</span>
-                <span>My AI Bartender</span>
+                <div class="phone-ui__header-icon">🍸</div>
+                <div class="phone-ui__header-text">
+                  <span class="phone-ui__title">My AI Bartender</span>
+                  <span class="phone-ui__subtitle">Premium mixology experience</span>
+                </div>
               </div>
-              <div class="phone-ui__card">
-                <span class="phone-ui__badge">AI Cocktail Concierge</span>
-                <p>Sophisticated cocktail intelligence for the evening</p>
+
+              <!-- AI Concierge Card -->
+              <div class="phone-ui__concierge">
+                <div class="phone-ui__concierge-icon">✨</div>
+                <div class="phone-ui__concierge-text">
+                  <span class="phone-ui__concierge-title">AI Cocktail Concierge</span>
+                  <span class="phone-ui__concierge-desc">Sophisticated cocktail intelligence for the evening</span>
+                </div>
               </div>
-              <div class="phone-ui__grid">
-                <div class="phone-ui__btn phone-ui__btn--purple">Chat</div>
-                <div class="phone-ui__btn phone-ui__btn--blue">Voice</div>
-                <div class="phone-ui__btn phone-ui__btn--coral">Scanner</div>
-                <div class="phone-ui__btn phone-ui__btn--gold">Create</div>
+
+              <!-- Feature Grid -->
+              <div class="phone-ui__features">
+                <div class="phone-ui__feature">
+                  <div class="phone-ui__feature-icon phone-ui__feature-icon--purple">💬</div>
+                  <span class="phone-ui__feature-label">Chat</span>
+                  <span class="phone-ui__feature-desc">Text conversation</span>
+                </div>
+                <div class="phone-ui__feature">
+                  <div class="phone-ui__feature-icon phone-ui__feature-icon--blue">🎙️</div>
+                  <span class="phone-ui__feature-label">Voice</span>
+                  <span class="phone-ui__feature-desc">Talk to AI</span>
+                </div>
+                <div class="phone-ui__feature">
+                  <div class="phone-ui__feature-icon phone-ui__feature-icon--coral">📷</div>
+                  <span class="phone-ui__feature-label">Scanner</span>
+                  <span class="phone-ui__feature-desc">Identify bottles</span>
+                </div>
+                <div class="phone-ui__feature">
+                  <div class="phone-ui__feature-icon phone-ui__feature-icon--pink">✨</div>
+                  <span class="phone-ui__feature-label">Create</span>
+                  <span class="phone-ui__feature-desc">Design cocktails</span>
+                </div>
+              </div>
+
+              <!-- Lounge Section -->
+              <div class="phone-ui__lounge">
+                <span class="phone-ui__lounge-title">Lounge Essentials</span>
+                <div class="phone-ui__lounge-card">
+                  <div class="phone-ui__lounge-icon phone-ui__lounge-icon--gold">📚</div>
+                  <div>
+                    <span class="phone-ui__lounge-label">Recipe Vault</span>
+                    <span class="phone-ui__lounge-desc">Curated cocktail collection</span>
+                  </div>
+                </div>
+                <div class="phone-ui__lounge-grid">
+                  <div class="phone-ui__lounge-item">
+                    <div class="phone-ui__lounge-icon phone-ui__lounge-icon--teal">🗂️</div>
+                    <span class="phone-ui__lounge-label">My Bar</span>
+                    <span class="phone-ui__lounge-desc">Track your collection</span>
+                  </div>
+                  <div class="phone-ui__lounge-item">
+                    <div class="phone-ui__lounge-icon phone-ui__lounge-icon--red">❤️</div>
+                    <span class="phone-ui__lounge-label">Favorites</span>
+                    <span class="phone-ui__lounge-desc">Saved cocktails</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -385,71 +436,206 @@ const differentiators = [
   .hero__phone-fallback {
     width: 100%;
     height: 100%;
-    background: var(--xt-bg-secondary);
+    background: #0d0d14;
     border-radius: 28px;
-    padding: var(--space-4);
-    display: flex;
-    flex-direction: column;
+    padding: 16px 12px;
+    overflow: hidden;
   }
 
   .phone-ui {
     display: flex;
     flex-direction: column;
-    gap: var(--space-4);
+    gap: 12px;
     height: 100%;
+    font-size: 11px;
   }
 
+  /* App Header */
   .phone-ui__header {
     display: flex;
     align-items: center;
-    gap: var(--space-2);
+    gap: 10px;
+    padding-bottom: 8px;
+  }
+
+  .phone-ui__header-icon {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+
+  .phone-ui__header-text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .phone-ui__title {
+    font-weight: 700;
+    font-size: 14px;
+    color: #fff;
+  }
+
+  .phone-ui__subtitle {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  /* AI Concierge Card */
+  .phone-ui__concierge {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.25) 0%, rgba(59, 130, 246, 0.15) 100%);
+    border-radius: 14px;
+    padding: 14px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .phone-ui__concierge-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .phone-ui__concierge-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .phone-ui__concierge-title {
     font-weight: 600;
-    color: var(--xt-text-primary);
+    font-size: 12px;
+    color: #fff;
   }
 
-  .phone-ui__icon {
-    font-size: 1.5rem;
+  .phone-ui__concierge-desc {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.3;
   }
 
-  .phone-ui__card {
-    background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(59, 130, 246, 0.1) 100%);
-    border-radius: var(--radius);
-    padding: var(--space-4);
-    border: 1px solid rgba(139, 92, 246, 0.3);
-  }
-
-  .phone-ui__badge {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--xt-purple-light);
-  }
-
-  .phone-ui__card p {
-    font-size: 0.8rem;
-    margin: var(--space-1) 0 0;
-    color: var(--xt-text-secondary);
-  }
-
-  .phone-ui__grid {
+  /* Feature Grid */
+  .phone-ui__features {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-2);
-    margin-top: auto;
+    gap: 8px;
   }
 
-  .phone-ui__btn {
-    padding: var(--space-3);
-    border-radius: var(--radius);
-    font-size: 0.75rem;
+  .phone-ui__feature {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 12px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .phone-ui__feature-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+  }
+
+  .phone-ui__feature-icon--purple { background: #8b5cf6; }
+  .phone-ui__feature-icon--blue { background: #3b82f6; }
+  .phone-ui__feature-icon--coral { background: #ef4444; }
+  .phone-ui__feature-icon--pink { background: #a855f7; }
+
+  .phone-ui__feature-label {
     font-weight: 600;
-    text-align: center;
-    color: white;
+    font-size: 11px;
+    color: #fff;
   }
 
-  .phone-ui__btn--purple { background: var(--xt-purple); }
-  .phone-ui__btn--blue { background: var(--xt-blue); }
-  .phone-ui__btn--coral { background: var(--xt-coral); }
-  .phone-ui__btn--gold { background: var(--xt-gold); color: #000; }
+  .phone-ui__feature-desc {
+    font-size: 9px;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  /* Lounge Section */
+  .phone-ui__lounge {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .phone-ui__lounge-title {
+    font-weight: 700;
+    font-size: 13px;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+
+  .phone-ui__lounge-card {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(59, 130, 246, 0.1) 100%);
+    border-radius: 12px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .phone-ui__lounge-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .phone-ui__lounge-icon--gold { background: #eab308; }
+  .phone-ui__lounge-icon--teal { background: #14b8a6; }
+  .phone-ui__lounge-icon--red { background: #ef4444; }
+
+  .phone-ui__lounge-label {
+    font-weight: 600;
+    font-size: 11px;
+    color: #fff;
+    display: block;
+  }
+
+  .phone-ui__lounge-desc {
+    font-size: 9px;
+    color: rgba(255, 255, 255, 0.5);
+    display: block;
+  }
+
+  .phone-ui__lounge-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .phone-ui__lounge-item {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 14px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    text-align: center;
+  }
 
   /* Features Bar */
   .features-bar {
