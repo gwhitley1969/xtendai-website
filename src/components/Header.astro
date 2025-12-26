@@ -26,6 +26,7 @@ function isActive(href: string): boolean {
   <div class="header__container container">
     <a href="/" class="header__logo" aria-label="Xtend-AI Home">
       <img src="/images/Xtend-AI_logo_primary_white.png" alt="Xtend-AI" width="220" height="60">
+      <span class="header__tagline">Your next favorite app, made smarter</span>
     </a>
 
     <nav class="header__nav" aria-label="Main navigation">
@@ -111,9 +112,29 @@ function isActive(href: string): boolean {
     height: 100%;
   }
 
+  .header__logo {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
   .header__logo img {
     height: 48px;
     width: auto;
+  }
+
+  .header__tagline {
+    display: none;
+    font-size: 0.9rem;
+    color: var(--xt-text-secondary);
+    font-weight: 400;
+    white-space: nowrap;
+  }
+
+  @media (min-width: 1100px) {
+    .header__tagline {
+      display: block;
+    }
   }
 
   .header__nav {
