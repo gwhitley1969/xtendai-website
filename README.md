@@ -68,12 +68,27 @@ Set these in Azure Static Web Apps configuration:
 |----------|-------------|
 | `SENDGRID_API_KEY` | SendGrid API key for contact form |
 
-## SendGrid Setup
+## Contact Form & Email Configuration
+
+The website uses SendGrid for the contact form on the Contact page. Form submissions are sent to `xtendai@xtend-ai.com`.
+
+### Email Addresses
+
+| Page | Email | Purpose |
+|------|-------|---------|
+| Contact | xtendai@xtend-ai.com | General inquiries, contact form destination |
+| Support | support@xtend-ai.com | Customer support, bug reports |
+| Terms | xtendai@xtend-ai.com | Legal inquiries |
+| Privacy | xtendai@xtend-ai.com | Privacy inquiries |
+
+### SendGrid Setup
 
 1. Create a SendGrid account at https://sendgrid.com
-2. Verify sender identity for `noreply@xtend-ai.com`
-3. Create an API key with "Mail Send" permission
-4. Add the API key to Azure SWA environment variables
+2. Create a Sender Identity for `xtendai@xtend-ai.com` and verify it
+3. Create an API key with "Mail Send" permission (or Full Access)
+4. Add the API key to Azure SWA environment variables as `SENDGRID_API_KEY`
+
+The contact form API is located at `api/contact/index.js` and sends emails using the verified sender address.
 
 ## Domain
 
