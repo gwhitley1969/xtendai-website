@@ -57,8 +57,8 @@ module.exports = async function (context, req) {
 
     // Prepare email
     const msg = {
-      to: 'xtendai2017@gmail.com',
-      from: 'xtendai2017@gmail.com', // Verified in SendGrid
+      to: 'xtendai@xtend-ai.com',
+      from: 'xtendai@xtend-ai.com', // Verified in SendGrid
       replyTo: email,
       subject: `[Xtend-AI Contact] New message from ${name || 'Anonymous'}`,
       text: `
