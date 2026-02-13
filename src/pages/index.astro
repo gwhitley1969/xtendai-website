@@ -77,6 +77,7 @@ const differentiators = [
                   <span class="phone-ui__title">My AI Bartender</span>
                   <span class="phone-ui__subtitle">Premium mixology experience</span>
                 </div>
+                <div class="phone-ui__header-profile">👤</div>
               </div>
 
               <!-- AI Concierge Card -->
@@ -91,7 +92,17 @@ const differentiators = [
               <!-- Feature Grid -->
               <div class="phone-ui__features">
                 <div class="phone-ui__feature">
-                  <div class="phone-ui__feature-icon phone-ui__feature-icon--purple">💬</div>
+                  <div class="phone-ui__feature-icon phone-ui__feature-icon--orange">📷</div>
+                  <span class="phone-ui__feature-label">Scan My Bar</span>
+                  <span class="phone-ui__feature-desc">Identify bottles</span>
+                </div>
+                <div class="phone-ui__feature">
+                  <div class="phone-ui__feature-icon phone-ui__feature-icon--purple">✨</div>
+                  <span class="phone-ui__feature-label">Create</span>
+                  <span class="phone-ui__feature-desc">Design cocktails</span>
+                </div>
+                <div class="phone-ui__feature">
+                  <div class="phone-ui__feature-icon phone-ui__feature-icon--teal">💬</div>
                   <span class="phone-ui__feature-label">Chat</span>
                   <span class="phone-ui__feature-desc">Text conversation</span>
                 </div>
@@ -100,21 +111,11 @@ const differentiators = [
                   <span class="phone-ui__feature-label">Voice</span>
                   <span class="phone-ui__feature-desc">Talk to AI</span>
                 </div>
-                <div class="phone-ui__feature">
-                  <div class="phone-ui__feature-icon phone-ui__feature-icon--coral">📷</div>
-                  <span class="phone-ui__feature-label">Scanner</span>
-                  <span class="phone-ui__feature-desc">Identify bottles</span>
-                </div>
-                <div class="phone-ui__feature">
-                  <div class="phone-ui__feature-icon phone-ui__feature-icon--pink">✨</div>
-                  <span class="phone-ui__feature-label">Create</span>
-                  <span class="phone-ui__feature-desc">Design cocktails</span>
-                </div>
               </div>
 
               <!-- Lounge Section -->
               <div class="phone-ui__lounge">
-                <span class="phone-ui__lounge-title">Lounge Essentials</span>
+                <span class="phone-ui__lounge-title">The Lounge</span>
                 <div class="phone-ui__lounge-card">
                   <div class="phone-ui__lounge-icon phone-ui__lounge-icon--gold">📚</div>
                   <div>
@@ -472,6 +473,20 @@ const differentiators = [
   .phone-ui__header-text {
     display: flex;
     flex-direction: column;
+    flex: 1;
+  }
+
+  .phone-ui__header-profile {
+    width: 30px;
+    height: 30px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1.5px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
   }
 
   .phone-ui__title {
@@ -552,10 +567,10 @@ const differentiators = [
     font-size: 16px;
   }
 
-  .phone-ui__feature-icon--purple { background: #3b82f6; }
-  .phone-ui__feature-icon--blue { background: #10b981; }
-  .phone-ui__feature-icon--coral { background: #f472b6; }
-  .phone-ui__feature-icon--pink { background: #a855f7; }
+  .phone-ui__feature-icon--orange { background: #f97316; }
+  .phone-ui__feature-icon--purple { background: #a855f7; }
+  .phone-ui__feature-icon--teal { background: #14b8a6; }
+  .phone-ui__feature-icon--blue { background: #3b82f6; }
 
   .phone-ui__feature-label {
     font-weight: 600;
