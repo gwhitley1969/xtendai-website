@@ -87,7 +87,7 @@ Your personal AI bartender that helps you discover cocktails, make smarter subst
 
 - **Chat:** Ask for cocktails, ideas, substitutions, and step-by-step help.
 - **Voice:** Real-time voice bartender conversations (hands-free).
-- **Scanner:** Use your camera to identify bottles and build “My Bar.”
+- **Scan My Bar:** Use your camera to identify bottles and build "My Bar."
 - **Create:** Build your own recipe and get AI suggestions to improve it.
 - **Share:** Share recipes with friends using simple codes/links.
 
@@ -133,7 +133,7 @@ Links: Products • About • Support • Contact • Privacy • Terms
   2) Ask the bartender  
   3) Create & refine  
   4) Share with friends
-- “Key features” grid (Chat, Voice, Scanner, Recipe Vault, Create Studio, Friends via Code)
+- “Key features” grid (Chat, Voice, Scan My Bar, Recipe Vault, Create Studio, Friends via Code)
 - Responsible use note (21+)
 
 ### 5.2 Coming Soon (future products)
