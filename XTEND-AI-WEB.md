@@ -127,7 +127,7 @@ Links: Products • About • Support • Contact • Privacy • Terms
 
 ### 5.1 My AI Bartender (featured)
 
-- Hero: name + short description + CTA (store links later)
+- Hero: name + short description + store links (App Store: https://apps.apple.com/us/app/my-ai-bartender-scan-create/id6758023541 | Google Play: https://play.google.com/store/apps/details?id=ai.mybartender.mybartenderai)
 - “How it works” (4 steps):  
   1) Build “My Bar”  
   2) Ask the bartender  
@@ -345,10 +345,10 @@ Deliverables:
 
 -----------------------------------
 
-* Support email address
+* ~~Support email address~~ — Done (support@xtend-ai.com)
 
-* Contact form destination decision (Option A/B/C)
+* ~~Contact form destination decision (Option A/B/C)~~ — Done (Option A: Azure Functions + SendGrid)
 
-* App store links (when available)
+* ~~App store links (when available)~~ — Done (App Store + Google Play live)
 
 * Screenshots for My AI Bartender (optional but recommended)
