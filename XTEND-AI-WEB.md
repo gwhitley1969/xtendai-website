@@ -18,7 +18,7 @@ Build a clean, mobile-first, high-trust corporate website that:
 - establishes credibility for a new company
 - provides a simple way to contact Xtend-AI
 
-Secondary goal: create a flexible structure to add future products (Beauty/Cosmetics, Wine connoisseur) without redesigning the site.
+Secondary goal: create a flexible structure to add future products (Clique Pix and others) without redesigning the site.
 
 ---
 
@@ -45,7 +45,7 @@ Top navigation:
 1. Home
 2. Products
    - My AI Bartender
-   - Coming Soon (Beauty/Cosmetics, Wine)
+   - Coming Soon (Clique Pix)
 3. About
 4. Support
 5. Contact
@@ -73,7 +73,7 @@ Footer should repeat primary nav + legal links.
 
 **Headline:** Built mobile-first. Powered by AI.  
 **Body:**  
-Xtend-AI creates B2C mobile apps for people who love discovering new experiences — whether that’s crafting cocktails, exploring beauty routines, or learning wine. We focus on products where AI improves the experience through conversation, scanning, and creative help — not complexity.
+Xtend-AI creates B2C mobile apps for people who love discovering new experiences — whether that’s crafting cocktails or sharing moments with friends. We focus on products where AI improves the experience through conversation, scanning, and creative help — not complexity.
 
 ---
 
@@ -110,7 +110,7 @@ Your personal AI bartender that helps you discover cocktails, make smarter subst
 
 **Headline:** More AI-enabled apps are on the way  
 **Body:**  
-We’re building new mobile experiences in **beauty/cosmetics** and **wine discovery** — designed with the same principles: excellent UX, practical AI, and user-first experiences.
+We’re building new mobile experiences like **Clique Pix** — private, event-based group photo sharing — designed with the same principles: excellent UX and user-first experiences.
 
 **CTA:** Contact Xtend-AI (or “Join updates” if email capture is added later)
 
@@ -138,8 +138,7 @@ Links: Products • About • Support • Contact • Privacy • Terms
 
 ### 5.2 Coming Soon (future products)
 
-- Beauty/Cosmetics app: 2–3 lines (placeholder)
-- Wine connoisseur app: 2–3 lines (placeholder)
+- Clique Pix: Private, event-based group photo sharing app (Flutter + Azure). Create temporary Events or persistent Circles, snap and share photos in real time, and let everything disappear when the moment's over.
 - CTA: Contact for partnership/updates
 
 ---
