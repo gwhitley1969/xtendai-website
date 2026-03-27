@@ -4,7 +4,7 @@ import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 
 const title = 'Products | Xtend-AI';
-const description = 'Explore AI-powered mobile apps from Xtend-AI. Discover My AI Bartender and upcoming experiences in beauty and wine.';
+const description = 'Explore mobile apps from Xtend-AI. Discover My AI Bartender and our upcoming photo sharing app, Clique Pix.';
 ---
 
 <BaseLayout title={title} description={description}>
@@ -61,24 +61,18 @@ const description = 'Explore AI-powered mobile apps from Xtend-AI. Discover My A
         <h2>More experiences in development</h2>
       </div>
 
-      <div class="grid grid--2">
-        <div class="card card--glow">
-          <div class="icon-circle icon-circle--coral">💄</div>
-          <h3>Beauty & Cosmetics</h3>
-          <p>
-            An AI-powered companion for beauty enthusiasts. Get personalized recommendations,
-            explore new looks, and discover products that match your style and skin type.
-          </p>
-        </div>
-
-        <div class="card card--glow">
-          <div class="icon-circle icon-circle--purple">🍷</div>
-          <h3>Wine Connoisseur</h3>
-          <p>
-            Your personal sommelier in your pocket. Discover wines, get food pairing suggestions,
-            and build your knowledge through conversational AI guidance.
-          </p>
-        </div>
+      <div class="coming-soon-card card card--glow">
+        <img
+          src="/images/cliquepix-logo.png"
+          alt="Clique Pix logo"
+          class="coming-soon-card__logo"
+        />
+        <h3>Clique Pix</h3>
+        <p>
+          Private, event-based group photo sharing. Create temporary Events or
+          persistent Circles, snap and share photos in real time, and let
+          everything disappear when the moment's over.
+        </p>
       </div>
 
       <div class="section__cta text-center">
@@ -208,5 +202,19 @@ const description = 'Explore AI-powered mobile apps from Xtend-AI. Discover My A
 
   .card h3 {
     margin-bottom: var(--space-3);
+  }
+
+  /* Coming Soon Card - single centered */
+  .coming-soon-card {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .coming-soon-card__logo {
+    display: block;
+    max-width: 160px;
+    height: auto;
+    margin: 0 auto var(--space-4);
   }
 </style>
