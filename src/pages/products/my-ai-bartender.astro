@@ -2,6 +2,8 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
+import { Image } from 'astro:assets';
+import bartenderIcon from '../../assets/my-ai-bartender-icon.png';
 
 const title = 'My AI Bartender | Xtend-AI';
 const description = 'Your personal AI bartender. Discover cocktails, make smarter substitutions, chat hands-free, and create your own recipes with AI assistance.';
@@ -53,6 +55,16 @@ const features = [
     <div class="hero__container container">
       <span class="badge badge--glow">Available Now!!!</span>
       <h1 class="hero__title">My AI <span class="text-gradient">Bartender</span></h1>
+      <div class="hero__app-icon">
+        <Image
+          src={bartenderIcon}
+          alt=""
+          width={120}
+          height={120}
+          densities={[2, 3]}
+          loading="eager"
+        />
+      </div>
       <p class="hero__subtitle">
         Your personal AI bartender that helps you discover cocktails, make smarter substitutions,
         and use what you already have.
@@ -179,6 +191,20 @@ const features = [
   .hero__title {
     font-size: clamp(2.5rem, 6vw, 4rem);
     margin: var(--space-6) 0;
+  }
+
+  .hero__app-icon {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto var(--space-6);
+  }
+
+  .hero__app-icon :global(img) {
+    width: 100%;
+    height: 100%;
+    display: block;
+    border-radius: 22%;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
   }
 
   .hero__subtitle {
