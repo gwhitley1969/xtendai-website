@@ -10,13 +10,13 @@ const features = [
   { icon: 'chat', color: 'blue', title: 'Chat', desc: 'Natural conversations with AI' },
   { icon: 'voice', color: 'green', title: 'Voice', desc: 'Hands-free interaction' },
   { icon: 'scanner', color: 'coral', title: 'Scan My Bar', desc: 'Camera-powered recognition' },
-  { icon: 'create', color: 'purple', title: 'Create', desc: 'Build your own recipes' },
+  { icon: 'create', color: 'accent', title: 'Create', desc: 'Build your own recipes' },
 ];
 
 const differentiators = [
   {
     icon: 'multimodal',
-    color: 'purple',
+    color: 'accent',
     title: 'Multi-modal by design',
     description: 'Voice + chat + camera working together seamlessly for natural interactions.'
   },
@@ -97,7 +97,7 @@ const differentiators = [
                   <span class="phone-ui__feature-desc">Identify bottles</span>
                 </div>
                 <div class="phone-ui__feature">
-                  <div class="phone-ui__feature-icon phone-ui__feature-icon--purple">✨</div>
+                  <div class="phone-ui__feature-icon phone-ui__feature-icon--accent">✨</div>
                   <span class="phone-ui__feature-label">Create</span>
                   <span class="phone-ui__feature-desc">Design cocktails</span>
                 </div>
@@ -225,7 +225,7 @@ const differentiators = [
                 </div>
               </li>
               <li>
-                <div class="icon-circle icon-circle--purple">✨</div>
+                <div class="icon-circle icon-circle--accent">✨</div>
                 <div>
                   <strong>Create</strong>
                   <span>Build your own recipe and get AI suggestions to improve it.</span>
@@ -316,7 +316,7 @@ const differentiators = [
   .hero__glow--1 {
     width: 600px;
     height: 600px;
-    background: var(--xt-purple);
+    background: var(--xt-accent);
     top: -200px;
     left: -200px;
     opacity: 0.15;
@@ -335,8 +335,8 @@ const differentiators = [
     position: absolute;
     inset: 0;
     background-image:
-      linear-gradient(rgba(139, 92, 246, 0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(139, 92, 246, 0.03) 1px, transparent 1px);
+      linear-gradient(rgba(24, 140, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(24, 140, 255, 0.03) 1px, transparent 1px);
     background-size: 60px 60px;
     mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
   }
@@ -422,7 +422,7 @@ const differentiators = [
     padding: 12px;
     box-shadow:
       0 50px 100px -20px rgba(0, 0, 0, 0.5),
-      0 0 0 1px rgba(139, 92, 246, 0.2),
+      0 0 0 1px rgba(24, 140, 255, 0.2),
       inset 0 1px 0 rgba(255, 255, 255, 0.1);
     animation: float 6s ease-in-out infinite;
   }
@@ -502,7 +502,7 @@ const differentiators = [
 
   /* AI Concierge Card */
   .phone-ui__concierge {
-    background: linear-gradient(135deg, rgba(139, 92, 246, 0.25) 0%, rgba(59, 130, 246, 0.15) 100%);
+    background: linear-gradient(135deg, rgba(24, 140, 255, 0.25) 0%, rgba(59, 130, 246, 0.15) 100%);
     border-radius: 14px;
     padding: 14px;
     display: flex;
@@ -513,7 +513,7 @@ const differentiators = [
   .phone-ui__concierge-icon {
     width: 40px;
     height: 40px;
-    background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+    background: linear-gradient(135deg, #188CFF 0%, #022A56 100%);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -568,7 +568,7 @@ const differentiators = [
   }
 
   .phone-ui__feature-icon--pink { background: #f472b6; }
-  .phone-ui__feature-icon--purple { background: #a855f7; }
+  .phone-ui__feature-icon--accent { background: #188CFF; }
   .phone-ui__feature-icon--teal { background: #14b8a6; }
   .phone-ui__feature-icon--blue { background: #3b82f6; }
 
@@ -833,7 +833,7 @@ const differentiators = [
     transform: translateX(-50%);
     width: 400px;
     height: 200px;
-    background: radial-gradient(ellipse at center, rgba(139, 92, 246, 0.2) 0%, transparent 70%);
+    background: radial-gradient(ellipse at center, rgba(24, 140, 255, 0.2) 0%, transparent 70%);
     pointer-events: none;
   }
 
@@ -855,7 +855,7 @@ const differentiators = [
   }
 
   .cta-card strong {
-    color: var(--xt-purple-light);
+    color: var(--xt-accent-light);
   }
 
   /* Float Animation */

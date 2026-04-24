@@ -1,6 +1,6 @@
 /* Xtend-AI Global Styles - Dark Theme */
 
-/* Brand Tokens - Inspired by My AI Bartender app */
+/* Brand Tokens - Xtend-AI brand palette (navy + accent blue from logo) */
 :root {
   /* Dark Background Colors */
   --xt-bg-primary: #0a0a0f;
@@ -9,9 +9,12 @@
   --xt-bg-card-hover: #222230;
   --xt-bg-elevated: #252532;
 
-  /* Accent Colors - Vibrant & Fun */
-  --xt-purple: #8b5cf6;
-  --xt-purple-light: #a78bfa;
+  /* Accent Colors - Brand blues + complementary palette */
+  --xt-accent: #188CFF;
+  --xt-accent-light: #7EC1FF;
+  --xt-navy-deep: #00052A;
+  --xt-navy: #022A56;
+  --xt-link: #0B6FE6;
   --xt-blue: #3b82f6;
   --xt-blue-light: #60a5fa;
   --xt-cyan: #22d3ee;
@@ -28,16 +31,17 @@
   --xt-navy-950: #0a0a0f;
   --xt-navy-900: #12121a;
   --xt-blue-500: #3b82f6;
-  --xt-blue-600: #8b5cf6;
+  --xt-blue-600: #188CFF;
   --xt-white: #ffffff;
 
   /* Gradients - Rich & Dynamic */
   --xt-gradient-hero: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-  --xt-gradient-purple: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --xt-gradient-blue: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  --xt-gradient-brand: linear-gradient(135deg, #022A56 0%, #188CFF 100%);
+  --xt-gradient-accent-text: linear-gradient(135deg, #188CFF 0%, #7EC1FF 100%);
+  --xt-gradient-blue: linear-gradient(135deg, #022A56 0%, #188CFF 100%);
   --xt-gradient-warm: linear-gradient(135deg, #f472b6 0%, #fbbf24 100%);
-  --xt-gradient-card: linear-gradient(145deg, rgba(139, 92, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%);
-  --xt-gradient-glow: radial-gradient(ellipse at 50% 0%, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
+  --xt-gradient-card: linear-gradient(145deg, rgba(24, 140, 255, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%);
+  --xt-gradient-glow: radial-gradient(ellipse at 50% 0%, rgba(24, 140, 255, 0.15) 0%, transparent 70%);
 
   /* Typography */
   --font-heading: 'Sora', system-ui, -apple-system, sans-serif;
@@ -113,7 +117,7 @@ p:last-child {
 }
 
 a {
-  color: var(--xt-purple-light);
+  color: var(--xt-accent-light);
   text-decoration: none;
   transition: color var(--transition-fast);
 }
@@ -171,7 +175,7 @@ li {
 }
 
 .text-gradient {
-  background: var(--xt-gradient-purple);
+  background: var(--xt-gradient-accent-text);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -209,14 +213,14 @@ li {
 }
 
 .btn--primary {
-  background: var(--xt-gradient-purple);
+  background: var(--xt-gradient-brand);
   color: var(--xt-white);
-  box-shadow: 0 4px 20px rgba(139, 92, 246, 0.4);
+  box-shadow: 0 4px 20px rgba(24, 140, 255, 0.4);
 }
 
 .btn--primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 30px rgba(139, 92, 246, 0.5);
+  box-shadow: 0 6px 30px rgba(24, 140, 255, 0.5);
   color: var(--xt-white);
 }
 
@@ -227,8 +231,8 @@ li {
 }
 
 .btn--secondary:hover {
-  border-color: var(--xt-purple);
-  background: rgba(139, 92, 246, 0.1);
+  border-color: var(--xt-accent);
+  background: rgba(24, 140, 255, 0.1);
   color: var(--xt-white);
 }
 
@@ -256,14 +260,14 @@ li {
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.5), transparent);
+  background: linear-gradient(90deg, transparent, rgba(24, 140, 255, 0.5), transparent);
   opacity: 0;
   transition: opacity var(--transition-base);
 }
 
 .card:hover {
   background: var(--xt-bg-card-hover);
-  border-color: rgba(139, 92, 246, 0.3);
+  border-color: rgba(24, 140, 255, 0.3);
   transform: translateY(-4px);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
@@ -278,7 +282,7 @@ li {
 }
 
 .card--glow:hover {
-  box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2);
+  box-shadow: 0 20px 40px rgba(24, 140, 255, 0.2);
 }
 
 /* Grid */
@@ -335,7 +339,7 @@ li {
   flex-shrink: 0;
 }
 
-.icon-circle--purple { background: var(--xt-purple); }
+.icon-circle--accent { background: var(--xt-accent); }
 .icon-circle--blue { background: var(--xt-blue); }
 .icon-circle--coral { background: var(--xt-coral); }
 .icon-circle--gold { background: var(--xt-gold); }
@@ -370,8 +374,8 @@ li {
 .form-input:focus,
 .form-textarea:focus {
   outline: none;
-  border-color: var(--xt-purple);
-  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.2);
+  border-color: var(--xt-accent);
+  box-shadow: 0 0 0 4px rgba(24, 140, 255, 0.2);
 }
 
 .form-input::placeholder,
@@ -393,9 +397,9 @@ li {
   font-size: 0.875rem;
   font-weight: 600;
   border-radius: 100px;
-  background: rgba(139, 92, 246, 0.2);
-  color: var(--xt-purple-light);
-  border: 1px solid rgba(139, 92, 246, 0.3);
+  background: rgba(24, 140, 255, 0.2);
+  color: var(--xt-accent-light);
+  border: 1px solid rgba(24, 140, 255, 0.3);
 }
 
 .badge--gold {
@@ -410,7 +414,7 @@ li {
   top: -100%;
   left: var(--space-4);
   padding: var(--space-2) var(--space-4);
-  background: var(--xt-purple);
+  background: var(--xt-accent);
   color: var(--xt-white);
   border-radius: var(--radius);
   z-index: 1000;
@@ -427,8 +431,8 @@ li {
 }
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 20px rgba(139, 92, 246, 0.4); }
-  50% { box-shadow: 0 0 40px rgba(139, 92, 246, 0.6); }
+  0%, 100% { box-shadow: 0 0 20px rgba(24, 140, 255, 0.4); }
+  50% { box-shadow: 0 0 40px rgba(24, 140, 255, 0.6); }
 }
 
 @keyframes gradient-shift {
