@@ -139,7 +139,7 @@ Links: Products • About • Support • Contact • Privacy • Terms
 
 ### 5.2 Coming Soon (future products)
 
-- Clique Pix: Private, event-based group photo sharing app (Flutter + Azure). Create temporary Events or persistent Cliques, snap and share photos in real time, and let everything disappear when the moment's over.
+- Clique Pix: Private, event-based group photo sharing app (Flutter + Azure). Create temporary Events or persistent Cliques, snap and share photos and videos in real time, and let everything disappear when the moment's over.
 - CTA: Contact for partnership/updates
 
 ---
