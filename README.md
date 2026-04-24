@@ -50,11 +50,14 @@ npm run preview
 │   ├── layouts/          # Page layouts
 │   ├── components/       # Reusable components
 │   ├── pages/            # Route pages
-│   └── styles/           # Global styles
-├── public/               # Static assets
+│   ├── styles/           # Global styles
+│   └── assets/           # Images optimized by astro:assets at build time
+├── public/               # Static assets served as-is
 ├── api/                  # Azure Functions
 └── docs/                 # Documentation
 ```
+
+Asset convention: images rendered via Astro's `<Image>` component live in `src/assets/` so the build pipeline can generate sized, format-modernized variants (WebP, density-aware `srcset`). Use `public/` only for files that must be served at a fixed URL with no processing (favicons, `robots.txt`, sitemaps, etc.).
 
 ## Deployment
 

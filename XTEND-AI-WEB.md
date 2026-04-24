@@ -127,7 +127,8 @@ Links: Products • About • Support • Contact • Privacy • Terms
 
 ### 5.1 My AI Bartender (featured)
 
-- Hero: name + short description + store links (App Store: https://apps.apple.com/us/app/my-ai-bartender-scan-create/id6758023541 | Google Play: https://play.google.com/store/apps/details?id=ai.mybartender.mybartenderai)
+- Products listing card: app icon sits beside the "My AI Bartender" heading.
+- Detail page hero: app icon + name + short description + store links (App Store: https://apps.apple.com/us/app/my-ai-bartender-scan-create/id6758023541 | Google Play: https://play.google.com/store/apps/details?id=ai.mybartender.mybartenderai)
 - “How it works” (4 steps):  
   1) Build “My Bar”  
   2) Ask the bartender  
