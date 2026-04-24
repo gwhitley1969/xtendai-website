@@ -168,10 +168,11 @@ Current locations where the My AI Bartender app icon (`src/assets/my-ai-bartende
 | Page | File | Size | Treatment |
 |---|---|---|---|
 | Home — phone mock header | `src/pages/index.astro` | 36 × 36 | 10 px `border-radius`, `overflow: hidden` clip |
+| Home — Featured Product section | `src/pages/index.astro` | 96 × 96 | 22% squircle, soft drop shadow, centered between H2 and tagline |
 | Products listing — featured card | `src/pages/products/index.astro` | 72 × 72 | 22% `border-radius` (iOS squircle), soft drop shadow, flex row with H2 |
 | Product detail — hero | `src/pages/products/my-ai-bartender.astro` | 120 × 120 | 22% squircle, soft drop shadow, centered below H1 |
 
-All three import the same source file. Astro generates per-site size/density variants and deduplicates identical outputs.
+All placements import the same source file. Astro generates per-site size/density variants and deduplicates identical outputs.
 
 ---
 
@@ -228,6 +229,22 @@ The repo doesn't run ESLint, Prettier, or `astro check` in CI. When editing file
 
 The repo root contains several untracked screenshot PNGs (`color01.png`, `old01.png`, `icon01.png`, etc.) that the product owner drops in as reference material during planning. They are not site assets and should not be committed. Git status will keep flagging them as untracked until explicitly gitignored or removed.
 
+### 8. `backdrop-filter` creates a containing block for fixed-position descendants
+
+Several CSS properties — `filter`, `transform`, `perspective`, `backdrop-filter`, `will-change`, and `contain` — make an element behave as the **containing block** for any `position: fixed` descendants, overriding the usual viewport-relative resolution. A fixed-positioned child of such an element anchors to the parent's box, not the viewport.
+
+This bit the mobile menu. `.header` has `backdrop-filter: blur(20px)` (Header.astro:103) for its glass look. Originally `.mobile-menu` was nested inside `<header>`, so its `position: fixed; top: var(--header-height); bottom: 0` coordinates resolved against the 72 px header box instead of the viewport:
+
+```
+top:    72 px from the top of the 72 px header     = y=72 in viewport
+bottom:  0 px from the bottom of the 72 px header  = y=72 in viewport
+height: 72 - 72 - 0 = 0 px
+```
+
+The menu was rendering at zero pixels tall on mobile, which is why tapping the hamburger produced the X animation and scroll lock but no visible nav items. Fix was to move `.mobile-menu` to be a DOM sibling of `<header>` (commit `3d507d2`) so it resolves against the viewport.
+
+**Rule of thumb**: any fixed-position overlay intended to cover the viewport — dialogs, drawers, modals, toasts — must be a DOM sibling of `<header>` (or live at body-root level), never a descendant. The header's `backdrop-filter` is permanent, so anything nested inside will inherit the containing-block trap.
+
 ---
 
 ## History notes
@@ -237,3 +254,5 @@ Significant implementation decisions captured here for future reference:
 - **Palette migration (commit `7496b59`)** — Site-wide swap from inherited My AI Bartender purple (`#8b5cf6` + variants) to the Xtend-AI brand blues (`#022A56` + `#188CFF`). Introduced `--xt-accent`, `--xt-accent-light`, `--xt-navy`, `--xt-navy-deep`, `--xt-link`, and `--xt-gradient-accent-text`. Renamed `--xt-gradient-purple` → `--xt-gradient-brand`. Renamed CSS class modifiers from `--purple` to `--accent` across templates.
 - **App icon integration (commits `0ec296f`, `b1526d9`, `8e1cf8c`)** — Introduced `src/assets/` as the canonical location for `<Image>`-processed images, starting with `my-ai-bartender-icon.png`. First use of `astro:assets` in the codebase.
 - **Profile avatar SVG conversion (commit `a452b4c`)** — Replaced `👤` emoji with an inline SVG person silhouette on a solid green disc, because emoji colors can't be controlled via CSS.
+- **Home Featured Product icon (commit `c594f19`)** — Added a 96 × 96 `<Image>` between the H2 and tagline in the home-page Featured Product section. 4th site-wide placement of the app icon; lazy-loaded since below the fold.
+- **Mobile menu containing-block fix (commit `3d507d2`)** — Moved `.mobile-menu` out of `<header>` so its fixed-position coordinates resolve against the viewport. The menu was previously zero-height on mobile because the header's `backdrop-filter` made it the containing block for descendant fixed elements. See Known Gotchas #8.
