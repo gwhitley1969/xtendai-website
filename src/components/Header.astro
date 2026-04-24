@@ -67,30 +67,30 @@ function isActive(href: string): boolean {
       <span class="header__toggle-bar"></span>
     </button>
   </div>
+</header>
 
-  <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
-    <nav aria-label="Mobile navigation">
-      <ul class="mobile-menu__list">
-        {navItems.map((item) => (
-          <>
+<div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+  <nav aria-label="Mobile navigation">
+    <ul class="mobile-menu__list">
+      {navItems.map((item) => (
+        <>
+          <li>
+            <a href={item.href} class="mobile-menu__link">
+              {item.label}
+            </a>
+          </li>
+          {item.dropdown && item.dropdown.map((subItem) => (
             <li>
-              <a href={item.href} class="mobile-menu__link">
-                {item.label}
+              <a href={subItem.href} class="mobile-menu__link mobile-menu__link--sub">
+                {subItem.label}
               </a>
             </li>
-            {item.dropdown && item.dropdown.map((subItem) => (
-              <li>
-                <a href={subItem.href} class="mobile-menu__link mobile-menu__link--sub">
-                  {subItem.label}
-                </a>
-              </li>
-            ))}
-          </>
-        ))}
-      </ul>
-    </nav>
-  </div>
-</header>
+          ))}
+        </>
+      ))}
+    </ul>
+  </nav>
+</div>
 
 <style>
   .header {
