@@ -208,6 +208,16 @@ const differentiators = [
         <div class="featured-product__header">
           <span class="badge">Featured Product</span>
           <h2>My AI Bartender</h2>
+          <div class="featured-product__icon">
+            <Image
+              src={bartenderIcon}
+              alt=""
+              width={96}
+              height={96}
+              densities={[2, 3]}
+              loading="lazy"
+            />
+          </div>
           <p class="featured-product__tagline">Your personal AI bartender in your pocket</p>
         </div>
 
@@ -756,6 +766,20 @@ const differentiators = [
   .featured-product__header h2 {
     margin: var(--space-4) 0 var(--space-2);
     font-size: clamp(2rem, 5vw, 3rem);
+  }
+
+  .featured-product__icon {
+    width: 96px;
+    height: 96px;
+    margin: var(--space-3) auto var(--space-2);
+  }
+
+  .featured-product__icon :global(img) {
+    width: 100%;
+    height: 100%;
+    display: block;
+    border-radius: 22%;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
   }
 
   .featured-product__tagline {
