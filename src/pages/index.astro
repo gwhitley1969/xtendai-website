@@ -2,6 +2,8 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { Image } from 'astro:assets';
+import bartenderIcon from '../assets/my-ai-bartender-icon.png';
 
 const title = 'Xtend-AI | AI-Powered Mobile Apps That Feel Personal';
 const description = 'Xtend-AI creates AI companion apps that extend what you can do — helping users discover, create, and share in the real world through friendly, capable mobile experiences.';
@@ -72,7 +74,16 @@ const differentiators = [
             <div class="phone-ui">
               <!-- App Header -->
               <div class="phone-ui__header">
-                <div class="phone-ui__header-icon">🍸</div>
+                <div class="phone-ui__header-icon">
+                  <Image
+                    src={bartenderIcon}
+                    alt=""
+                    width={36}
+                    height={36}
+                    densities={[2, 3]}
+                    loading="eager"
+                  />
+                </div>
                 <div class="phone-ui__header-text">
                   <span class="phone-ui__title">My AI Bartender</span>
                   <span class="phone-ui__subtitle">Premium mixology experience</span>
@@ -462,12 +473,16 @@ const differentiators = [
   .phone-ui__header-icon {
     width: 36px;
     height: 36px;
-    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
     border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .phone-ui__header-icon :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
   }
 
   .phone-ui__header-text {
