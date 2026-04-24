@@ -97,3 +97,11 @@ The contact form API is located at `api/contact/index.js` and sends emails using
 
 - **Production**: https://www.xtend-ai.com
 - **Azure SWA**: https://gentle-sea-0d684ea10.2.azurestaticapps.net
+
+## Documentation
+
+- `XTEND-AI-WEB.md` — product brief: positioning, sitemap, page content, brand spec
+- `docs/IMPLEMENTATION.md` — engineering reference: design tokens, asset pipeline, Astro patterns, deployment quirks
+- `XTEND-AI_WEB_BRIEF.md` — original brand-asset handoff notes
+- `PRIVACY_POLICY.md` — privacy policy content
+- `services.md` — My AI Bartender terms of service content
