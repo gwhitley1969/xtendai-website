@@ -1,4 +1,7 @@
 ---
+import { Image } from 'astro:assets';
+import logo from '../assets/xtend-ai-logo-white.png';
+
 const currentPath = Astro.url.pathname;
 
 const navItems = [
@@ -33,7 +36,11 @@ function isActive(href: string): boolean {
 <header class="header">
   <div class="header__container container">
     <a href="/" class="header__logo" aria-label="Xtend-AI Home">
-      <img src="/images/Xtend-AI_logo_primary_white.png" alt="Xtend-AI" width="220" height="60">
+      {/* The source is a 1024×1024 square; the old 220×60 attrs were wrong
+          and CSS height:48px was rendering it 48×48 anyway. Serving the
+          same square through <Image> drops it from a 775 KB PNG — the
+          site-wide mobile LCP blocker — to a ~2 KB WebP. */}
+      <Image src={logo} alt="Xtend-AI" width={48} height={48} densities={[2, 3]} loading="eager" />
       <span class="header__tagline">Web, mobile, and the cloud beneath</span>
     </a>
 
@@ -105,7 +112,9 @@ function isActive(href: string): boolean {
     gap: var(--space-3);
   }
 
-  .header__logo img {
+  /* <Image> emits the img from a component, so the scoped selector needs
+     :global() to reach it (docs/IMPLEMENTATION.md, Astro Patterns). */
+  .header__logo :global(img) {
     height: 48px;
     width: auto;
   }

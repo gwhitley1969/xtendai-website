@@ -1,4 +1,7 @@
 ---
+import { Image } from 'astro:assets';
+import logo from '../assets/xtend-ai-logo-white.png';
+
 const currentYear = new Date().getFullYear();
 
 const navLinks = [
@@ -21,7 +24,7 @@ const legalLinks = [
     <div class="footer__top">
       <div class="footer__brand">
         <a href="/" class="footer__logo" aria-label="Xtend-AI Home">
-          <img src="/images/Xtend-AI_logo_primary_white.png" alt="Xtend-AI" width="200" height="54">
+          <Image src={logo} alt="Xtend-AI" width={32} height={32} densities={[2, 3]} loading="lazy" />
         </a>
         <p class="footer__tagline">Web, mobile, and the cloud beneath</p>
       </div>
@@ -96,7 +99,7 @@ const legalLinks = [
     max-width: 300px;
   }
 
-  .footer__logo img {
+  .footer__logo :global(img) {
     height: 32px;
     width: auto;
   }
