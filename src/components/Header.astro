@@ -9,9 +9,24 @@ const navItems = [
   { label: 'Contact', href: '/contact' }
 ];
 
+/**
+ * Nav section that owns a URL which is not itself a nav destination.
+ * Product detail pages live under /products but are reached from Work,
+ * so Work stays lit while a visitor reads one. Without this the header
+ * shows no active item at all on those pages.
+ */
+const navSectionFor: Record<string, string> = {
+  '/products': '/work'
+};
+
 function isActive(href: string): boolean {
   if (href === '/') return currentPath === '/';
-  return currentPath.startsWith(href);
+  if (currentPath.startsWith(href)) return true;
+
+  const owningPrefix = Object.keys(navSectionFor).find((prefix) =>
+    currentPath.startsWith(prefix)
+  );
+  return owningPrefix !== undefined && navSectionFor[owningPrefix] === href;
 }
 ---
 
@@ -51,7 +66,11 @@ function isActive(href: string): boolean {
     <ul class="mobile-menu__list">
       {navItems.map((item) => (
         <li>
-          <a href={item.href} class="mobile-menu__link">
+          <a
+            href={item.href}
+            class={`mobile-menu__link ${isActive(item.href) ? 'mobile-menu__link--active' : ''}`}
+            aria-current={isActive(item.href) ? 'page' : undefined}
+          >
             {item.label}
           </a>
         </li>
@@ -233,6 +252,10 @@ function isActive(href: string): boolean {
     font-weight: 500;
     text-decoration: none;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .mobile-menu__link--active {
+    color: var(--xt-accent-light);
   }
 
   .mobile-menu__link:hover {
