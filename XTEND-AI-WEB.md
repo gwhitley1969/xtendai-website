@@ -312,8 +312,10 @@ Links to `/products/my-ai-bartender`.
 
 **CLIQUE Pix** — live.
 Private, event-based group photo sharing. Create temporary Events or persistent Cliques, snap and share photos and videos in real time, and let everything disappear when the moment is over.
-Store links: **OWNER TO PROVIDE** — App Store and Google Play URLs.
+Store links: [App Store](https://apps.apple.com/us/app/clique-pix-group-pic-sharing/id6766294274) • [Google Play](https://play.google.com/store/apps/details?id=com.cliquepix.clique_pix)
 Links to `/products/clique-pix`.
+
+> **Store URL rule.** Always link the canonical listing form — `play.google.com/store/apps/details?id=<package>` and `apps.apple.com/.../id<numeric>`. Never a `store/search?q=` URL: Play search returns whatever ranks that day (including competitors) and cannot deep-link into the Play app. CLIQUE Pix is package `com.cliquepix.clique_pix` / Apple ID `6766294274`; My AI Bartender is `ai.mybartender.mybartenderai` / `6758023541`.
 
 > **Spelling:** it is **CLIQUE Pix** — capital CLIQUE, capital P, lowercase ix. The site currently says "Clique Pix" in several places; all of them are stale.
 
@@ -323,7 +325,9 @@ Links to `/products/clique-pix`.
 
 ### 7.1 My AI Bartender — `/products/my-ai-bartender`
 
-Live and unchanged. Keep the existing structure: hero with app icon, name, short description, and store links; "How it works" in four steps; "Key features" grid; responsible-use note (21+). URL must not move — it is linked from both live store listings.
+Live. Keep the existing structure: hero with app icon, name, short description, and store links; "How it works" in four steps; "Key features" grid; responsible-use note (21+). URL must not move — it is linked from both live store listings.
+
+Two stale strings were corrected during the repositioning: the closing CTA said *"Join the waitlist to be notified when My AI Bartender launches"* on a page that also carried an "Available Now" badge and links to both live stores, and the badge itself read "Available Now!!!". Both are fixed.
 
 ### 7.2 CLIQUE Pix — `/products/clique-pix` — NEW
 
@@ -332,9 +336,9 @@ Parity with My AI Bartender.
 - Hero: app icon + name + short description + store links
 - What it does: temporary Events and persistent Cliques; real-time photo and video sharing; content disappears when the moment is over
 - Built with Flutter and Azure
-- Store links: **OWNER TO PROVIDE**
+- Store links: as recorded in §6.2
 
-**Icon asset:** use `CLIQUE_Pix/play_app_icon_512x512.png`, copied into `src/assets/clique-pix-icon.png` and rendered with `<Image>` at the same sizes and 22% squircle radius as the My AI Bartender icon. The existing `public/images/cliquepix-logo.png` is the same artwork served unprocessed and should be retired once the `<Image>` version is in place. The other files in `CLIQUE_Pix/` are the same mark at lower resolution or with a baked-in light background — unusable on a dark theme.
+**Icon asset:** ~~use `CLIQUE_Pix/play_app_icon_512x512.png`~~ — Done. Copied to `src/assets/clique-pix-icon.png` and rendered with `<Image>` at the same sizes and 22% squircle radius as the My AI Bartender icon. `public/images/cliquepix-logo.png` was the same artwork served unprocessed and has been deleted. The other files in `CLIQUE_Pix/` are the same mark at lower resolution or with a baked-in light background — unusable on a dark theme.
 
 > The "Coming Soon (Clique Pix)" framing everywhere on the site is now false. CLIQUE Pix has shipped.
 
@@ -594,7 +598,7 @@ Deliverables:
 * ~~Client naming consent~~ — Done (Needle Girlie may be named)
 * ~~§1 — positioning statement~~ — Done (architecture-led, approved)
 * ~~§2 — tagline~~ — Done ("Web, mobile, and the cloud beneath")
-* **§6.2, §7.2 — CLIQUE Pix App Store and Google Play URLs**
+* ~~§6.2, §7.2 — CLIQUE Pix App Store and Google Play URLs~~ — Done (canonical listing URLs recorded in §6.2)
 * **§8 — confirm the founder's name spelling**
 * **§6.1 — one or two sentences on the problem the Needle Girlie engagement solves**
 * **§9 — CLIQUE Pix FAQ entries**
