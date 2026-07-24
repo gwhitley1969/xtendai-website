@@ -232,13 +232,20 @@ function isActive(href: string): boolean {
     background: var(--xt-bg-primary);
     padding: var(--space-4);
     transform: translateX(100%);
-    transition: transform var(--transition-base);
+    /* visibility keeps the closed menu's links out of tab order — an
+       aria-hidden container must not hold focusable content. The 0s
+       visibility transition is delayed until the slide-out finishes so
+       the closing animation stays visible. */
+    visibility: hidden;
+    transition: transform var(--transition-base), visibility 0s linear var(--transition-base);
     overflow-y: auto;
     z-index: 99;
   }
 
   .mobile-menu[aria-hidden="false"] {
     transform: translateX(0);
+    visibility: visible;
+    transition: transform var(--transition-base);
   }
 
   @media (min-width: 900px) {

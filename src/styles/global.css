@@ -48,7 +48,11 @@
   /* Text Colors */
   --xt-text-primary: #ffffff;
   --xt-text-secondary: #a1a1aa;
-  --xt-text-muted: #71717a;
+  /* Muted was #71717a, which is 3.85:1 against --xt-bg-secondary — a WCAG
+     AA failure for the small text it's used on (footer, captions, labels).
+     #8a8a94 clears 4.5:1 on every surface muted text sits on while staying
+     visibly quieter than --xt-text-secondary. */
+  --xt-text-muted: #8a8a94;
 
   /* Legacy colors for compatibility */
   --xt-navy-950: #0a0a0f;
