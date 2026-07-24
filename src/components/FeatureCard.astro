@@ -3,11 +3,32 @@ interface Props {
   title: string;
   description: string;
   icon?: string;
+  /**
+   * `center` suits short, glanceable copy (home-page teasers).
+   * `start` suits a full paragraph — centred text becomes hard to
+   * track past about two lines.
+   */
+  align?: 'center' | 'start';
 }
 
-const { title, description, icon = 'default' } = Astro.props;
+const { title, description, icon = 'default', align = 'center' } = Astro.props;
 
 const icons: Record<string, string> = {
+  web: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="6" y="10" width="36" height="28" rx="4" stroke="currentColor" stroke-width="2"/>
+    <path d="M6 19H42" stroke="currentColor" stroke-width="2"/>
+    <circle cx="12" cy="14.5" r="1.5" fill="currentColor"/>
+    <circle cx="17" cy="14.5" r="1.5" fill="currentColor"/>
+    <circle cx="22" cy="14.5" r="1.5" fill="currentColor"/>
+  </svg>`,
+  mobile: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="14" y="6" width="20" height="36" rx="4" stroke="currentColor" stroke-width="2"/>
+    <path d="M21 11H27" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="24" cy="36" r="1.5" fill="currentColor"/>
+  </svg>`,
+  cloud: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M35 34H14C9.58 34 6 30.42 6 26C6 22.06 8.85 18.79 12.6 18.13C13.74 12.93 18.42 9 24 9C30.08 9 35.11 13.63 35.87 19.6C39.36 20.35 42 23.42 42 27.1C42 30.91 38.81 34 35 34Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+  </svg>`,
   multimodal: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
     <circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="2"/>
     <circle cx="16" cy="20" r="4" stroke="currentColor" stroke-width="2"/>
@@ -65,7 +86,7 @@ const icons: Record<string, string> = {
 };
 ---
 
-<div class="feature-card card">
+<div class:list={['feature-card', 'card', `feature-card--${align}`]}>
   <div class="feature-card__icon" set:html={icons[icon] || icons.default} />
   <h3 class="feature-card__title">{title}</h3>
   <p class="feature-card__description">{description}</p>
@@ -73,15 +94,27 @@ const icons: Record<string, string> = {
 
 <style>
   .feature-card {
-    text-align: center;
     padding: var(--space-8);
+  }
+
+  .feature-card--center {
+    text-align: center;
+  }
+
+  .feature-card--start {
+    text-align: left;
   }
 
   .feature-card__icon {
     width: 48px;
     height: 48px;
-    margin: 0 auto var(--space-4);
-    color: var(--xt-blue-600);
+    margin: 0 0 var(--space-4);
+    color: var(--xt-accent);
+  }
+
+  .feature-card--center .feature-card__icon {
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .feature-card__icon :global(svg) {
@@ -91,14 +124,14 @@ const icons: Record<string, string> = {
 
   .feature-card__title {
     font-size: 1.125rem;
-    margin-bottom: var(--space-2);
-    color: var(--xt-navy-900);
+    margin-bottom: var(--space-3);
+    color: var(--xt-text-primary);
   }
 
   .feature-card__description {
     font-size: 0.9375rem;
-    color: var(--xt-navy-900);
-    opacity: 0.8;
+    line-height: 1.7;
+    color: var(--xt-text-secondary);
     margin: 0;
   }
 </style>
