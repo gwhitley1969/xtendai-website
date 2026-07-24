@@ -83,5 +83,22 @@ async function makeWordmarkWhite() {
   await saveRaw(data, info, 'src/assets/xtend-ai-wordmark-white.png');
 }
 
+/**
+ * Watermark: the reverse mark upscaled to 1024 wide with a slight blur.
+ * The site-wide watermark renders at up to ~min(90vw, 97vh); the 431px
+ * source's hard binary-alpha edges stair-step visibly at that scale, and
+ * the blur bakes in a soft edge that survives further browser upscaling.
+ * Must run after makeMarkReverse() — it reads that output.
+ */
+async function makeWatermark() {
+  await sharp('src/assets/xtend-ai-mark-reverse.png')
+    .resize({ width: 1024 })
+    .blur(1.2)
+    .png()
+    .toFile('src/assets/xtend-ai-mark-watermark.png');
+  console.log('wrote src/assets/xtend-ai-mark-watermark.png (1024w, softened)');
+}
+
 await makeMarkReverse();
 await makeWordmarkWhite();
+await makeWatermark();

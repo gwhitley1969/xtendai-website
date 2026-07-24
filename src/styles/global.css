@@ -93,6 +93,9 @@
   --radius-lg: 20px;
   --radius-xl: 28px;
 
+  /* Site-wide brand watermark strength (see .site-watermark) */
+  --xt-watermark-opacity: 0.06;
+
   /* Transitions */
   --transition-fast: 150ms ease;
   --transition-base: 250ms ease;
@@ -461,6 +464,30 @@ li {
   color: var(--xt-white);
   border-radius: var(--radius);
   z-index: 1000;
+}
+
+/* Site-wide brand watermark — the reverse X mark, fixed and centered so
+   every page scrolls over it like a letterhead. Rendered in
+   BaseLayout.astro. It sits ABOVE section backgrounds (which are opaque
+   and would otherwise swallow it) but below the header (100), mobile
+   menu (99), and skip link (1000); at 6% on a site with no dark text
+   this is visually identical to sitting behind the content. */
+.site-watermark {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 90;
+}
+
+.site-watermark img {
+  /* ~90% of the viewport's limiting dimension; 97vh × the mark's
+     431:399 aspect keeps the height within 90vh. */
+  width: min(90vw, 97vh);
+  height: auto;
+  opacity: var(--xt-watermark-opacity);
 }
 
 .skip-link:focus {

@@ -1,4 +1,7 @@
 ---
+import { Image } from 'astro:assets';
+import xtendWatermark from '../assets/xtend-ai-mark-watermark.png';
+
 interface Props {
   title: string;
   description: string;
@@ -75,6 +78,14 @@ const organizationSchema = {
 </head>
 <body>
   <a href="#main" class="skip-link">Skip to main content</a>
+
+  {/* Letterhead watermark on every page — styles in global.css
+      (.site-watermark). Dedicated softened 1024px asset: the raw mark's
+      hard edges stair-step when CSS scales it to ~90% of the viewport.
+      srcset lets phones take the small variant. */}
+  <div class="site-watermark" aria-hidden="true">
+    <Image src={xtendWatermark} alt="" widths={[512, 1024]} sizes="min(90vw, 97vh)" loading="eager" />
+  </div>
 
   <slot name="header" />
 
