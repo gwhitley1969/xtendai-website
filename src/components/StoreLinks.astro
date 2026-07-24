@@ -1,0 +1,69 @@
+---
+/**
+ * App Store + Google Play buttons.
+ *
+ * Shared because three pages render them (Work, and each product detail
+ * page) and hand-copied SVG paths drift. `appName` is only used to build
+ * distinct accessible labels — two pages render two pairs of these, and
+ * "Download on the App Store" twice tells a screen-reader user nothing
+ * about which app they are downloading.
+ */
+interface Props {
+  appStore: string;
+  googlePlay: string;
+  appName: string;
+  size?: 'default' | 'large';
+}
+
+const { appStore, googlePlay, appName, size = 'default' } = Astro.props;
+const sizeClass = size === 'large' ? 'btn--large' : '';
+---
+
+<div class="store-links">
+  <a
+    href={appStore}
+    class:list={['btn', 'btn--primary', sizeClass, 'store-links__btn']}
+    aria-label={`Download ${appName} on the App Store`}
+  >
+    <svg width="20" height="24" viewBox="0 0 20 24" fill="currentColor" aria-hidden="true">
+      <path d="M16.5 12.5c0-2.8 2.3-4.2 2.4-4.3-1.3-1.9-3.3-2.2-4-2.2-1.7-.2-3.4 1-4.3 1s-2.2-1-3.6-1c-1.9 0-3.6 1.1-4.5 2.8-1.9 3.3-.5 8.3 1.4 11 .9 1.3 2 2.8 3.5 2.7 1.4-.1 1.9-.9 3.6-.9s2.1.9 3.6.9c1.5 0 2.4-1.3 3.3-2.7 1-1.5 1.5-3 1.5-3.1-.1 0-2.9-1.1-2.9-4.2zM13.8 4.3c.8-.9 1.3-2.2 1.1-3.5-1.1 0-2.5.8-3.3 1.7-.7.8-1.3 2.1-1.2 3.4 1.3.1 2.6-.6 3.4-1.6z"/>
+    </svg>
+    App Store
+  </a>
+  <a
+    href={googlePlay}
+    class:list={['btn', 'btn--secondary', sizeClass, 'store-links__btn']}
+    aria-label={`Get ${appName} on Google Play`}
+  >
+    <svg width="20" height="22" viewBox="0 0 20 22" fill="currentColor" aria-hidden="true">
+      <path d="M1 1.4L12.4 11 1 20.6V1.4zM14.3 11l4.7 4.2-4.7 4.2-2.8-2.5 2.8-5.9zm-2.8-5.9L14.3 11l-2.8 5.9L1.7 11l9.8-5.9zM1 .2c-.3.2-.5.5-.5.9v19.8c0 .4.2.7.5.9l11.5-10.3L1 .2z"/>
+    </svg>
+    Google Play
+  </a>
+</div>
+
+<style>
+  .store-links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    align-items: stretch;
+  }
+
+  @media (min-width: 540px) {
+    .store-links {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+  }
+
+  .store-links__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .store-links__btn svg {
+    flex-shrink: 0;
+  }
+</style>
