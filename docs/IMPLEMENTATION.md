@@ -217,7 +217,9 @@ The brand PNGs in `public/images/` use navy ink drawn for white surfaces — inv
 | Product detail — hero | `products/my-ai-bartender.astro` | bartender | 120 × 120 | 22% squircle, centered below H1 |
 | Product detail — hero | `products/clique-pix.astro` | CLIQUE Pix | 120 × 120 | 22% squircle, centered below H1 |
 
-All placements go through `<Image>` with `densities={[2, 3]}` (except the watermark — a 6% opacity ghost needs no retina variants). Astro generates per-site size/density variants and deduplicates identical outputs. In the header and footer the mark and wordmark are sized by **separate wrapper-scoped `:global(img)` selectors** — a shared `.header__logo :global(img)` rule would force both images to one height.
+All placements go through `<Image>` with `densities={[2, 3]}` (except the watermark — a 6% opacity ghost needs no retina variants). Astro generates per-site size/density variants and deduplicates identical outputs.
+
+> On desktop the hero watermark is the page's **LCP element** (largest painted area beats the `<h1>` text block). Verified harmless 2026-07-24: ~20 KB WebP, paints ≈ 150 ms unthrottled, desktop Lighthouse LCP 0.4 s / performance 100. Mobile never fetches it, so mobile LCP is untouched. If desktop LCP ever regresses, look here first. In the header and footer the mark and wordmark are sized by **separate wrapper-scoped `:global(img)` selectors** — a shared `.header__logo :global(img)` rule would force both images to one height.
 
 > The header logo previously shipped as a **775 KB PNG served raw from `public/images/`** — the site-wide mobile LCP element (simulated 5.4 s on slow 4G) — and then as a 1024² opaque "white chip" whose baked-in background made the lockup illegible at 48 px on the dark bar. If a redesigned logo asset arrives, it goes in `src/assets/`, never `public/`, and gets a reverse variant via the script above.
 
