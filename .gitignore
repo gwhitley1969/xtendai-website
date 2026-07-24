@@ -27,3 +27,6 @@ yarn-error.log*
 
 # Local Azure Functions
 api/local.settings.json
+
+# Claude Code machine-local settings (CLAUDE.md itself is tracked)
+.claude/settings.local.json
