@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
-import logo from '../assets/xtend-ai-logo-white.png';
+import mark from '../assets/xtend-ai-mark-reverse.png';
+import wordmark from '../assets/xtend-ai-wordmark-white.png';
 
 const currentYear = new Date().getFullYear();
 
@@ -24,7 +25,12 @@ const legalLinks = [
     <div class="footer__top">
       <div class="footer__brand">
         <a href="/" class="footer__logo" aria-label="Xtend-AI Home">
-          <Image src={logo} alt="Xtend-AI" width={32} height={32} densities={[2, 3]} loading="lazy" />
+          <span class="footer__mark">
+            <Image src={mark} alt="" width={30} densities={[2, 3]} loading="lazy" />
+          </span>
+          <span class="footer__wordmark">
+            <Image src={wordmark} alt="" width={99} densities={[2, 3]} loading="lazy" />
+          </span>
         </a>
         <p class="footer__tagline">Web, mobile, and the cloud beneath</p>
       </div>
@@ -99,8 +105,23 @@ const legalLinks = [
     max-width: 300px;
   }
 
-  .footer__logo :global(img) {
-    height: 32px;
+  .footer__logo {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  /* Sized separately — a shared :global(img) rule would force the mark
+     and wordmark to one height. */
+  .footer__mark :global(img) {
+    display: block;
+    height: 28px;
+    width: auto;
+  }
+
+  .footer__wordmark :global(img) {
+    display: block;
+    height: 18px;
     width: auto;
   }
 

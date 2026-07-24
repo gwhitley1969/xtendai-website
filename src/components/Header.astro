@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
-import logo from '../assets/xtend-ai-logo-white.png';
+import mark from '../assets/xtend-ai-mark-reverse.png';
+import wordmark from '../assets/xtend-ai-wordmark-white.png';
 
 const currentPath = Astro.url.pathname;
 
@@ -36,12 +37,17 @@ function isActive(href: string): boolean {
 <header class="header">
   <div class="header__container container">
     <a href="/" class="header__logo" aria-label="Xtend-AI Home">
-      {/* The source is a 1024×1024 square; the old 220×60 attrs were wrong
-          and CSS height:48px was rendering it 48×48 anyway. Serving the
-          same square through <Image> drops it from a 775 KB PNG — the
-          site-wide mobile LCP blocker — to a ~2 KB WebP. */}
-      <Image src={logo} alt="Xtend-AI" width={48} height={48} densities={[2, 3]} loading="eager" />
-      <span class="header__tagline">Web, mobile, and the cloud beneath</span>
+      {/* Reverse (dark-surface) assets from scripts/make-reverse-logo.mjs.
+          alt="" on both — the anchor's aria-label is the accessible name. */}
+      <span class="header__mark">
+        <Image src={mark} alt="" width={48} densities={[2, 3]} loading="eager" />
+      </span>
+      <span class="header__lockup">
+        <span class="header__wordmark">
+          <Image src={wordmark} alt="" width={121} densities={[2, 3]} loading="eager" />
+        </span>
+        <span class="header__tagline">Web, mobile, and the cloud beneath</span>
+      </span>
     </a>
 
     <nav class="header__nav" aria-label="Main navigation">
@@ -112,15 +118,31 @@ function isActive(href: string): boolean {
     gap: var(--space-3);
   }
 
-  /* <Image> emits the img from a component, so the scoped selector needs
-     :global() to reach it (docs/IMPLEMENTATION.md, Astro Patterns). */
-  .header__logo :global(img) {
-    height: 48px;
+  /* <Image> emits the img from a component, so the scoped selectors need
+     :global() to reach it (docs/IMPLEMENTATION.md, Astro Patterns).
+     Mark and wordmark are sized separately — a shared .header__logo
+     :global(img) rule would force both to one height. */
+  .header__mark :global(img) {
+    display: block;
+    height: 40px;
+    width: auto;
+  }
+
+  .header__lockup {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .header__wordmark :global(img) {
+    display: block;
+    height: 20px;
     width: auto;
   }
 
   .header__tagline {
     font-size: 0.65rem;
+    line-height: 1.2;
     color: #ffffff;
     font-weight: 700;
     white-space: nowrap;
@@ -128,6 +150,14 @@ function isActive(href: string): boolean {
   }
 
   @media (min-width: 768px) {
+    .header__mark :global(img) {
+      height: 44px;
+    }
+
+    .header__wordmark :global(img) {
+      height: 22px;
+    }
+
     .header__tagline {
       font-size: 0.85rem;
     }
