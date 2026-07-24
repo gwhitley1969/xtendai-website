@@ -7,6 +7,16 @@
     {
       "route": "/api/*",
       "allowedRoles": ["anonymous"]
+    },
+    {
+      "route": "/products",
+      "redirect": "/work",
+      "statusCode": 301
+    },
+    {
+      "route": "/products/",
+      "redirect": "/work",
+      "statusCode": 301
     }
   ],
   "globalHeaders": {
