@@ -134,7 +134,7 @@ Density conventions for fixed-size UI chrome:
 - `densities={[2, 3]}` generates 2× and 3× variants — browsers pick from `srcset` based on device DPR.
 - `loading="eager"` for above-the-fold elements; omit (Astro's default `lazy`) for below-the-fold.
 
-Astro deduplicates output files by size+hash, so identical variants across multiple import sites share one generated file. Confirmed during the products-listing icon addition: 72 px (1x on products listing) reused the 72 px variant that had been generated as 2x for the home-page icon.
+Astro deduplicates output files by size+hash, so identical variants across multiple import sites share one generated file. Confirmed during the products-listing icon addition (page since retired — `/products` now 301s to `/work`): a 72 px 1x variant reused the 72 px file that had been generated as 2x for the home-page icon. The same dedup applies to today's call sites — e.g. the 72 px icons on `/work` share variants with the product detail heroes.
 
 ### `public/` — files served at a fixed URL with no processing
 
@@ -162,7 +162,7 @@ Astro scopes `<style>` blocks by adding a `data-astro-cid-<hash>` attribute to e
 }
 ```
 
-`:global()` opts the `img` selector out of scoping. Used for all three app-icon call sites (home phone mock, product detail hero, products-listing card).
+`:global()` opts the `img` selector out of scoping. Used at every `<Image>` call site — the header and footer logo, the home phone mock, the `/work` app cards, and both product detail heroes (see the Icon Placement Map).
 
 ### Scoped inline SVG — no `:global()` needed
 
