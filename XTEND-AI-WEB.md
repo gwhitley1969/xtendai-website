@@ -354,7 +354,9 @@ Rewritten. For a services buyer the founder's credentials **are** the credibilit
 - **H1:** About Xtend-AI
 - **Lead paragraph:** the approved positioning statement, once §1 is decided.
 - **Company paragraph:** Xtend-AI, LLC is a small studio based between Charlotte and Harrisburg, North Carolina. We design and build websites, mobile apps, and the Azure infrastructure that runs them, for client companies — and we build and ship our own consumer apps on the same stack.
-- **Founder paragraph:** Xtend-AI was founded by **Gene Whitley** *(owner to confirm spelling — inferred from repository authorship, not supplied in writing)*, a solutions architect with roughly thirty years in enterprise infrastructure and cloud architecture. Microsoft Azure certified: AZ-305 Solutions Architect Expert, AZ-104, AZ-700, AZ-900. Formerly an IBM Certified Architect Level 2 (Expert) and an Open Group Certified Master Architect. Contributing author on five published technical books.
+- **Founder paragraph:** Xtend-AI was founded by **Gene Whitley** (spelling confirmed by the owner), a solutions architect with roughly thirty years in enterprise infrastructure and cloud architecture. Microsoft Azure certified: AZ-305 Solutions Architect Expert, AZ-104, AZ-700, AZ-900. Formerly an IBM Certified Architect Level 2 (Expert) and an Open Group Certified Master Architect. Contributing author on five published technical books.
+
+- **Certification list.** The page renders the certifications as a labelled list. Exam codes are expanded to their standard Microsoft certification titles — AZ-104 Azure Administrator Associate, AZ-700 Azure Network Engineer Associate, AZ-900 Azure Fundamentals — because a business owner does not read exam codes. These are the canonical titles for those exams, not new claims; correct them here if any is wrong and the page follows.
 - **The point of that paragraph, stated plainly:** when you hire Xtend-AI you are working with the person who designs the system and writes the code. There is no account manager and no handoff.
 
 ### Values (revised)
@@ -381,7 +383,8 @@ Rationale: a prospective client who lands here by accident must not conclude tha
 
 - Support email: `support@xtend-ai.com`
 - Response time: 24–48 hours
-- FAQ: existing My AI Bartender entries stay. **OWNER TO PROVIDE** CLIQUE Pix FAQ entries — do not invent app behavior, pricing, or platform support for CLIQUE Pix.
+- FAQ: existing My AI Bartender entries stay, now under a "My AI Bartender" sub-heading — with two apps live, unlabelled FAQs read as if they apply to both. A closing note routes CLIQUE Pix questions to the support address until entries exist. **OWNER TO PROVIDE** CLIQUE Pix FAQ entries — do not invent app behavior, pricing, or platform support for CLIQUE Pix.
+- The email-support card no longer refers to "our support team". A one-person studio saying *team* contradicts the "small, senior, direct — no account manager" claim the rest of the site makes.
 
 ---
 
@@ -406,6 +409,10 @@ The interest value must reach the inbox **in the email subject line**, so a lead
 and must also appear as a row in the email body. Wired through `api/contact/index.js`.
 
 **Backwards compatibility:** the Azure Function must keep accepting a payload with no `interest` field. A visitor with the old page cached mid-session must not get an error.
+
+**Implementation notes.** The option strings live in two places — the `interests` array in `src/pages/contact.astro` and the `INTERESTS` allow-list in `api/contact/index.js` — and must stay in step. The Function puts a value into the subject line only if it is on the allow-list; anything else is treated as absent and falls back to the previous subject, which covers both a malformed payload and the cached-page case with one rule, and means submitted text can never be echoed into a mail header.
+
+Submitted fields are HTML-escaped before being interpolated into the email's HTML part. They were not previously, which let a sender put working markup into an inbox. The plain-text part is left unescaped, as it should be.
 
 ---
 
@@ -602,7 +609,7 @@ Deliverables:
 * ~~§1 — positioning statement~~ — Done (architecture-led, approved)
 * ~~§2 — tagline~~ — Done ("Web, mobile, and the cloud beneath")
 * ~~§6.2, §7.2 — CLIQUE Pix App Store and Google Play URLs~~ — Done (canonical listing URLs recorded in §6.2)
-* **§8 — confirm the founder's name spelling**
+* ~~§8 — confirm the founder's name spelling~~ — Done (Gene Whitley)
 * **§6.1 — one or two sentences on the problem the Needle Girlie engagement solves**
 * **§9 — CLIQUE Pix FAQ entries**
 * §4.1 — hero visual decision (keep phone mock / add browser frame / replace)
