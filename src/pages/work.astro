@@ -33,22 +33,31 @@ const engagements = [
   }
 ];
 
+/**
+ * `web` is null rather than absent so both entries share one shape —
+ * otherwise the inferred union type makes `app.web` an error on the
+ * member that lacks the key.
+ */
 const apps = [
   {
     name: 'My AI Bartender',
     icon: bartenderIcon,
+    status: 'Live on iOS and Android',
     summary: 'Discover cocktails, make smarter substitutions, and use what you already have. Chat, voice, camera-based bottle scanning, and recipe creation.',
     href: '/products/my-ai-bartender',
     appStore: 'https://apps.apple.com/us/app/my-ai-bartender-scan-create/id6758023541',
-    googlePlay: 'https://play.google.com/store/apps/details?id=ai.mybartender.mybartenderai'
+    googlePlay: 'https://play.google.com/store/apps/details?id=ai.mybartender.mybartenderai',
+    web: null
   },
   {
     name: 'CLIQUE Pix',
     icon: cliquePixIcon,
-    summary: 'Private, event-based group photo sharing. Create temporary Events or persistent Cliques, snap and share photos and videos in real time, and let everything disappear when the moment is over.',
+    status: 'Live on iOS, Android, and the web',
+    summary: 'Private, event-based group photo sharing. Create temporary Events or persistent Cliques, snap and share photos and videos in real time, and let everything disappear when the moment is over. One Azure backend serves the mobile apps and a web client on Azure Static Web Apps.',
     href: '/products/clique-pix',
     appStore: 'https://apps.apple.com/us/app/clique-pix-group-pic-sharing/id6766294274',
-    googlePlay: 'https://play.google.com/store/apps/details?id=com.cliquepix.clique_pix'
+    googlePlay: 'https://play.google.com/store/apps/details?id=com.cliquepix.clique_pix',
+    web: 'https://clique-pix.com'
   }
 ];
 ---
@@ -134,7 +143,7 @@ const apps = [
               </div>
               <div>
                 <h3 class="app__name">{app.name}</h3>
-                <span class="app__status">Live on iOS and Android</span>
+                <span class="app__status">{app.status}</span>
               </div>
             </div>
 
@@ -146,7 +155,12 @@ const apps = [
               appName={app.name}
             />
 
-            <a href={app.href} class="app__link">More about {app.name}</a>
+            <div class="app__links">
+              <a href={app.href} class="app__link">More about {app.name}</a>
+              {app.web && (
+                <a href={app.web} class="app__link">Open the web app</a>
+              )}
+            </div>
           </article>
         ))}
       </div>
@@ -354,9 +368,14 @@ const apps = [
     flex-grow: 1;
   }
 
-  .app__link {
-    display: inline-block;
+  .app__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4) var(--space-6);
     margin-top: var(--space-6);
+  }
+
+  .app__link {
     font-weight: 600;
   }
 

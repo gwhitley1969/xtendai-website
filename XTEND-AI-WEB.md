@@ -182,7 +182,7 @@ Three cards, each linking to `/services`.
 **Headline:** Work we're shipping
 
 **Body:**
-We are building a website and a Flutter mobile app for Needle Girlie, a medical aesthetics practice in Harrisburg, NC. We have also shipped two apps of our own — My AI Bartender and CLIQUE Pix — both live on the App Store and Google Play.
+We are building a website and a Flutter mobile app for Needle Girlie, a medical aesthetics practice in Harrisburg, NC. We have also shipped two apps of our own — My AI Bartender and CLIQUE Pix — live on the App Store and Google Play, with CLIQUE Pix also running on the web.
 
 **CTA:** See our work → `/work`
 
@@ -259,7 +259,7 @@ That background is the difference between a site that looks finished and a syste
 
 - **Architected, not assembled.** Static-first for speed, deployed to Azure with infrastructure as code, real DNS delegation, security headers, CI/CD on every push, and per-client tenant isolation. Not a page builder with a subscription attached.
 - **We ship both halves.** The website and the mobile app, on the same design system, with AI features when they actually earn their place.
-- **We build our own products.** My AI Bartender and CLIQUE Pix are live in both stores. We run the same stack we would put you on.
+- **We build our own products.** My AI Bartender and CLIQUE Pix are live in both app stores, and CLIQUE Pix also runs in the browser at clique-pix.com — one Azure backend serving an iOS app, an Android app, and a web client on Azure Static Web Apps. That is the same architecture, on the same services, that we would put you on.
 - **Small, senior, direct.** You talk to the architect who builds it, not an account manager.
 - **Local, and remote-friendly.** Based between Charlotte and Harrisburg, NC. Happy to meet in person; equally happy to work entirely remotely.
 
@@ -310,10 +310,13 @@ Discover cocktails, make smarter substitutions, and use what you already have. C
 Store links: [App Store](https://apps.apple.com/us/app/my-ai-bartender-scan-create/id6758023541) • [Google Play](https://play.google.com/store/apps/details?id=ai.mybartender.mybartenderai)
 Links to `/products/my-ai-bartender`.
 
-**CLIQUE Pix** — live.
+**CLIQUE Pix** — live on iOS, Android, and the web.
 Private, event-based group photo sharing. Create temporary Events or persistent Cliques, snap and share photos and videos in real time, and let everything disappear when the moment is over.
 Store links: [App Store](https://apps.apple.com/us/app/clique-pix-group-pic-sharing/id6766294274) • [Google Play](https://play.google.com/store/apps/details?id=com.cliquepix.clique_pix)
+Web app: [clique-pix.com](https://clique-pix.com)
 Links to `/products/clique-pix`.
+
+> **Why the web client matters more than it looks.** CLIQUE Pix is not a mobile app with a marketing page attached — it is one product on three surfaces. The web client is a full React application on **Azure Static Web Apps** at `clique-pix.com`, authenticating through Entra External ID and sharing the same Azure backend, the same real-time hub, and the same telemetry as the two mobile apps. That is precisely the architecture §5 sells to clients, which makes it the strongest single piece of evidence on the site: the "same stack we would put you on" claim is literally checkable. Say so, and keep saying it accurately.
 
 > **Store URL rule.** Always link the canonical listing form — `play.google.com/store/apps/details?id=<package>` and `apps.apple.com/.../id<numeric>`. Never a `store/search?q=` URL: Play search returns whatever ranks that day (including competitors) and cannot deep-link into the Play app. CLIQUE Pix is package `com.cliquepix.clique_pix` / Apple ID `6766294274`; My AI Bartender is `ai.mybartender.mybartenderai` / `6758023541`.
 
@@ -333,10 +336,10 @@ Two stale strings were corrected during the repositioning: the closing CTA said 
 
 Parity with My AI Bartender.
 
-- Hero: app icon + name + short description + store links
+- Hero: app icon + name + short description + store links, plus the web app link
 - What it does: temporary Events and persistent Cliques; real-time photo and video sharing; content disappears when the moment is over
-- Built with Flutter and Azure
-- Store links: as recorded in §6.2
+- **Three surfaces, one backend:** a Flutter app for iOS and Android, a React web client on Azure Static Web Apps at `clique-pix.com`, and one Azure backend behind all three — same real-time hub, same sign-in, same data
+- Store links and web link: as recorded in §6.2
 
 **Icon asset:** ~~use `CLIQUE_Pix/play_app_icon_512x512.png`~~ — Done. Copied to `src/assets/clique-pix-icon.png` and rendered with `<Image>` at the same sizes and 22% squircle radius as the My AI Bartender icon. `public/images/cliquepix-logo.png` was the same artwork served unprocessed and has been deleted. The other files in `CLIQUE_Pix/` are the same mark at lower resolution or with a baked-in light background — unusable on a dark theme.
 

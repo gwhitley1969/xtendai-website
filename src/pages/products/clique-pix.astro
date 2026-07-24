@@ -7,7 +7,7 @@ import { Image } from 'astro:assets';
 import cliquePixIcon from '../../assets/clique-pix-icon.png';
 
 const title = 'CLIQUE Pix | Xtend-AI';
-const description = 'Private, event-based group photo sharing. Create temporary Events or persistent Cliques, share photos and videos in real time, and let everything disappear when the moment is over.';
+const description = 'Private, event-based group photo sharing on iOS, Android, and the web. Share photos and videos in real time, then let everything disappear when the moment is over.';
 
 const appStore = 'https://apps.apple.com/us/app/clique-pix-group-pic-sharing/id6766294274';
 const googlePlay = 'https://play.google.com/store/apps/details?id=com.cliquepix.clique_pix';
@@ -73,6 +73,9 @@ const features = [
           size="large"
         />
       </div>
+      <p class="hero__web">
+        Or open it in your browser at <a href="https://clique-pix.com">clique-pix.com</a>
+      </p>
     </div>
   </section>
 
@@ -96,10 +99,15 @@ const features = [
   <section class="section">
     <div class="container">
       <div class="built card">
-        <h2 class="built__title">Built with Flutter and Azure</h2>
+        <h2 class="built__title">Three surfaces, one backend</h2>
         <p class="built__text">
-          One Flutter codebase for iOS and Android, on an Azure backend. The same stack
-          we build client apps on — which is the point.
+          A Flutter app for iOS and Android, a web client on Azure Static Web Apps at
+          clique-pix.com, and a single Azure backend behind all three — same sign-in,
+          same real-time updates, same photos, whichever one you open.
+        </p>
+        <p class="built__text">
+          That is the same architecture we build client work on. Shipping our own
+          products on it is how we know it holds.
         </p>
         <a href="/services" class="btn btn--secondary">See what we build for clients</a>
       </div>
@@ -186,6 +194,12 @@ const features = [
   /* StoreLinks is a component, so its root needs :global() to be reached */
   .hero__actions :global(.store-links) {
     justify-content: center;
+  }
+
+  .hero__web {
+    margin-top: var(--space-6);
+    font-size: 0.9375rem;
+    color: var(--xt-text-muted);
   }
 
   .section-title {
