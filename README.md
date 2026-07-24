@@ -6,7 +6,7 @@ Corporate marketing website for Xtend-AI, built with Astro and deployed to Azure
 
 - **Framework**: Astro 5.x
 - **Styling**: Vanilla CSS with custom properties
-- **Fonts**: Sora (headings) + Inter (body)
+- **Fonts**: Sora (headings) + Inter (body) — self-hosted variable woff2 in `public/fonts/`, no Google Fonts request
 - **Contact Form**: Azure Functions + SendGrid
 - **Hosting**: Azure Static Web Apps
 
@@ -74,6 +74,8 @@ Set these in Azure Static Web Apps configuration:
 ## Contact Form & Email Configuration
 
 The website uses SendGrid for the contact form on the Contact page. Form submissions are sent to `xtendai@xtend-ai.com`.
+
+The form includes a required **interest selector** (*New website / Mobile app / Cloud & hosting / Support / Something else*) that qualifies leads on arrival: the chosen value is carried into the email subject — `[Xtend-AI Contact] New website — Jane Smith` — and shown as a row in the body. The option strings live in **two files that must stay in step**: `src/pages/contact.astro` (renders the `<select>`) and `api/contact/index.js` (the `INTERESTS` allow-list; only allow-listed values reach the subject line). Submissions without an interest value still send, using the older generic subject.
 
 ### Email Addresses
 

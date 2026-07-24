@@ -56,7 +56,22 @@ These are **not** brand colors — they're illustrative chrome for feature cards
 |---|---|---|
 | `--xt-text-primary` | `#ffffff` | Primary text on dark bg |
 | `--xt-text-secondary` | `#a1a1aa` | Muted text (descriptions, metadata) |
-| `--xt-text-muted` | `#71717a` | Placeholders, captions |
+| `--xt-text-muted` | `#8a8a94` | Placeholders, captions, footer copy |
+
+> `--xt-text-muted` was `#71717a` until 2026-07-24 — 3.85:1 against `--xt-bg-secondary`, a WCAG AA failure for the small text it's used on. `#8a8a94` clears 4.5:1 on all three surfaces muted text sits on (`#0a0a0f`, `#12121a`, `#1a1a24`) while staying visibly quieter than `--xt-text-secondary`. If you darken it again, Lighthouse accessibility drops on every page with a footer — which is every page.
+
+### Fonts
+
+Sora and Inter are **self-hosted**: two latin-subset variable woff2 files in `public/fonts/` (`sora-var.woff2` 25 KB covers 600–700, `inter-var.woff2` 48 KB covers 400–600), declared via `@font-face` at the top of `global.css` and preloaded in `BaseLayout.astro`. There is no Google Fonts request — the third-party chain (render CSS from one origin, woff2 from a second, late text repaint on swap) was the largest simulated-mobile LCP cost on every page.
+
+Gotchas if you touch this:
+- `crossorigin` is required on font preloads **even same-origin**, or the browser fetches each file twice.
+- A new weight outside the declared ranges needs the `@font-face` `font-weight` range widened — the variable files already contain all weights.
+- `.woff2` has an explicit MIME mapping in `staticwebapp.config.json`.
+
+### Form primitives
+
+`.form-input`, `.form-select`, and `.form-textarea` share one style block in `global.css`. The block sets `color-scheme: dark` so the **native** select arrow and popup list render with the browser's dark UA styling — do not replace this with a custom chevron background image. A required `<select>` with a disabled empty first option matches `:invalid` until a choice is made; `.form-select:invalid` uses that to render the placeholder state in `--xt-text-muted`.
 
 ### Gradients
 
@@ -159,20 +174,44 @@ When you inline an `<svg>` directly in a template rather than via a component, A
 
 Tokens defined in `src/styles/global.css`'s `:root` block are accessible to every component. CSS custom properties defined in a component's scoped `<style>` block are scoped the same way selectors are, so if child components need to consume a value, define it globally.
 
+### Shared components
+
+- **`StoreLinks.astro`** — App Store + Google Play buttons. Three pages render them (`/work` and both product detail pages); the SVG paths drifted when hand-copied. Takes `appName` solely to build distinct `aria-label`s — `/work` renders two pairs, and "Download on the App Store" twice tells a screen-reader user nothing about which app.
+- **`FeatureCard.astro`** — icon + title + description card. Has an `align` prop: `center` for short teaser copy, `start` for full paragraphs (centred text is hard to track past ~2 lines). Its text colors are the semantic tokens — see History notes for the `--xt-navy-900` trap that made it unusable before 2026-07-24.
+
+### JSON-LD and the head slot
+
+`BaseLayout.astro` exposes `<slot name="head" />` inside `<head>` and emits an `Organization` JSON-LD block on every page. Page-specific structured data slots in from the page — `/services` contributes `ProfessionalService` this way:
+
+```astro
+<BaseLayout title={title} description={description}>
+  <script slot="head" is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
+```
+
+Both `is:inline` and `set:html` matter: without `is:inline` Astro processes the script; without `set:html` the JSON is HTML-escaped (`&` → `&amp;`), which breaks parsing.
+
+### Active-nav section map
+
+`Header.astro` highlights nav items by URL prefix, plus a `navSectionFor` map for URLs that live outside the nav but belong to a section — `/products/*` pages highlight **Work**, since Products is no longer a nav item and those pages are reached from `/work`. New nav-orphan URLs get an entry there, or the header shows no active item on them. The mobile menu applies the same active state.
+
 ---
 
 ## Icon Placement Map
 
-Current locations where the My AI Bartender app icon (`src/assets/my-ai-bartender-icon.png`) is rendered:
+Sources in `src/assets/`: `my-ai-bartender-icon.png`, `clique-pix-icon.png` (from `CLIQUE_Pix/play_app_icon_512x512.png`), and `xtend-ai-logo-white.png` (1024 × 1024 square — the "white" in the name is its background, not its ink).
 
-| Page | File | Size | Treatment |
-|---|---|---|---|
-| Home — phone mock header | `src/pages/index.astro` | 36 × 36 | 10 px `border-radius`, `overflow: hidden` clip |
-| Home — Featured Product section | `src/pages/index.astro` | 96 × 96 | 22% squircle, soft drop shadow, centered between H2 and tagline |
-| Products listing — featured card | `src/pages/products/index.astro` | 72 × 72 | 22% `border-radius` (iOS squircle), soft drop shadow, flex row with H2 |
-| Product detail — hero | `src/pages/products/my-ai-bartender.astro` | 120 × 120 | 22% squircle, soft drop shadow, centered below H1 |
+| Page | File | Image | Size | Treatment |
+|---|---|---|---|---|
+| Every page — header | `src/components/Header.astro` | logo | 48 × 48 | white chip, eager |
+| Every page — footer | `src/components/Footer.astro` | logo | 32 × 32 | white chip, lazy |
+| Home — phone mock header | `src/pages/index.astro` | bartender | 36 × 36 | 10 px `border-radius`, `overflow: hidden` clip |
+| Work — app cards | `src/pages/work.astro` | both apps | 72 × 72 | 22% squircle, soft drop shadow |
+| Product detail — hero | `products/my-ai-bartender.astro` | bartender | 120 × 120 | 22% squircle, centered below H1 |
+| Product detail — hero | `products/clique-pix.astro` | CLIQUE Pix | 120 × 120 | 22% squircle, centered below H1 |
 
-All placements import the same source file. Astro generates per-site size/density variants and deduplicates identical outputs.
+All placements go through `<Image>` with `densities={[2, 3]}`. Astro generates per-site size/density variants and deduplicates identical outputs.
+
+> The header logo previously shipped as a **775 KB PNG served raw from `public/images/`** — the site-wide mobile LCP element (simulated 5.4 s on slow 4G). Through the pipeline it is 0.4–2.1 KB per variant. If a redesigned logo asset arrives, it goes in `src/assets/`, never `public/`.
 
 ---
 
@@ -189,6 +228,10 @@ The GH Action at `.github/workflows/azure-static-web-apps.yml` fires on every pu
 ### Direct-to-main push guard (Claude Code)
 
 Pushes to `main` are gated by a permission guard in the local Claude Code harness. When running under auto mode, the guard may block direct pushes even with prior authorization. Workaround: the user runs `! git push origin main` from the prompt, which executes the push in their local session.
+
+### Redirects only exist in production
+
+`/products` (and `/products/`) 301-redirect to `/work` via the `routes` array in `staticwebapp.config.json`. SWA config is not interpreted by `npm run dev` or `npm run preview`, so locally `/products` 404s (dev) or falls through to `navigationFallback` (deployed behavior for unknown routes). The redirect deliberately does **not** use `/products/*` — that would swallow the live detail pages, and `/products/my-ai-bartender` is linked from both app-store listings.
 
 ### Domains
 
@@ -217,9 +260,9 @@ Before the brand palette was implemented, `--xt-blue-600` held `#8b5cf6` (a purp
 
 CSS custom properties can't be directly interpolated into `rgba()` literals without `color-mix()` or a helper. This is why the codebase uses hardcoded `rgba(24, 140, 255, X)` instead of `rgba(var(--xt-accent), X)`. A future refactor could introduce `--xt-accent-rgb: 24, 140, 255;` and use `rgba(var(--xt-accent-rgb), X)` — not done now because it would touch 30+ call sites.
 
-### 5. `hero__phone-img` fallback mechanism
+### 5. `hero__phone-img` fallback mechanism — REMOVED 2026-07-24
 
-`src/pages/index.astro:70` renders `<img src="/images/app-preview.png" onerror="...">`. That file doesn't exist in `public/`, so the image fails to load, the `onerror` handler hides it, and the CSS-rendered `.hero__phone-fallback` (the phone mock in HTML) always shows. If someone later drops a real app screenshot at `public/images/app-preview.png`, the entire CSS phone mock stops rendering in favor of the image — including all the styled elements (app icon, concierge card, feature tiles, profile avatar) that this doc describes.
+The home hero previously rendered `<img src="/images/app-preview.png" onerror="this.style.display='none'">` above the CSS phone mock. The file never existed, so every production page load logged a console 404, and the mechanism was a trap: dropping a real file at that path would have silently replaced the entire CSS phone mock. The `<img>` is gone — the CSS mock **is** the hero visual. To use a real screenshot instead, replace the markup deliberately; there is no magic path anymore.
 
 ### 6. No linting or formatting in CI
 
@@ -227,7 +270,7 @@ The repo doesn't run ESLint, Prettier, or `astro check` in CI. When editing file
 
 ### 7. Untracked reference PNGs in repo root
 
-The repo root contains several untracked screenshot PNGs (`color01.png`, `old01.png`, `icon01.png`, etc.) that the product owner drops in as reference material during planning. They are not site assets and should not be committed. Git status will keep flagging them as untracked until explicitly gitignored or removed.
+The repo root contains several untracked screenshot PNGs (`color01.png`, `old01.png`, `icon01.png`, etc.) that the product owner drops in as reference material during planning, plus the `CLIQUE_Pix/` folder of source brand assets. They are not site assets and should not be committed. Anything the site actually renders gets copied into `src/assets/` first (as `clique-pix-icon.png` was). Git status will keep flagging the rest as untracked until explicitly gitignored or removed.
 
 ### 8. `backdrop-filter` creates a containing block for fixed-position descendants
 
@@ -245,6 +288,12 @@ The menu was rendering at zero pixels tall on mobile, which is why tapping the h
 
 **Rule of thumb**: any fixed-position overlay intended to cover the viewport — dialogs, drawers, modals, toasts — must be a DOM sibling of `<header>` (or live at body-root level), never a descendant. The header's `backdrop-filter` is permanent, so anything nested inside will inherit the containing-block trap.
 
+A second rule rides along: the closed menu is `aria-hidden="true"` **and** `visibility: hidden`. The visibility is not decoration — an aria-hidden container must not hold focusable content, and without it keyboard focus tabs into the invisible menu. The delayed `visibility` transition (`0s linear var(--transition-base)`) exists so the slide-out animation finishes before the menu vanishes; the open state restores instant visibility. Any future overlay needs the same pairing.
+
+### 9. The contact-form interest list lives in two files
+
+The interest selector's option strings exist in `src/pages/contact.astro` (the `interests` array that renders the `<select>`) and in `api/contact/index.js` (the `INTERESTS` allow-list). They must stay in step. The Function puts a value into the email subject **only if it is on the allow-list**; anything else falls back to the generic subject. That one rule covers a stale cached page (no `interest` field), a malformed payload, and header-injection attempts — but it also means a new option added to the page and not the Function silently never reaches the subject line.
+
 ---
 
 ## History notes
@@ -256,3 +305,6 @@ Significant implementation decisions captured here for future reference:
 - **Profile avatar SVG conversion (commit `a452b4c`)** — Replaced `👤` emoji with an inline SVG person silhouette on a solid green disc, because emoji colors can't be controlled via CSS.
 - **Home Featured Product icon (commit `c594f19`)** — Added a 96 × 96 `<Image>` between the H2 and tagline in the home-page Featured Product section. 4th site-wide placement of the app icon; lazy-loaded since below the fold.
 - **Mobile menu containing-block fix (commit `3d507d2`)** — Moved `.mobile-menu` out of `<header>` so its fixed-position coordinates resolve against the viewport. The menu was previously zero-height on mobile because the header's `backdrop-filter` made it the containing block for descendant fixed elements. See Known Gotchas #8.
+- **Services repositioning (2026-07-24, commits `a86791f`…)** — The company now also builds websites and web applications for clients, and the site was restructured services-first around a rewritten `XTEND-AI-WEB.md`. New: `/services`, `/work`, `/products/clique-pix`, `StoreLinks.astro`, contact interest selector wired through the Azure Function, Organization + ProfessionalService JSON-LD. Removed: `/products` index (301 → `/work` — the listing and `/work` would have described the same two apps and drifted). Nav became Home / Services / Work / About / Contact with Support footer-only. Detail-page URLs were preserved because both live app-store listings link `/products/my-ai-bartender`.
+- **FeatureCard token fix (commit `3412465`)** — `FeatureCard.astro` was unused and unusable: its text colors were `var(--xt-navy-900)`, a legacy alias that *sounds* like light-theme text ink and genuinely is `#022A56` in the colliding `xtend-ai_brand_tokens.css`, but resolves to background `#12121a` in this site's `global.css` — near-black on near-black. Repointed to semantic tokens, which survive a theme inversion; numbered-scale names don't. This is the token-collision warning above, observed in the wild.
+- **Lighthouse hardening (2026-07-24)** — Mobile Performance was 71 (home) / 73 (services); all four categories are now 100 on both pages, mobile and desktop. Two causes, found by the observed-vs-simulated LCP gap: the Google Fonts chain (fixed by self-hosting two variable woff2 files — see Fonts) and the header logo, a 775 KB PNG served raw from `public/` and rendered 48 px square — simulated 5.4 s LCP on slow 4G (fixed via `<Image>`, 99.7% smaller). Also fixed: `--xt-text-muted` contrast (AA), focusable links inside the closed aria-hidden mobile menu, and the hero's guaranteed console 404 (gotcha #5, now removed).
