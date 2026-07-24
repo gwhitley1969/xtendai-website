@@ -48,6 +48,40 @@ const process = [
   }
 ];
 
+/**
+ * ProfessionalService structured data (brief §11): the service area is
+ * the Charlotte metro plus Harrisburg, NC, and the catalog mirrors the
+ * three service cards. City and region only — no street address is
+ * published. No priceRange: the site deliberately carries no pricing.
+ */
+const professionalServiceSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  name: 'Xtend-AI',
+  url: new URL('/services/', Astro.site).toString(),
+  image: new URL('/images/xtend-ai_logo_transparent_cropped.png', Astro.site).toString(),
+  description: 'Website design and development, mobile apps for iOS and Android from one Flutter codebase, and Azure cloud architecture, deployment, and hosting.',
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Harrisburg',
+    addressRegion: 'NC',
+    addressCountry: 'US'
+  },
+  areaServed: [
+    { '@type': 'AdministrativeArea', name: 'Charlotte metropolitan area' },
+    { '@type': 'City', name: 'Harrisburg, NC' }
+  ],
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Services',
+    itemListElement: [
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Website design and development' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Mobile app development for iOS and Android' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Azure cloud architecture and hosting' } }
+    ]
+  }
+};
+
 const differentiators = [
   {
     title: 'Architected, not assembled',
@@ -73,6 +107,7 @@ const differentiators = [
 ---
 
 <BaseLayout title={title} description={description}>
+  <script slot="head" is:inline type="application/ld+json" set:html={JSON.stringify(professionalServiceSchema)} />
   <Header slot="header" />
 
   <!-- Hero -->
@@ -92,6 +127,9 @@ const differentiators = [
   <!-- Three service cards -->
   <section class="section">
     <div class="container">
+      <!-- Keeps the document outline h1 → h2 → h3; the cards render h3s
+           and without this the page skipped a level. -->
+      <h2 class="visually-hidden">What we build</h2>
       <div class="grid grid--3">
         {services.map((service) => (
           <FeatureCard

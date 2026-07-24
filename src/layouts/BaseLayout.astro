@@ -7,6 +7,18 @@ interface Props {
 
 const { title, description, ogImage = '/images/xtend-ai_logo_transparent_cropped.png' } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+
+/**
+ * Organization identity, emitted on every page (brief §11: name, URL,
+ * logo — nothing invented beyond those).
+ */
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Xtend-AI',
+  url: Astro.site?.toString(),
+  logo: new URL('/images/xtend-ai_logo_transparent_cropped.png', Astro.site).toString()
+};
 ---
 
 <!DOCTYPE html>
@@ -42,6 +54,13 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@600;700&display=swap" rel="stylesheet">
+
+  <!-- Structured data. is:inline + set:html: Astro must not bundle this,
+       and the JSON must land unescaped. -->
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
+
+  <!-- Pages can contribute page-specific head markup (e.g. extra JSON-LD) -->
+  <slot name="head" />
 
   <title>{title}</title>
 </head>
