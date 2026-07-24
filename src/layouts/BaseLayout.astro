@@ -5,7 +5,14 @@ interface Props {
   ogImage?: string;
 }
 
-const { title, description, ogImage = '/images/xtend-ai_logo_transparent_cropped.png' } = Astro.props;
+/**
+ * Default link-preview image: the 1200×630 dark card from
+ * scripts/make-favicon-og.mjs. The transparent-logo PNG it replaced went
+ * invisible in dark-mode chat apps (navy ink, no background). The
+ * Organization JSON-LD logo below deliberately keeps the transparent
+ * original — Google's surfaces are light, where navy ink is correct.
+ */
+const { title, description, ogImage = '/images/og-card.png' } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
 /**
