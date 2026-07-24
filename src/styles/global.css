@@ -359,6 +359,7 @@ li {
 }
 
 .form-input,
+.form-select,
 .form-textarea {
   width: 100%;
   padding: var(--space-3) var(--space-4);
@@ -369,9 +370,14 @@ li {
   border: 2px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--radius);
   transition: all var(--transition-fast);
+  /* Renders the native select arrow and its popup list with the browser's
+     dark UA styling. Keeps them legible on a dark surface without
+     hand-colouring a custom chevron into a background data URI. */
+  color-scheme: dark;
 }
 
 .form-input:focus,
+.form-select:focus,
 .form-textarea:focus {
   outline: none;
   border-color: var(--xt-accent);
@@ -380,6 +386,16 @@ li {
 
 .form-input::placeholder,
 .form-textarea::placeholder {
+  color: var(--xt-text-muted);
+}
+
+.form-select {
+  cursor: pointer;
+}
+
+/* The disabled first option stands in for a placeholder. A required select
+   with no value selected matches :invalid, so mute it until one is chosen. */
+.form-select:invalid {
   color: var(--xt-text-muted);
 }
 

@@ -4,7 +4,24 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 
 const title = 'Contact | Xtend-AI';
-const description = 'Get in touch with Xtend-AI. We\'d love to hear from you about partnerships, feedback, or questions.';
+const description = 'Start a project with Xtend-AI. Tell us whether you need a website, a mobile app, cloud and hosting, or product support — we respond within 24–48 hours.';
+
+/**
+ * Qualifies the lead on arrival. The chosen value is carried into the
+ * email subject line by api/contact, so the inbox shows what the enquiry
+ * is about without opening it.
+ *
+ * These strings must stay in step with the INTERESTS allow-list in
+ * api/contact/index.js — a value missing from that list falls back to the
+ * generic subject rather than appearing in it.
+ */
+const interests = [
+  'New website',
+  'Mobile app',
+  'Cloud & hosting',
+  'Support',
+  'Something else'
+];
 ---
 
 <BaseLayout title={title} description={description}>
@@ -32,6 +49,16 @@ const description = 'Get in touch with Xtend-AI. We\'d love to hear from you abo
             <div class="form-group">
               <label for="email" class="form-label">Email <span class="required">*</span></label>
               <input type="email" id="email" name="email" class="form-input" placeholder="you@example.com" required autocomplete="email">
+            </div>
+
+            <div class="form-group">
+              <label for="interest" class="form-label">What can we help with? <span class="required">*</span></label>
+              <select id="interest" name="interest" class="form-select" required>
+                <option value="" disabled selected>Select one…</option>
+                {interests.map((option) => (
+                  <option value={option}>{option}</option>
+                ))}
+              </select>
             </div>
 
             <div class="form-group">
@@ -226,6 +253,7 @@ const description = 'Get in touch with Xtend-AI. We\'d love to hear from you abo
         body: JSON.stringify({
           name: formData.get('name'),
           email: formData.get('email'),
+          interest: formData.get('interest'),
           message: formData.get('message')
         })
       });
