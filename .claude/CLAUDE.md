@@ -61,9 +61,10 @@ src/
     products/my-ai-bartender.astro
     products/clique-pix.astro   # no products/index — /products 301s to /work in SWA config
   styles/global.css             # ALL design tokens live in :root here; @font-face at top
-  assets/                       # images processed by <Image> at build time (app icons, logo)
-public/                         # served verbatim — favicons, robots.txt, fonts/
+  assets/                       # images processed by <Image> at build time (app icons, reverse logo assets)
+public/                         # served verbatim — favicons, robots.txt, fonts/, og-card
 api/contact/                    # Azure Function (Node) → SendGrid; INTERESTS allow-list
+scripts/                        # one-off derived-asset generators (reverse logo, favicons, OG card) — run manually, outputs committed
 docs/                           # engineering documentation
 ```
 
