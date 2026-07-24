@@ -3,16 +3,9 @@ const currentPath = Astro.url.pathname;
 
 const navItems = [
   { label: 'Home', href: '/' },
-  {
-    label: 'Products',
-    href: '/products',
-    dropdown: [
-      { label: 'My AI Bartender', href: '/products/my-ai-bartender' },
-      { label: 'Coming Soon', href: '/products#coming-soon' }
-    ]
-  },
+  { label: 'Services', href: '/services' },
+  { label: 'Work', href: '/work' },
   { label: 'About', href: '/about' },
-  { label: 'Support', href: '/support' },
   { label: 'Contact', href: '/contact' }
 ];
 
@@ -26,36 +19,20 @@ function isActive(href: string): boolean {
   <div class="header__container container">
     <a href="/" class="header__logo" aria-label="Xtend-AI Home">
       <img src="/images/Xtend-AI_logo_primary_white.png" alt="Xtend-AI" width="220" height="60">
-      <span class="header__tagline">Your next favorite app, made smarter</span>
+      <span class="header__tagline">Web, mobile, and the cloud beneath</span>
     </a>
 
     <nav class="header__nav" aria-label="Main navigation">
       <ul class="nav__list">
         {navItems.map((item) => (
-          <li class={`nav__item ${item.dropdown ? 'nav__item--dropdown' : ''}`}>
+          <li class="nav__item">
             <a
               href={item.href}
               class={`nav__link ${isActive(item.href) ? 'nav__link--active' : ''}`}
               aria-current={isActive(item.href) ? 'page' : undefined}
             >
               {item.label}
-              {item.dropdown && (
-                <svg class="nav__chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                  <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              )}
             </a>
-            {item.dropdown && (
-              <ul class="nav__dropdown">
-                {item.dropdown.map((subItem) => (
-                  <li>
-                    <a href={subItem.href} class="nav__dropdown-link">
-                      {subItem.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            )}
           </li>
         ))}
       </ul>
@@ -73,20 +50,11 @@ function isActive(href: string): boolean {
   <nav aria-label="Mobile navigation">
     <ul class="mobile-menu__list">
       {navItems.map((item) => (
-        <>
-          <li>
-            <a href={item.href} class="mobile-menu__link">
-              {item.label}
-            </a>
-          </li>
-          {item.dropdown && item.dropdown.map((subItem) => (
-            <li>
-              <a href={subItem.href} class="mobile-menu__link mobile-menu__link--sub">
-                {subItem.label}
-              </a>
-            </li>
-          ))}
-        </>
+        <li>
+          <a href={item.href} class="mobile-menu__link">
+            {item.label}
+          </a>
+        </li>
       ))}
     </ul>
   </nav>
@@ -186,50 +154,6 @@ function isActive(href: string): boolean {
     color: var(--xt-accent-light);
   }
 
-  .nav__chevron {
-    transition: transform var(--transition-fast);
-  }
-
-  .nav__item--dropdown:hover .nav__chevron {
-    transform: rotate(180deg);
-  }
-
-  .nav__dropdown {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    min-width: 200px;
-    padding: var(--space-2) 0;
-    background: var(--xt-bg-card);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: var(--radius);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-    list-style: none;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(8px);
-    transition: all var(--transition-fast);
-  }
-
-  .nav__item--dropdown:hover .nav__dropdown {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-  }
-
-  .nav__dropdown-link {
-    display: block;
-    padding: var(--space-2) var(--space-4);
-    color: var(--xt-text-secondary);
-    text-decoration: none;
-    transition: all var(--transition-fast);
-  }
-
-  .nav__dropdown-link:hover {
-    background: rgba(24, 140, 255, 0.1);
-    color: var(--xt-accent-light);
-  }
-
   /* Mobile Toggle */
   .header__toggle {
     display: flex;
@@ -309,13 +233,6 @@ function isActive(href: string): boolean {
     font-weight: 500;
     text-decoration: none;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .mobile-menu__link--sub {
-    padding-left: var(--space-8);
-    font-size: 1rem;
-    font-weight: 400;
-    color: var(--xt-text-secondary);
   }
 
   .mobile-menu__link:hover {
