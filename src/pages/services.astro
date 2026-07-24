@@ -1,0 +1,365 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import FeatureCard from '../components/FeatureCard.astro';
+
+const title = 'Web, Mobile & Cloud Services | Xtend-AI';
+const description = 'Website design and development, iOS and Android apps from one Flutter codebase, and Azure architecture, deployment, and hosting. Charlotte, NC and remote.';
+
+const services = [
+  {
+    icon: 'web',
+    title: 'Websites',
+    description: 'Design and build, mobile-first from the first pixel. Fast, accessible, and SEO-ready. Your site ships as static files to a global CDN, so it loads in well under a second — no CMS to patch, no plugin to break, no monthly platform fee. Custom domain, HTTPS, and security headers configured properly on day one.'
+  },
+  {
+    icon: 'mobile',
+    title: 'Mobile apps',
+    description: 'iOS and Android from a single Flutter codebase: one build, both stores, one set of changes to maintain. When an app needs a backend we build it on Azure — authentication, storage, notifications, and APIs designed around what the app actually does. We ship our own apps this way; My AI Bartender and CLIQUE Pix are both live.'
+  },
+  {
+    icon: 'cloud',
+    title: 'Cloud & hosting',
+    description: 'This is the part most shops hand to someone else. We architect it. Azure resources defined as infrastructure as code, DNS delegated and managed properly, CI/CD that deploys on every push, TLS and security headers, monitoring and alerting after launch, and per-client tenant isolation so your environment is yours alone. Ongoing management if you want it.'
+  }
+];
+
+const process = [
+  {
+    title: 'Discovery',
+    description: "A conversation about what you're trying to accomplish and who it's for. No questionnaire, no discovery fee."
+  },
+  {
+    title: 'Architecture',
+    description: "Before anything gets built you get the plan: what we're building, what it runs on, what it costs to run, and how long it takes."
+  },
+  {
+    title: 'Build',
+    description: 'We build in the open. You watch it come together on a real URL, not in a slide deck at the end.'
+  },
+  {
+    title: 'Launch',
+    description: "Domain, DNS, TLS, security headers, analytics, and store submission if there's an app. We handle the parts that usually go wrong."
+  },
+  {
+    title: 'Support',
+    description: "We stay on: updates, monitoring, and changes as the business changes. Or a clean handoff with documentation if you'd rather run it yourself."
+  }
+];
+
+const differentiators = [
+  {
+    title: 'Architected, not assembled',
+    description: 'Static-first for speed, deployed to Azure with infrastructure as code, real DNS delegation, security headers, CI/CD on every push, and per-client tenant isolation. Not a page builder with a subscription attached.'
+  },
+  {
+    title: 'We ship both halves',
+    description: 'The website and the mobile app, on the same design system, with AI features when they actually earn their place.'
+  },
+  {
+    title: 'We build our own products',
+    description: 'My AI Bartender and CLIQUE Pix are live in both stores. We run the same stack we would put you on.'
+  },
+  {
+    title: 'Small, senior, direct',
+    description: 'You talk to the architect who builds it, not an account manager.'
+  },
+  {
+    title: 'Local, and remote-friendly',
+    description: 'Based between Charlotte and Harrisburg, NC. Happy to meet in person; equally happy to work entirely remotely.'
+  }
+];
+---
+
+<BaseLayout title={title} description={description}>
+  <Header slot="header" />
+
+  <!-- Hero -->
+  <section class="page-header">
+    <div class="page-header__glow"></div>
+    <div class="container">
+      <span class="badge">Services</span>
+      <h1>Websites, apps, and the <span class="text-gradient">infrastructure to run them</span></h1>
+      <p class="page-header__subtitle">
+        We design and build your website and your mobile app, then run them on cloud
+        infrastructure we architect ourselves — so there is one team responsible when
+        something needs to change.
+      </p>
+    </div>
+  </section>
+
+  <!-- Three service cards -->
+  <section class="section">
+    <div class="container">
+      <div class="grid grid--3">
+        {services.map((service) => (
+          <FeatureCard
+            icon={service.icon}
+            title={service.title}
+            description={service.description}
+            align="start"
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- How we work -->
+  <section class="section section--glow">
+    <div class="container">
+      <div class="section-header text-center">
+        <span class="badge badge--gold">How we work</span>
+        <h2>Five steps, no jargon</h2>
+      </div>
+
+      <ol class="process">
+        {process.map((step, index) => (
+          <li class="process__step">
+            <span class="process__number" aria-hidden="true">{index + 1}</span>
+            <div class="process__body">
+              <h3 class="process__title">{step.title}</h3>
+              <p class="process__desc">{step.description}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- Why us -->
+  <section class="section">
+    <div class="container">
+      <div class="why-grid">
+        <div class="why-content">
+          <span class="badge">Why us</span>
+          <h2>Thirty years of enterprise architecture, <span class="text-gradient">pointed at your business</span>.</h2>
+          <p class="lead">
+            Xtend-AI is led by a solutions architect with roughly three decades in enterprise
+            infrastructure and cloud. Microsoft Azure certified — AZ-305 Solutions Architect
+            Expert, AZ-104, AZ-700, and AZ-900 — formerly an IBM Certified Architect Level 2
+            (Expert) and an Open Group Certified Master Architect, and a contributing author
+            on five published technical books.
+          </p>
+          <p>
+            That background is the difference between a site that looks finished and a system
+            that keeps working after you stop paying attention to it.
+          </p>
+        </div>
+
+        <div class="why-card card card--glow">
+          <ul class="why-list">
+            {differentiators.map((item) => (
+              <li class="why-item">
+                <strong class="why-item__title">{item.title}</strong>
+                <span class="why-item__desc">{item.description}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section section--glow">
+    <div class="container text-center">
+      <h2>Tell us what you're building</h2>
+      <p class="cta-text">
+        Every project is scoped individually — tell us what you need and we'll come back
+        with an architecture, a timeline, and a number.
+      </p>
+      <a href="/contact" class="btn btn--primary btn--large">
+        Start a project
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="M4 10H16M16 10L11 5M16 10L11 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+  </section>
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  /* Page header — matches the pattern used on About, Contact, Products */
+  .page-header {
+    position: relative;
+    padding: var(--space-20) 0;
+    overflow: hidden;
+  }
+
+  .page-header__glow {
+    position: absolute;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 400px;
+    background: radial-gradient(ellipse at center, rgba(24, 140, 255, 0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .page-header .container {
+    position: relative;
+    z-index: 1;
+  }
+
+  .page-header h1 {
+    margin: var(--space-4) 0;
+    font-size: clamp(2rem, 5vw, 3rem);
+  }
+
+  .page-header__subtitle {
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--xt-text-secondary);
+    max-width: 640px;
+    margin: 0;
+  }
+
+  .section-header {
+    margin-bottom: var(--space-12);
+  }
+
+  .section-header h2 {
+    margin-top: var(--space-4);
+  }
+
+  /* How we work */
+  .process {
+    list-style: none;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  .process__step {
+    position: relative;
+    display: flex;
+    gap: var(--space-6);
+    margin: 0;
+    padding-bottom: var(--space-8);
+  }
+
+  .process__step:last-child {
+    padding-bottom: 0;
+  }
+
+  /* Connector line between the numbered markers */
+  .process__step:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    top: 48px;
+    left: 23px;
+    width: 2px;
+    height: calc(100% - 48px);
+    background: linear-gradient(180deg, rgba(24, 140, 255, 0.4) 0%, rgba(24, 140, 255, 0.05) 100%);
+  }
+
+  .process__number {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--xt-gradient-brand);
+    color: var(--xt-text-primary);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 1.125rem;
+    box-shadow: 0 4px 16px rgba(24, 140, 255, 0.3);
+  }
+
+  .process__body {
+    padding-top: var(--space-2);
+  }
+
+  .process__title {
+    font-size: 1.25rem;
+    margin-bottom: var(--space-2);
+  }
+
+  .process__desc {
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  /* Why us */
+  .why-grid {
+    display: grid;
+    gap: var(--space-12);
+  }
+
+  @media (min-width: 900px) {
+    .why-grid {
+      grid-template-columns: 1.4fr 1fr;
+      align-items: start;
+    }
+  }
+
+  .why-content h2 {
+    margin: var(--space-4) 0 var(--space-6);
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+  }
+
+  .why-content p {
+    font-size: 1.0625rem;
+    line-height: 1.8;
+  }
+
+  .why-content .lead {
+    color: var(--xt-text-primary);
+    margin-bottom: var(--space-4);
+  }
+
+  .why-card {
+    padding: var(--space-8);
+  }
+
+  .why-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .why-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding: var(--space-4) 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    margin: 0;
+  }
+
+  .why-item:first-child {
+    padding-top: 0;
+  }
+
+  .why-item:last-child {
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+
+  .why-item__title {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    color: var(--xt-text-primary);
+  }
+
+  .why-item__desc {
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    color: var(--xt-text-secondary);
+  }
+
+  /* CTA */
+  .cta-text {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    max-width: 620px;
+    margin: var(--space-4) auto var(--space-8);
+  }
+</style>

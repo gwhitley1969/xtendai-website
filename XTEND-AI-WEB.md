@@ -236,6 +236,8 @@ This is the part most shops hand to someone else. We architect it. Azure resourc
 
 ### 5.3 How we work
 
+**Section heading:** Five steps, no jargon
+
 Five steps. No consulting jargon, no invented methodology name.
 
 1. **Discovery** — A conversation about what you're trying to accomplish and who it's for. No questionnaire, no discovery fee.
@@ -264,7 +266,12 @@ That background is the difference between a site that looks finished and a syste
 ### 5.5 CTA
 
 **Headline:** Tell us what you're building
+
+**Body:** Every project is scoped individually — tell us what you need and we'll come back with an architecture, a timeline, and a number.
+
 **CTA:** Start a project → `/contact`
+
+> The body line carries the no-pricing decision (§5.6) honestly: it tells a buyer they will get a number, just not off a menu.
 
 ### 5.6 Pricing
 
