@@ -2,37 +2,64 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import FeatureCard from '../components/FeatureCard.astro';
 import { Image } from 'astro:assets';
 import bartenderIcon from '../assets/my-ai-bartender-icon.png';
 
-const title = 'Xtend-AI | AI-Powered Mobile Apps That Feel Personal';
-const description = 'Xtend-AI creates AI companion apps that extend what you can do — helping users discover, create, and share in the real world through friendly, capable mobile experiences.';
+const title = 'Xtend-AI | Web & Mobile App Development — Charlotte, NC';
+const description = 'Xtend-AI designs and builds websites, mobile apps, and the Azure cloud that runs them — architected, not assembled. Charlotte & Harrisburg, NC, and remote.';
 
-const features = [
-  { icon: 'chat', color: 'blue', title: 'Chat', desc: 'Natural conversations with AI' },
-  { icon: 'voice', color: 'green', title: 'Voice', desc: 'Hands-free interaction' },
-  { icon: 'scanner', color: 'coral', title: 'Scan My Bar', desc: 'Camera-powered recognition' },
-  { icon: 'create', color: 'accent', title: 'Create', desc: 'Build your own recipes' },
+/**
+ * Replaces the old Chat / Voice / Scan My Bar / Create bar, which was
+ * My AI Bartender feature copy sitting on the company home page.
+ *
+ * Every value here is verifiable, and the 30 years is labelled as the
+ * founder's career — not the company's age. Xtend-AI, LLC is young and
+ * the copy must never blur the two.
+ */
+const credibility = [
+  { value: 'Azure Certified', label: 'AZ-305 Solutions Architect Expert' },
+  { value: '30 years', label: "The founder's career in enterprise infrastructure" },
+  { value: '2 apps shipped', label: 'Live on the App Store and Google Play' },
+  { value: 'Charlotte / Harrisburg, NC', label: 'Local, and remote-friendly' }
+];
+
+const services = [
+  {
+    icon: 'web',
+    title: 'Websites',
+    description: 'Designed and built mobile-first. Fast, accessible, SEO-ready, and deployed as static files to a global CDN — not a page builder with a monthly subscription attached.'
+  },
+  {
+    icon: 'mobile',
+    title: 'Mobile apps',
+    description: 'iOS and Android from a single Flutter codebase, with an Azure backend when the app needs one. We have shipped two of our own to both stores.'
+  },
+  {
+    icon: 'cloud',
+    title: 'Cloud & hosting',
+    description: 'Azure architecture, infrastructure as code, custom domains and real DNS delegation, security headers, CI/CD on every push, and monitoring after launch.'
+  }
 ];
 
 const differentiators = [
   {
-    icon: 'multimodal',
+    icon: '🏗️',
     color: 'accent',
-    title: 'Multi-modal by design',
-    description: 'Voice + chat + camera working together seamlessly for natural interactions.'
+    title: 'Architected, not assembled',
+    description: 'Static-first builds, infrastructure as code, real DNS delegation, security headers, CI/CD on every push, and per-client tenant isolation. The same discipline as enterprise systems, at the size of your business.'
   },
   {
-    icon: 'purpose',
+    icon: '🧩',
     color: 'cyan',
-    title: 'Purpose-built, not generic',
-    description: 'Each app is domain-focused, designed for specific real-world use cases.'
+    title: 'Both halves, one system',
+    description: 'Website and mobile app on the same design system, with AI features only where they earn their place. One team, one look, one place to call.'
   },
   {
-    icon: 'human',
-    color: 'coral',
-    title: 'Human UX first',
-    description: 'AI should feel natural and fast — invisible technology, visible results.'
+    icon: '🤝',
+    color: 'green',
+    title: 'Small, senior, direct',
+    description: 'You talk to the architect who builds it. No account manager, and no handoff to a junior team after the pitch.'
   }
 ];
 ---
@@ -49,22 +76,23 @@ const differentiators = [
     </div>
     <div class="hero__container container">
       <div class="hero__content">
-        <span class="badge">AI-Powered Mobile Experiences</span>
+        <span class="badge">Web · Mobile · Azure Cloud</span>
         <h1 class="hero__title">
-          Apps that feel like <span class="text-gradient">magic</span>
+          Websites and apps, <span class="text-gradient">architected to last</span>
         </h1>
         <p class="hero__subtitle">
-          We build consumer mobile apps that blend chat, voice, and camera intelligence
-          to help people discover, create, and share — starting with My AI Bartender.
+          Xtend-AI designs and builds websites, mobile apps, and the cloud infrastructure
+          that runs them. Based in the Charlotte area, working with clients anywhere — and
+          you deal directly with the architect who builds it.
         </p>
         <div class="hero__actions">
-          <a href="/products" class="btn btn--primary btn--large">
-            <span>Explore Our Apps</span>
+          <a href="/services" class="btn btn--primary btn--large">
+            <span>See what we build</span>
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
               <path d="M4 10H16M16 10L11 5M16 10L11 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </a>
-          <a href="/contact" class="btn btn--secondary btn--large">Contact Us</a>
+          <a href="/contact" class="btn btn--secondary btn--large">Start a project</a>
         </div>
       </div>
       <div class="hero__visual">
@@ -159,22 +187,14 @@ const differentiators = [
     </div>
   </section>
 
-  <!-- Features Bar -->
-  <section class="features-bar">
+  <!-- Credibility Bar -->
+  <section class="cred-bar">
     <div class="container">
-      <div class="features-bar__grid">
-        {features.map((feature) => (
-          <div class="feature-pill">
-            <div class={`feature-pill__icon icon-circle icon-circle--${feature.color}`}>
-              {feature.icon === 'chat' && '💬'}
-              {feature.icon === 'voice' && '🎙️'}
-              {feature.icon === 'scanner' && '📷'}
-              {feature.icon === 'create' && '✨'}
-            </div>
-            <div class="feature-pill__text">
-              <strong>{feature.title}</strong>
-              <span>{feature.desc}</span>
-            </div>
+      <div class="cred-bar__grid">
+        {credibility.map((item) => (
+          <div class="cred">
+            <strong class="cred__value">{item.value}</strong>
+            <span class="cred__label">{item.label}</span>
           </div>
         ))}
       </div>
@@ -187,86 +207,66 @@ const differentiators = [
       <div class="split">
         <div class="split__content">
           <span class="badge badge--gold">What We Do</span>
-          <h2>Built mobile-first.<br><span class="text-gradient">Powered by AI.</span></h2>
+          <h2>Websites, apps, and<br><span class="text-gradient">the cloud beneath them.</span></h2>
           <p>
-            Xtend-AI creates B2C mobile apps for people who love discovering new experiences —
-            whether that's crafting cocktails or sharing moments with friends.
+            Most shops build one of the three and hand off the rest. We build all three,
+            because they are the same problem: a site that loads fast, an app that ships
+            to both stores, and Azure infrastructure that holds them up.
           </p>
           <p>
-            We focus on products where AI improves the experience through conversation, scanning,
-            and creative help — not complexity.
+            Designed together, on one system — not bolted together after the fact.
           </p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Featured Product Section -->
+  <!-- Services Teaser -->
   <section class="section">
     <div class="container">
-      <div class="featured-product">
-        <div class="featured-product__header">
-          <span class="badge">Featured Product</span>
-          <h2>My AI Bartender</h2>
-          <div class="featured-product__icon">
-            <Image
-              src={bartenderIcon}
-              alt=""
-              width={96}
-              height={96}
-              densities={[2, 3]}
-              loading="lazy"
-            />
-          </div>
-          <p class="featured-product__tagline">Your personal AI bartender in your pocket</p>
-        </div>
+      <div class="section-header text-center">
+        <span class="badge">Services</span>
+        <h2>What we build</h2>
+      </div>
 
-        <div class="featured-product__card">
-          <div class="featured-product__content">
-            <p class="featured-product__desc">
-              Discover cocktails, make smarter substitutions, and use what you already have.
-              Chat with your bartender, talk hands-free, scan your home bar, and refine your own creations.
-            </p>
+      <div class="grid grid--3">
+        {services.map((service) => (
+          <FeatureCard
+            icon={service.icon}
+            title={service.title}
+            description={service.description}
+            align="start"
+          />
+        ))}
+      </div>
 
-            <ul class="featured-product__features">
-              <li>
-                <div class="icon-circle icon-circle--blue">💬</div>
-                <div>
-                  <strong>Chat</strong>
-                  <span>Ask for cocktails, ideas, substitutions, and step-by-step help.</span>
-                </div>
-              </li>
-              <li>
-                <div class="icon-circle icon-circle--green">🎙️</div>
-                <div>
-                  <strong>Voice</strong>
-                  <span>Real-time voice bartender conversations (hands-free).</span>
-                </div>
-              </li>
-              <li>
-                <div class="icon-circle icon-circle--coral">📷</div>
-                <div>
-                  <strong>Scan My Bar</strong>
-                  <span>Use your camera to identify bottles and build "My Bar."</span>
-                </div>
-              </li>
-              <li>
-                <div class="icon-circle icon-circle--accent">✨</div>
-                <div>
-                  <strong>Create</strong>
-                  <span>Build your own recipe and get AI suggestions to improve it.</span>
-                </div>
-              </li>
-            </ul>
+      <div class="section__cta text-center">
+        <a href="/services" class="btn btn--secondary btn--large">See all services</a>
+      </div>
+    </div>
+  </section>
 
-            <a href="/products/my-ai-bartender" class="btn btn--primary btn--large">
-              Learn More
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M4 10H16M16 10L11 5M16 10L11 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </a>
-          </div>
-        </div>
+  <!-- Proof -->
+  <section class="section section--glow">
+    <div class="container">
+      <div class="section-header text-center">
+        <span class="badge badge--gold">Proof</span>
+        <h2>Work we're shipping</h2>
+      </div>
+
+      <div class="proof card">
+        <p class="proof__text">
+          We're building a website and a Flutter mobile app for <strong>Needle Girlie</strong>,
+          a medical aesthetics practice in Harrisburg, NC. We've also shipped two apps of our
+          own — <strong>My AI Bartender</strong> and <strong>CLIQUE Pix</strong> — both live on
+          the App Store and Google Play.
+        </p>
+        <a href="/work" class="btn btn--primary btn--large">
+          See our work
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M4 10H16M16 10L11 5M16 10L11 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
       </div>
     </div>
   </section>
@@ -275,17 +275,13 @@ const differentiators = [
   <section class="section section--glow">
     <div class="container">
       <div class="section-header text-center">
-        <h2>We don't just build "AI features."<br><span class="text-gradient">We build AI experiences.</span></h2>
+        <h2>We don't assemble websites.<br><span class="text-gradient">We architect systems.</span></h2>
       </div>
 
       <div class="grid grid--3">
         {differentiators.map((item) => (
           <div class="card card--glow">
-            <div class={`icon-circle icon-circle--${item.color}`}>
-              {item.icon === 'multimodal' && '🔮'}
-              {item.icon === 'purpose' && '🎯'}
-              {item.icon === 'human' && '✋'}
-            </div>
+            <div class={`icon-circle icon-circle--${item.color}`}>{item.icon}</div>
             <h3>{item.title}</h3>
             <p>{item.description}</p>
           </div>
@@ -294,19 +290,18 @@ const differentiators = [
     </div>
   </section>
 
-  <!-- What's Next Section -->
+  <!-- Closing CTA -->
   <section class="section">
     <div class="container">
       <div class="cta-card">
         <div class="cta-card__glow"></div>
         <div class="cta-card__content">
-          <span class="badge">Coming Soon</span>
-          <h2>More AI-enabled apps are on the way</h2>
+          <h2>Let's talk about your project</h2>
           <p>
-            We're building new mobile experiences like <strong>Clique Pix</strong> — private, event-based
-            group photo sharing — designed with the same principles: excellent UX and user-first experiences.
+            Tell us what you're trying to build. You'll get a straight answer about whether
+            we're the right fit — and if we are, an architecture, a timeline, and a number.
           </p>
-          <a href="/contact" class="btn btn--primary btn--large">Get in Touch</a>
+          <a href="/contact" class="btn btn--primary btn--large">Start a project</a>
         </div>
       </div>
     </div>
@@ -687,51 +682,52 @@ const differentiators = [
     text-align: center;
   }
 
-  /* Features Bar */
-  .features-bar {
+  /* Credibility Bar */
+  .cred-bar {
     padding: var(--space-8) 0;
     background: var(--xt-bg-secondary);
     border-top: 1px solid rgba(255, 255, 255, 0.05);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   }
 
-  .features-bar__grid {
+  .cred-bar__grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-4);
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
   }
 
-  @media (min-width: 768px) {
-    .features-bar__grid {
+  @media (min-width: 640px) {
+    .cred-bar__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .cred-bar__grid {
       grid-template-columns: repeat(4, 1fr);
     }
   }
 
-  .feature-pill {
-    display: flex;
-    align-items: center;
-    gap: var(--space-3);
-  }
-
-  .feature-pill__icon {
-    width: 44px;
-    height: 44px;
-    font-size: 1.25rem;
-  }
-
-  .feature-pill__text {
+  .cred {
     display: flex;
     flex-direction: column;
+    gap: var(--space-1);
+    padding-left: var(--space-4);
+    border-left: 2px solid rgba(24, 140, 255, 0.4);
   }
 
-  .feature-pill__text strong {
+  .cred__value {
+    font-family: var(--font-heading);
+    font-size: 1.0625rem;
+    font-weight: 700;
+    line-height: 1.3;
     color: var(--xt-text-primary);
-    font-size: 0.9375rem;
   }
 
-  .feature-pill__text span {
-    color: var(--xt-text-muted);
+  .cred__label {
     font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--xt-text-muted);
   }
 
   /* Split Content */
@@ -757,97 +753,28 @@ const differentiators = [
     margin-bottom: var(--space-4);
   }
 
-  /* Featured Product */
-  .featured-product__header {
-    text-align: center;
-    margin-bottom: var(--space-8);
+  /* Services teaser */
+  .section__cta {
+    margin-top: var(--space-12);
   }
 
-  .featured-product__header h2 {
-    margin: var(--space-4) 0 var(--space-2);
-    font-size: clamp(2rem, 5vw, 3rem);
-  }
-
-  .featured-product__icon {
-    width: 96px;
-    height: 96px;
-    margin: var(--space-3) auto var(--space-2);
-  }
-
-  .featured-product__icon :global(img) {
-    width: 100%;
-    height: 100%;
-    display: block;
-    border-radius: 22%;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-  }
-
-  .featured-product__tagline {
-    font-size: 1.125rem;
-    color: var(--xt-text-secondary);
-  }
-
-  .featured-product__card {
-    background: var(--xt-bg-card);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: var(--radius-xl);
-    padding: var(--space-8);
-    max-width: 800px;
+  /* Proof */
+  .proof {
+    max-width: 760px;
     margin: 0 auto;
+    padding: var(--space-12) var(--space-8);
+    text-align: center;
   }
 
-  .featured-product__desc {
+  .proof__text {
     font-size: 1.125rem;
     line-height: 1.8;
     margin-bottom: var(--space-8);
-    text-align: center;
   }
 
-  .featured-product__features {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 var(--space-8);
-    display: grid;
-    gap: var(--space-4);
-  }
-
-  @media (min-width: 640px) {
-    .featured-product__features {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  .featured-product__features li {
-    display: flex;
-    gap: var(--space-4);
-    align-items: flex-start;
-    padding: var(--space-4);
-    background: rgba(255, 255, 255, 0.02);
-    border-radius: var(--radius);
-    margin: 0;
-  }
-
-  .featured-product__features li .icon-circle {
-    width: 48px;
-    height: 48px;
-    font-size: 1.25rem;
-  }
-
-  .featured-product__features li strong {
-    display: block;
-    color: var(--xt-text-primary);
-    margin-bottom: var(--space-1);
-  }
-
-  .featured-product__features li span {
-    font-size: 0.875rem;
-    color: var(--xt-text-secondary);
-  }
-
-  .featured-product__card > .btn {
-    display: flex;
-    margin: 0 auto;
-    width: fit-content;
+  .proof strong {
+    color: var(--xt-accent-light);
+    font-weight: 600;
   }
 
   /* Cards with icons */
