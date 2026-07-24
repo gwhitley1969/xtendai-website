@@ -5,6 +5,7 @@ import Footer from '../components/Footer.astro';
 import FeatureCard from '../components/FeatureCard.astro';
 import { Image } from 'astro:assets';
 import bartenderIcon from '../assets/my-ai-bartender-icon.png';
+import xtendMark from '../assets/xtend-ai-mark-reverse.png';
 
 const title = 'Xtend-AI | Web & Mobile App Development — Charlotte, NC';
 const description = 'Xtend-AI designs and builds websites, mobile apps, and the Azure cloud that runs them — architected, not assembled. Charlotte & Harrisburg, NC, and remote.';
@@ -73,6 +74,12 @@ const differentiators = [
       <div class="hero__glow hero__glow--1"></div>
       <div class="hero__glow hero__glow--2"></div>
       <div class="hero__grid"></div>
+      {/* Brand watermark — decorative ghost of the X mark. Hidden below
+          768px, and lazy: display:none means it never intersects, so
+          mobile never downloads it. */}
+      <span class="hero__watermark" aria-hidden="true">
+        <Image src={xtendMark} alt="" width={520} loading="lazy" />
+      </span>
     </div>
     <div class="hero__container container">
       <div class="hero__content">
@@ -324,6 +331,28 @@ const differentiators = [
     position: absolute;
     inset: 0;
     z-index: 0;
+  }
+
+  .hero__watermark {
+    display: none;
+  }
+
+  @media (min-width: 768px) {
+    .hero__watermark {
+      display: block;
+      position: absolute;
+      top: 50%;
+      right: -70px;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    .hero__watermark :global(img) {
+      display: block;
+      width: 520px;
+      height: auto;
+      opacity: 0.06;
+    }
   }
 
   .hero__glow {
