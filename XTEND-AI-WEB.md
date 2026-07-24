@@ -154,7 +154,7 @@ Four items, same four-across layout:
 | Value | Label |
 |---|---|
 | Azure Certified | AZ-305 Solutions Architect Expert |
-| 30 years | The founder's career in enterprise infrastructure |
+| 30 years | Our co-founder's career in enterprise infrastructure |
 | 2 apps shipped | Live on the App Store and Google Play |
 | Charlotte / Harrisburg, NC | Local, and remote-friendly |
 
@@ -354,7 +354,7 @@ Rewritten. For a services buyer the founder's credentials **are** the credibilit
 - **H1:** About Xtend-AI
 - **Lead paragraph:** the approved positioning statement, once §1 is decided.
 - **Company paragraph:** Xtend-AI, LLC is a small studio based between Charlotte and Harrisburg, North Carolina. We design and build websites, mobile apps, and the Azure infrastructure that runs them, for client companies — and we build and ship our own consumer apps on the same stack.
-- **Founder paragraph:** Xtend-AI was founded by **Gene Whitley** (spelling confirmed by the owner), a solutions architect with roughly thirty years in enterprise infrastructure and cloud architecture. Microsoft Azure certified: AZ-305 Solutions Architect Expert, AZ-104, AZ-700, AZ-900. Formerly an IBM Certified Architect Level 2 (Expert) and an Open Group Certified Master Architect. Contributing author on five published technical books.
+- **Founder paragraph:** Xtend-AI was **co-founded** by **Gene Whitley** (spelling confirmed by the owner), a solutions architect with roughly thirty years in enterprise infrastructure and cloud architecture. "Co-founded," not "founded" — there is another founder, per the owner (2026-07-24). The site copy must say *co-founded* wherever founding is mentioned; the co-founder is not named on the site unless the owner supplies that. Microsoft Azure certified: AZ-305 Solutions Architect Expert, AZ-104, AZ-700, AZ-900. Formerly an IBM Certified Architect Level 2 (Expert) and an Open Group Certified Master Architect. Contributing author on five published technical books.
 
 - **Certification list.** The page renders the certifications as a labelled list. Exam codes are expanded to their standard Microsoft certification titles — AZ-104 Azure Administrator Associate, AZ-700 Azure Network Engineer Associate, AZ-900 Azure Fundamentals — because a business owner does not read exam codes. These are the canonical titles for those exams, not new claims; correct them here if any is wrong and the page follows.
 - **The point of that paragraph, stated plainly:** when you hire Xtend-AI you are working with the person who designs the system and writes the code. There is no account manager and no handoff.
