@@ -50,10 +50,12 @@ const organizationSchema = {
   <meta name="twitter:description" content={description}>
   <meta name="twitter:image" content={new URL(ogImage, Astro.site)}>
 
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@600;700&display=swap" rel="stylesheet">
+  <!-- Fonts — self-hosted variable woff2 (see global.css @font-face).
+       Preloaded so the fetch starts at HTML parse time instead of after
+       the stylesheet is parsed. `crossorigin` is required on font
+       preloads even same-origin, or the browser fetches twice. -->
+  <link rel="preload" href="/fonts/sora-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin>
 
   <!-- Structured data. is:inline + set:html: Astro must not bundle this,
        and the JSON must land unescaped. -->
