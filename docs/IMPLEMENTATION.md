@@ -198,20 +198,28 @@ Both `is:inline` and `set:html` matter: without `is:inline` Astro processes the 
 
 ## Icon Placement Map
 
-Sources in `src/assets/`: `my-ai-bartender-icon.png`, `clique-pix-icon.png` (from `CLIQUE_Pix/play_app_icon_512x512.png`), and `xtend-ai-logo-white.png` (1024 × 1024 square — the "white" in the name is its background, not its ink).
+Sources in `src/assets/`: `my-ai-bartender-icon.png`, `clique-pix-icon.png` (from `CLIQUE_Pix/play_app_icon_512x512.png`), and the two **reverse logo assets** `xtend-ai-mark-reverse.png` (431 × 399) and `xtend-ai-wordmark-white.png` (744 × 135).
+
+### Reverse logo assets
+
+The brand PNGs in `public/images/` use navy ink drawn for white surfaces — invisible on this site's dark chrome. `scripts/make-reverse-logo.mjs` (run manually: `node scripts/make-reverse-logo.mjs`, then commit the outputs; sharp comes with Astro) generates the dark-surface variants:
+
+- **Mark**: navy stroke → white, blue stays `#188CFF` (the `--xt-accent` value), blends interpolated on the green channel — the axis that separates the two inks. A near-white **fringe guard runs first**: the sources are background-removed rasters with binary alpha, and ~850 near-white leftover pixels would otherwise classify as "blue" and speckle the stroke edges.
+- **Wordmark**: white ink with **alpha derived from pixel darkness**. The source's anti-aliasing is baked against white at full alpha; darkness-as-coverage converts it to true alpha anti-aliasing instead of hardening every edge to solid white.
 
 | Page | File | Image | Size | Treatment |
 |---|---|---|---|---|
-| Every page — header | `src/components/Header.astro` | logo | 48 × 48 | white chip, eager |
-| Every page — footer | `src/components/Footer.astro` | logo | 32 × 32 | white chip, lazy |
+| Every page — header | `src/components/Header.astro` | mark + wordmark | 40/44 h + 20/22 h | reverse lockup, tagline stacked under wordmark, eager |
+| Every page — footer | `src/components/Footer.astro` | mark + wordmark | 28 h + 18 h | reverse lockup, lazy |
+| Home — hero watermark | `src/pages/index.astro` | mark | 520 w | 6% opacity ghost in `.hero__bg`; `display: none` < 768px + lazy → never fetched on mobile |
 | Home — phone mock header | `src/pages/index.astro` | bartender | 36 × 36 | 10 px `border-radius`, `overflow: hidden` clip |
 | Work — app cards | `src/pages/work.astro` | both apps | 72 × 72 | 22% squircle, soft drop shadow |
 | Product detail — hero | `products/my-ai-bartender.astro` | bartender | 120 × 120 | 22% squircle, centered below H1 |
 | Product detail — hero | `products/clique-pix.astro` | CLIQUE Pix | 120 × 120 | 22% squircle, centered below H1 |
 
-All placements go through `<Image>` with `densities={[2, 3]}`. Astro generates per-site size/density variants and deduplicates identical outputs.
+All placements go through `<Image>` with `densities={[2, 3]}` (except the watermark — a 6% opacity ghost needs no retina variants). Astro generates per-site size/density variants and deduplicates identical outputs. In the header and footer the mark and wordmark are sized by **separate wrapper-scoped `:global(img)` selectors** — a shared `.header__logo :global(img)` rule would force both images to one height.
 
-> The header logo previously shipped as a **775 KB PNG served raw from `public/images/`** — the site-wide mobile LCP element (simulated 5.4 s on slow 4G). Through the pipeline it is 0.4–2.1 KB per variant. If a redesigned logo asset arrives, it goes in `src/assets/`, never `public/`.
+> The header logo previously shipped as a **775 KB PNG served raw from `public/images/`** — the site-wide mobile LCP element (simulated 5.4 s on slow 4G) — and then as a 1024² opaque "white chip" whose baked-in background made the lockup illegible at 48 px on the dark bar. If a redesigned logo asset arrives, it goes in `src/assets/`, never `public/`, and gets a reverse variant via the script above.
 
 ---
 
@@ -313,3 +321,4 @@ Significant implementation decisions captured here for future reference:
 - **Services repositioning (2026-07-24, commits `a86791f`…)** — The company now also builds websites and web applications for clients, and the site was restructured services-first around a rewritten `XTEND-AI-WEB.md`. New: `/services`, `/work`, `/products/clique-pix`, `StoreLinks.astro`, contact interest selector wired through the Azure Function, Organization + ProfessionalService JSON-LD. Removed: `/products` index (301 → `/work` — the listing and `/work` would have described the same two apps and drifted). Nav became Home / Services / Work / About / Contact with Support footer-only. Detail-page URLs were preserved because both live app-store listings link `/products/my-ai-bartender`.
 - **FeatureCard token fix (commit `3412465`)** — `FeatureCard.astro` was unused and unusable: its text colors were `var(--xt-navy-900)`, a legacy alias that *sounds* like light-theme text ink and genuinely is `#022A56` in the colliding `xtend-ai_brand_tokens.css`, but resolves to background `#12121a` in this site's `global.css` — near-black on near-black. Repointed to semantic tokens, which survive a theme inversion; numbered-scale names don't. This is the token-collision warning above, observed in the wild.
 - **Lighthouse hardening (2026-07-24)** — Mobile Performance was 71 (home) / 73 (services); all four categories are now 100 on both pages, mobile and desktop. Two causes, found by the observed-vs-simulated LCP gap: the Google Fonts chain (fixed by self-hosting two variable woff2 files — see Fonts) and the header logo, a 775 KB PNG served raw from `public/` and rendered 48 px square — simulated 5.4 s LCP on slow 4G (fixed via `<Image>`, 99.7% smaller). Also fixed: `--xt-text-muted` contrast (AA), focusable links inside the closed aria-hidden mobile menu, and the hero's guaranteed console 404 (gotcha #5, now removed).
+- **Reverse logo lockup + hero watermark (2026-07-24, commits `ec16277`…)** — The header logo was an opaque 1024² PNG ("white" = its background) rendered as an illegible 48 px white chip on the dark bar; no dark-surface logo variant existed anywhere. Added `scripts/make-reverse-logo.mjs` (see Icon Placement Map) generating the reverse mark and white wordmark from the transparent brand PNGs, rebuilt the header/footer as mark + readable wordmark + stacked tagline, deleted the chip asset, and added a 6% opacity X watermark behind the home hero (≥ 768px only, lazy — never fetched on mobile). Brand rule recorded in `XTEND-AI-WEB.md` §12: on dark surfaces navy ink inverts to white, `#188CFF` stays constant.

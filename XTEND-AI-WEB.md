@@ -472,6 +472,16 @@ linear-gradient(135deg, #022A56 0%, #188CFF 100%)
 
 > The live site implements these as `var(--xt-*)` tokens on `:root` in `src/styles/global.css`. See `docs/IMPLEMENTATION.md` for the token table and the warning about the colliding `xtend-ai_brand_tokens.css` file in the repo root.
 
+### 12.1a Logo on dark surfaces (reverse treatment) — approved 2026-07-24
+
+The logo inks (navy `#022A56` + blue `#188CFF`) were drawn for white surfaces. On dark surfaces (the live site's chrome), the approved reverse treatment is:
+
+- **Navy ink inverts to white.** The X mark's navy stroke and the wordmark's navy letterforms render white.
+- **Blue `#188CFF` stays constant** on both light and dark surfaces.
+- Never place the navy-ink originals on a dark background, and never fake it with an opaque white plate behind the logo (the pre-2026-07-24 header did exactly that — an illegible white chip).
+
+Generated reverse assets live in `src/assets/` (`xtend-ai-mark-reverse.png`, `xtend-ai-wordmark-white.png`), regenerated from the transparent originals via `node scripts/make-reverse-logo.mjs`. The header and footer render the lockup as mark + wordmark + tagline; the home hero carries a low-opacity X-mark watermark.
+
 ### 12.2 Typography
 
 Preferred:
@@ -526,7 +536,7 @@ Preferred assets:
 
 * Optional CSS tokens file (if provided)
 
-> If the original SVG exists, prefer SVG for the header logo (crisper than PNG).
+> If the original SVG exists, prefer SVG for the header logo (crisper than PNG). None has surfaced as of 2026-07-24 — the site works from the transparent PNGs, plus the derived dark-surface variants described in §12.1a.
 
 App icons live in `src/assets/` and render through `<Image>`:
 
