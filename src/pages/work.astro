@@ -1,0 +1,369 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import StoreLinks from '../components/StoreLinks.astro';
+import { Image } from 'astro:assets';
+import bartenderIcon from '../assets/my-ai-bartender-icon.png';
+import cliquePixIcon from '../assets/clique-pix-icon.png';
+
+const title = 'Our Work | Xtend-AI';
+const description = "Client engagements and the apps we've shipped ourselves — My AI Bartender and CLIQUE Pix, live on the App Store and Google Play.";
+
+/**
+ * Client engagements. Adding the next one is an entry in this array —
+ * the markup below is a map over it, so engagement #2 and #3 cost a
+ * data edit, not a redesign.
+ *
+ * `href` stays null until a client site is genuinely live. Sending a
+ * referral to an "under construction" placeholder costs more trust
+ * than the outbound link gains.
+ */
+const engagements = [
+  {
+    name: 'Needle Girlie',
+    client: 'Amy Palacios, FNP',
+    sector: 'Medical aesthetics',
+    location: 'Harrisburg, NC',
+    status: 'In progress',
+    summary: 'A website and a Flutter mobile app with an AI assistant.',
+    stack: ['Azure Static Web Apps', 'Flutter — iOS & Android', 'Azure backend', 'AI assistant'],
+    note: 'The public site is currently an "under construction" placeholder while the full build is underway.',
+    href: null
+  }
+];
+
+const apps = [
+  {
+    name: 'My AI Bartender',
+    icon: bartenderIcon,
+    summary: 'Discover cocktails, make smarter substitutions, and use what you already have. Chat, voice, camera-based bottle scanning, and recipe creation.',
+    href: '/products/my-ai-bartender',
+    appStore: 'https://apps.apple.com/us/app/my-ai-bartender-scan-create/id6758023541',
+    googlePlay: 'https://play.google.com/store/apps/details?id=ai.mybartender.mybartenderai'
+  },
+  {
+    name: 'CLIQUE Pix',
+    icon: cliquePixIcon,
+    summary: 'Private, event-based group photo sharing. Create temporary Events or persistent Cliques, snap and share photos and videos in real time, and let everything disappear when the moment is over.',
+    href: '/products/clique-pix',
+    appStore: 'https://apps.apple.com/us/app/clique-pix-group-pic-sharing/id6766294274',
+    googlePlay: 'https://play.google.com/store/apps/details?id=com.cliquepix.clique_pix'
+  }
+];
+---
+
+<BaseLayout title={title} description={description}>
+  <Header slot="header" />
+
+  <section class="page-header">
+    <div class="page-header__glow"></div>
+    <div class="container">
+      <span class="badge">Our Work</span>
+      <h1>Work we're <span class="text-gradient">shipping</span></h1>
+      <p class="page-header__subtitle">
+        One client engagement in progress, and two apps of our own live in both stores.
+        This page grows as the work does.
+      </p>
+    </div>
+  </section>
+
+  <!-- Client work -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Client work</h2>
+      </div>
+
+      <div class="engagements">
+        {engagements.map((item) => (
+          <article class="engagement card">
+            <div class="engagement__head">
+              <div>
+                <h3 class="engagement__name">{item.name}</h3>
+                <p class="engagement__meta">
+                  {item.client} · {item.sector} · {item.location}
+                </p>
+              </div>
+              <span class="badge badge--gold engagement__status">{item.status}</span>
+            </div>
+
+            <p class="engagement__summary">{item.summary}</p>
+
+            <ul class="chips">
+              {item.stack.map((tech) => (
+                <li class="chip">{tech}</li>
+              ))}
+            </ul>
+
+            <p class="engagement__note">{item.note}</p>
+
+            {item.href && (
+              <a href={item.href} class="engagement__link">Visit the site</a>
+            )}
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Our own apps -->
+  <section class="section section--glow">
+    <div class="container">
+      <div class="section-header">
+        <h2>Our own apps</h2>
+        <p class="section-header__lead">
+          We build and ship our own products on the same stack we would put you on.
+          That is not a portfolio flex — it is why we know what breaks.
+        </p>
+      </div>
+
+      <div class="apps">
+        {apps.map((app) => (
+          <article class="app card">
+            <div class="app__head">
+              <div class="app__icon">
+                <Image
+                  src={app.icon}
+                  alt=""
+                  width={72}
+                  height={72}
+                  densities={[2, 3]}
+                  loading="lazy"
+                />
+              </div>
+              <div>
+                <h3 class="app__name">{app.name}</h3>
+                <span class="app__status">Live on iOS and Android</span>
+              </div>
+            </div>
+
+            <p class="app__summary">{app.summary}</p>
+
+            <StoreLinks
+              appStore={app.appStore}
+              googlePlay={app.googlePlay}
+              appName={app.name}
+            />
+
+            <a href={app.href} class="app__link">More about {app.name}</a>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section">
+    <div class="container text-center">
+      <h2>Want to be the next one on this page?</h2>
+      <p class="cta-text">
+        Tell us what you're building and we'll come back with an architecture,
+        a timeline, and a number.
+      </p>
+      <a href="/contact" class="btn btn--primary btn--large">
+        Start a project
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="M4 10H16M16 10L11 5M16 10L11 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+  </section>
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  .page-header {
+    position: relative;
+    padding: var(--space-20) 0;
+    overflow: hidden;
+  }
+
+  .page-header__glow {
+    position: absolute;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 400px;
+    background: radial-gradient(ellipse at center, rgba(24, 140, 255, 0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .page-header .container {
+    position: relative;
+    z-index: 1;
+  }
+
+  .page-header h1 {
+    margin: var(--space-4) 0;
+    font-size: clamp(2rem, 5vw, 3rem);
+  }
+
+  .page-header__subtitle {
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--xt-text-secondary);
+    max-width: 620px;
+    margin: 0;
+  }
+
+  .section-header {
+    margin-bottom: var(--space-8);
+  }
+
+  .section-header__lead {
+    font-size: 1.0625rem;
+    line-height: 1.8;
+    max-width: 640px;
+    margin-top: var(--space-4);
+  }
+
+  /* Client engagements */
+  .engagements,
+  .apps {
+    display: grid;
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 900px) {
+    .apps {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .engagement {
+    padding: var(--space-8);
+    max-width: 800px;
+  }
+
+  .engagement__head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+
+  @media (min-width: 640px) {
+    .engagement__head {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+  }
+
+  .engagement__name {
+    margin-bottom: var(--space-1);
+  }
+
+  .engagement__meta {
+    font-size: 0.9375rem;
+    color: var(--xt-text-muted);
+    margin: 0;
+  }
+
+  .engagement__status {
+    flex-shrink: 0;
+    align-self: flex-start;
+  }
+
+  .engagement__summary {
+    font-size: 1.0625rem;
+    line-height: 1.8;
+    color: var(--xt-text-primary);
+    margin-bottom: var(--space-6);
+  }
+
+  .engagement__note {
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    margin: var(--space-6) 0 0;
+    padding-top: var(--space-4);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .engagement__link {
+    display: inline-block;
+    margin-top: var(--space-4);
+    font-weight: 600;
+  }
+
+  /* Stack chips */
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .chip {
+    padding: var(--space-1) var(--space-3);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--xt-text-secondary);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 100px;
+    margin: 0;
+  }
+
+  /* Our own apps */
+  .app {
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-8);
+  }
+
+  .app__head {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    margin-bottom: var(--space-4);
+  }
+
+  .app__icon {
+    width: 72px;
+    height: 72px;
+    flex-shrink: 0;
+  }
+
+  .app__icon :global(img) {
+    width: 100%;
+    height: 100%;
+    display: block;
+    border-radius: 22%;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  .app__name {
+    margin-bottom: var(--space-1);
+  }
+
+  .app__status {
+    font-size: 0.875rem;
+    color: var(--xt-green);
+    font-weight: 500;
+  }
+
+  .app__summary {
+    line-height: 1.7;
+    margin-bottom: var(--space-6);
+    flex-grow: 1;
+  }
+
+  .app__link {
+    display: inline-block;
+    margin-top: var(--space-6);
+    font-weight: 600;
+  }
+
+  .cta-text {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    max-width: 560px;
+    margin: var(--space-4) auto var(--space-8);
+  }
+</style>
