@@ -231,7 +231,12 @@ Pushes to `main` are gated by a permission guard in the local Claude Code harnes
 
 ### Redirects only exist in production
 
-`/products` (and `/products/`) 301-redirect to `/work` via the `routes` array in `staticwebapp.config.json`. SWA config is not interpreted by `npm run dev` or `npm run preview`, so locally `/products` 404s (dev) or falls through to `navigationFallback` (deployed behavior for unknown routes). The redirect deliberately does **not** use `/products/*` — that would swallow the live detail pages, and `/products/my-ai-bartender` is linked from both app-store listings.
+`/products` 301-redirects to `/work` via the `routes` array in `staticwebapp.config.json`. SWA config is not interpreted by `npm run dev` or `npm run preview`, so locally `/products` 404s (dev) or falls through to `navigationFallback` (deployed behavior for unknown routes). The redirect deliberately does **not** use `/products/*` — that would swallow the live detail pages, and `/products/my-ai-bartender` is linked from both app-store listings.
+
+Two hard-won rules about that config:
+
+- **SWA normalizes trailing slashes.** `/products` and `/products/` are the *same route*; listing both is a duplicate-rule validation error. And it is not a warning — it kills the deploy.
+- **`staticwebapp.config.json` is validated only in the deploy pipeline.** `npm run build` — the repo's only local gate — passes happily over a config that will fail deployment. The Oryx build succeeds, then the deploy step validates the config and exits. If a push "succeeded" but production still serves old content, check the GitHub Action's conclusion before anything else (this exact sequence happened on 2026-07-24).
 
 ### Domains
 
