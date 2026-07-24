@@ -3,8 +3,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 
-const title = 'Support | Xtend-AI';
-const description = 'Get help with Xtend-AI products. Find answers to common questions or contact our support team.';
+const title = 'App Support | Xtend-AI';
+const description = 'Help with My AI Bartender and CLIQUE Pix. FAQs, bug reports, and support contact. For new project inquiries, see Services.';
 
 const faqs = [
   { question: 'How do I get started with My AI Bartender?', answer: 'Download the app from the App Store or Google Play, create an account, and start by scanning your bottles or manually adding what you have at home. Then just ask the bartender for recommendations!' },
@@ -21,9 +21,26 @@ const faqs = [
   <section class="page-header">
     <div class="page-header__glow"></div>
     <div class="container text-center">
-      <span class="badge">Support</span>
+      <span class="badge">App Support</span>
       <h1>How can we <span class="text-gradient">help</span>?</h1>
-      <p class="page-header__subtitle">We're here to help you get the most out of our apps</p>
+      <p class="page-header__subtitle">Help with My AI Bartender and CLIQUE Pix</p>
+    </div>
+  </section>
+
+  <!--
+    Scopes the page explicitly. A prospective client who lands here by
+    accident must not conclude that Xtend-AI is a support desk. Same
+    reason Support is footer-only in the navigation.
+  -->
+  <section class="scope-section">
+    <div class="container">
+      <div class="scope-note">
+        <p>
+          <strong>This page is for help with our apps</strong> — My AI Bartender and
+          CLIQUE Pix. If you're a business looking to hire us to build a website or an
+          app, start at <a href="/services">Services</a> or <a href="/contact">Contact</a>.
+        </p>
+      </div>
     </div>
   </section>
 
@@ -33,7 +50,7 @@ const faqs = [
         <div class="support-card card card--glow">
           <div class="icon-circle icon-circle--accent">✉️</div>
           <h2>Email Support</h2>
-          <p>Have a question or issue? Our support team is ready to help.</p>
+          <p>Have a question or a bug to report? Email us and you'll get a real answer.</p>
           <a href="mailto:support@xtend-ai.com" class="btn btn--primary">Email Us</a>
         </div>
 
@@ -50,12 +67,18 @@ const faqs = [
     <div class="container">
       <h2 class="section-title text-center">Frequently Asked Questions</h2>
       <div class="faq-list">
+        <h3 class="faq-group">My AI Bartender</h3>
         {faqs.map((faq) => (
           <details class="faq-item">
             <summary class="faq-question">{faq.question}</summary>
             <p class="faq-answer">{faq.answer}</p>
           </details>
         ))}
+        <p class="faq-note">
+          Questions about <strong>CLIQUE Pix</strong>? Email
+          <a href="mailto:support@xtend-ai.com">support@xtend-ai.com</a> — we answer
+          within 24–48 hours.
+        </p>
       </div>
     </div>
   </section>
@@ -109,6 +132,31 @@ const faqs = [
     margin-bottom: var(--space-12);
   }
 
+  /* Scope note */
+  .scope-section {
+    padding-bottom: var(--space-8);
+  }
+
+  .scope-note {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: var(--space-4) var(--space-6);
+    background: rgba(24, 140, 255, 0.08);
+    border: 1px solid rgba(24, 140, 255, 0.25);
+    border-left: 3px solid var(--xt-accent);
+    border-radius: var(--radius);
+  }
+
+  .scope-note p {
+    margin: 0;
+    font-size: 0.9375rem;
+    line-height: 1.7;
+  }
+
+  .scope-note strong {
+    color: var(--xt-text-primary);
+  }
+
   .support-grid {
     display: grid;
     gap: var(--space-6);
@@ -144,6 +192,22 @@ const faqs = [
   .faq-list {
     max-width: 700px;
     margin: 0 auto;
+  }
+
+  .faq-group {
+    font-size: 1.125rem;
+    color: var(--xt-accent-light);
+    margin-bottom: var(--space-2);
+  }
+
+  .faq-note {
+    margin-top: var(--space-8);
+    font-size: 0.9375rem;
+    line-height: 1.7;
+  }
+
+  .faq-note strong {
+    color: var(--xt-text-primary);
   }
 
   .faq-item {
