@@ -20,7 +20,6 @@ const legalLinks = [
 ---
 
 <footer class="footer">
-  <div class="footer__glow"></div>
   <div class="footer__container container">
     <div class="footer__top">
       <div class="footer__brand">
@@ -67,17 +66,6 @@ const legalLinks = [
     background: var(--xt-bg-secondary);
     padding: var(--space-16) 0 var(--space-8);
     overflow: hidden;
-  }
-
-  .footer__glow {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 600px;
-    height: 200px;
-    background: radial-gradient(ellipse at center, rgba(24, 140, 255, 0.1) 0%, transparent 70%);
-    pointer-events: none;
   }
 
   .footer__container {

@@ -61,17 +61,13 @@
   --xt-blue-600: #188CFF;
   --xt-white: #ffffff;
 
-  /* Gradients - Rich & Dynamic */
-  --xt-gradient-hero: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  /* Gradients */
   /* Ends on --xt-link rather than --xt-accent: white button text on
      #188CFF is ~3.4:1 (a WCAG AA fail at button sizes); on #0B6FE6 it
      clears 4.5:1 while staying visibly the same brand blue. */
   --xt-gradient-brand: linear-gradient(135deg, #022A56 0%, var(--xt-link) 100%);
   --xt-gradient-accent-text: linear-gradient(135deg, #188CFF 0%, #7EC1FF 100%);
-  --xt-gradient-blue: linear-gradient(135deg, #022A56 0%, #188CFF 100%);
-  --xt-gradient-warm: linear-gradient(135deg, #f472b6 0%, #fbbf24 100%);
   --xt-gradient-card: linear-gradient(145deg, rgba(24, 140, 255, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%);
-  --xt-gradient-glow: radial-gradient(ellipse at 50% 0%, rgba(24, 140, 255, 0.15) 0%, transparent 70%);
 
   /* Typography */
   --font-heading: 'Sora', system-ui, -apple-system, sans-serif;
@@ -199,10 +195,6 @@ li {
   }
 }
 
-.section--glow {
-  background: var(--xt-gradient-glow);
-}
-
 .text-center {
   text-align: center;
 }
@@ -248,12 +240,11 @@ li {
 .btn--primary {
   background: var(--xt-gradient-brand);
   color: var(--xt-white);
-  box-shadow: 0 4px 20px rgba(24, 140, 255, 0.4);
 }
 
 .btn--primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 30px rgba(24, 140, 255, 0.5);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
   color: var(--xt-white);
 }
 
@@ -512,31 +503,6 @@ li {
 
 .skip-link:focus {
   top: var(--space-4);
-}
-
-/* Animations */
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
-
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 20px rgba(24, 140, 255, 0.4); }
-  50% { box-shadow: 0 0 40px rgba(24, 140, 255, 0.6); }
-}
-
-@keyframes gradient-shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-.animate-float {
-  animation: float 3s ease-in-out infinite;
-}
-
-.animate-pulse-glow {
-  animation: pulse-glow 2s ease-in-out infinite;
 }
 
 /* Reduced motion: collapse every animation and transition to effectively
