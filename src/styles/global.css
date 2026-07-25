@@ -63,7 +63,10 @@
 
   /* Gradients - Rich & Dynamic */
   --xt-gradient-hero: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-  --xt-gradient-brand: linear-gradient(135deg, #022A56 0%, #188CFF 100%);
+  /* Ends on --xt-link rather than --xt-accent: white button text on
+     #188CFF is ~3.4:1 (a WCAG AA fail at button sizes); on #0B6FE6 it
+     clears 4.5:1 while staying visibly the same brand blue. */
+  --xt-gradient-brand: linear-gradient(135deg, #022A56 0%, var(--xt-link) 100%);
   --xt-gradient-accent-text: linear-gradient(135deg, #188CFF 0%, #7EC1FF 100%);
   --xt-gradient-blue: linear-gradient(135deg, #022A56 0%, #188CFF 100%);
   --xt-gradient-warm: linear-gradient(135deg, #f472b6 0%, #fbbf24 100%);
@@ -517,4 +520,21 @@ li {
 
 .animate-pulse-glow {
   animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Reduced motion: collapse every animation and transition to effectively
+   instant. transition-delay is included deliberately — the mobile menu
+   delays its visibility flip to keep the slide-out animation visible,
+   and with the slide gone the delay must go too. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0.01ms !important;
+  }
 }

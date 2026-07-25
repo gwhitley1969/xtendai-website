@@ -314,6 +314,9 @@ const differentiators = [
   .hero {
     position: relative;
     min-height: calc(100vh - var(--header-height));
+    /* dvh tracks the *visible* viewport on iOS (address bar collapse),
+       so the CTA can't land below the fold on first paint. */
+    min-height: calc(100dvh - var(--header-height));
     display: flex;
     align-items: center;
     padding: var(--space-12) 0;
