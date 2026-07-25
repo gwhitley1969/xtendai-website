@@ -165,13 +165,13 @@ Four items, same four-across layout:
 **Headline:** Websites, apps, and the cloud beneath them
 
 **Body:**
-Most shops build one of the three and hand off the rest. We build all three, because they are the same problem: a site that loads fast, an app that ships to both stores, and Azure infrastructure that holds them up. Designed together, on one system — not bolted together after the fact.
+Most shops build one of the three and hand off the rest. We build all three, because they are the same problem: a site that loads fast, an app that ships to both stores, and Azure infrastructure that holds them up. Designed together on one system, not bolted together after the fact.
 
 ### 4.4 Section: Services teaser
 
 Three cards, each linking to `/services`.
 
-1. **Websites** — Designed and built mobile-first. Fast, accessible, SEO-ready, and deployed as static files to a global CDN — not a page builder with a monthly subscription attached.
+1. **Websites** — Designed and built mobile-first. Fast, accessible, SEO-ready, and deployed as static files to a global CDN, not a page builder with a monthly subscription attached.
 2. **Mobile apps** — iOS and Android from a single Flutter codebase, with an Azure backend when the app needs one. We have shipped two of our own to both stores.
 3. **Cloud & hosting** — Azure architecture, infrastructure as code, custom domains and real DNS delegation, security headers, CI/CD on every push, and monitoring after launch.
 
@@ -182,7 +182,7 @@ Three cards, each linking to `/services`.
 **Headline:** Work we're shipping
 
 **Body:**
-We are building a website and a Flutter mobile app for Needle Girlie, a medical aesthetics practice in Harrisburg, NC. We have also shipped two apps of our own — My AI Bartender and CLIQUE Pix — live on the App Store and Google Play, with CLIQUE Pix also running on the web.
+We are building a website and a Flutter mobile app for Needle Girlie, a medical aesthetics practice in Harrisburg, NC. We have also shipped two apps of our own, My AI Bartender and CLIQUE Pix, live on the App Store and Google Play, with CLIQUE Pix also running on the web.
 
 **CTA:** See our work → `/work`
 
@@ -200,7 +200,7 @@ We are building a website and a Flutter mobile app for Needle Girlie, a medical 
 
 **Headline:** Let's talk about your project
 
-**Body:** Tell us what you're trying to build. You'll get a straight answer about whether we're the right fit — and if we are, an architecture, a timeline, and a number.
+**Body:** Tell us what you're trying to build. You'll get a straight answer about whether we're the right fit. If we are, you'll get an architecture, a timeline, and a number.
 
 **CTA:** Start a project → `/contact`
 
@@ -219,15 +219,15 @@ The core commercial page.
 
 **H1:** Websites, apps, and the infrastructure to run them
 
-**Subheadline:** We design and build your website and your mobile app, then run them on cloud infrastructure we architect ourselves — so there is one team responsible when something needs to change.
+**Subheadline:** We design and build your website and your mobile app, then run them on cloud infrastructure we architect ourselves, so there is one team responsible when something needs to change.
 
 ### 5.2 Three service cards
 
 **Websites**
-Design and build, mobile-first from the first pixel. Fast, accessible, and SEO-ready. Your site ships as static files to a global CDN, so it loads in well under a second — no CMS to patch, no plugin to break, no monthly platform fee. Custom domain, HTTPS, and security headers configured properly on day one.
+Design and build, mobile-first from the first pixel. Fast, accessible, and SEO-ready. Your site ships as static files to a global CDN, so it loads in well under a second: no CMS to patch, no plugin to break, no monthly platform fee. Custom domain, HTTPS, and security headers configured properly on day one.
 
 **Mobile apps**
-iOS and Android from a single Flutter codebase: one build, both stores, one set of changes to maintain. When an app needs a backend we build it on Azure — authentication, storage, notifications, and APIs designed around what the app actually does. We ship our own apps this way; My AI Bartender and CLIQUE Pix are both live.
+iOS and Android from a single Flutter codebase: one build, both stores, one set of changes to maintain. When an app needs a backend we build it on Azure, with authentication, storage, notifications, and APIs designed around what the app actually does. We ship our own apps this way; My AI Bartender and CLIQUE Pix are both live.
 
 **Cloud & hosting**
 This is the part most shops hand to someone else. We architect it. Azure resources defined as infrastructure as code, DNS delegated and managed properly, CI/CD that deploys on every push, TLS and security headers, monitoring and alerting after launch, and per-client tenant isolation so your environment is yours alone. Ongoing management if you want it.
@@ -251,7 +251,7 @@ Five steps. No consulting jargon, no invented methodology name.
 **Headline:** Thirty years of enterprise architecture, pointed at your business.
 
 **Body:**
-Xtend-AI is led by a solutions architect with roughly three decades in enterprise infrastructure and cloud. Microsoft Azure certified — AZ-305 Solutions Architect Expert, AZ-104, AZ-700, and AZ-900 — formerly an IBM Certified Architect Level 2 (Expert) and an Open Group Certified Master Architect, and a contributing author on five published technical books.
+Xtend-AI is led by a solutions architect with roughly three decades in enterprise infrastructure and cloud. Microsoft Azure certified (AZ-305 Solutions Architect Expert, AZ-104, AZ-700, and AZ-900), formerly an IBM Certified Architect Level 2 (Expert) and an Open Group Certified Master Architect, and a contributing author on five published technical books.
 
 That background is the difference between a site that looks finished and a system that keeps working after you stop paying attention to it.
 
@@ -259,7 +259,7 @@ That background is the difference between a site that looks finished and a syste
 
 - **Architected, not assembled.** Static-first for speed, deployed to Azure with infrastructure as code, real DNS delegation, security headers, CI/CD on every push, and per-client tenant isolation. Not a page builder with a subscription attached.
 - **We ship both halves.** The website and the mobile app, on the same design system, with AI features when they actually earn their place.
-- **We build our own products.** My AI Bartender and CLIQUE Pix are live in both app stores, and CLIQUE Pix also runs in the browser at clique-pix.com — one Azure backend serving an iOS app, an Android app, and a web client on Azure Static Web Apps. That is the same architecture, on the same services, that we would put you on.
+- **We build our own products.** My AI Bartender and CLIQUE Pix are live in both app stores, and CLIQUE Pix also runs in the browser at clique-pix.com, with one Azure backend serving an iOS app, an Android app, and a web client on Azure Static Web Apps. That is the same architecture, on the same services, that we would put you on.
 - **Small, senior, direct.** You talk to the architect who builds it, not an account manager.
 - **Local, and remote-friendly.** Based between Charlotte and Harrisburg, NC. Happy to meet in person; equally happy to work entirely remotely.
 
@@ -267,7 +267,7 @@ That background is the difference between a site that looks finished and a syste
 
 **Headline:** Tell us what you're building
 
-**Body:** Every project is scoped individually — tell us what you need and we'll come back with an architecture, a timeline, and a number.
+**Body:** Every project is scoped individually. Tell us what you need and we'll come back with an architecture, a timeline, and a number.
 
 **CTA:** Start a project → `/contact`
 
@@ -303,7 +303,7 @@ Proof, not a brag wall. One client engagement in progress and two shipped apps o
 
 ### 6.2 Our own apps
 
-**Framing line:** We build and ship our own products on the same stack we would put you on. That is not a portfolio flex — it is why we know what breaks.
+**Framing line:** We build and ship our own products on the same stack we would put you on. That is not a portfolio flex. It is why we know what breaks.
 
 **My AI Bartender** — live.
 Discover cocktails, make smarter substitutions, and use what you already have. Chat, voice, camera-based bottle scanning, and recipe creation.
@@ -338,7 +338,7 @@ Parity with My AI Bartender.
 
 - Hero: app icon + name + short description + store links, plus the web app link
 - What it does: temporary Events and persistent Cliques; real-time photo and video sharing; content disappears when the moment is over
-- **Three surfaces, one backend:** a Flutter app for iOS and Android, a React web client on Azure Static Web Apps at `clique-pix.com`, and one Azure backend behind all three — same real-time hub, same sign-in, same data
+- **Three surfaces, one backend:** a Flutter app for iOS and Android, a React web client on Azure Static Web Apps at `clique-pix.com`, and one Azure backend behind all three: same real-time hub, same sign-in, same data
 - Store links and web link: as recorded in §6.2
 
 **Icon asset:** ~~use `CLIQUE_Pix/play_app_icon_512x512.png`~~ — Done. Copied to `src/assets/clique-pix-icon.png` and rendered with `<Image>` at the same sizes and 22% squircle radius as the My AI Bartender icon. `public/images/cliquepix-logo.png` was the same artwork served unprocessed and has been deleted. The other files in `CLIQUE_Pix/` are the same mark at lower resolution or with a baked-in light background — unusable on a dark theme.
@@ -353,7 +353,7 @@ Rewritten. For a services buyer the founder's credentials **are** the credibilit
 
 - **H1:** About Xtend-AI
 - **Lead paragraph:** the approved positioning statement, once §1 is decided.
-- **Company paragraph:** Xtend-AI, LLC is a small studio based between Charlotte and Harrisburg, North Carolina. We design and build websites, mobile apps, and the Azure infrastructure that runs them, for client companies — and we build and ship our own consumer apps on the same stack.
+- **Company paragraph:** Xtend-AI, LLC is a small studio based between Charlotte and Harrisburg, North Carolina. We design and build websites, mobile apps, and the Azure infrastructure that runs them, for client companies, and we build and ship our own consumer apps on the same stack.
 - **Founder paragraph:** Xtend-AI was **co-founded** by **Gene Whitley** (spelling confirmed by the owner), a solutions architect with roughly thirty years in enterprise infrastructure and cloud architecture. "Co-founded," not "founded" — there is another founder, per the owner (2026-07-24).
 
 > **The co-founder has asked not to be named. This is a standing privacy decision, not a gap awaiting content.** Do not name, describe, or hint at their identity anywhere on the site or in this brief — even if the name is discoverable elsewhere. Copy says *co-founded* and stops there. Only the owner can lift this. Microsoft Azure certified: AZ-305 Solutions Architect Expert, AZ-104, AZ-700, AZ-900. Formerly an IBM Certified Architect Level 2 (Expert) and an Open Group Certified Master Architect. Contributing author on five published technical books.
@@ -379,12 +379,12 @@ The previous four read as product-company values. Revised to work for both halve
 Simple, credible, and **explicitly scoped to app support**.
 
 **Scope banner, at the top of the page:**
-> This page is for help with our apps — My AI Bartender and CLIQUE Pix. If you're a business looking to hire us to build a website or an app, start at [Services](/services) or [Contact](/contact).
+> This page is for help with our apps: My AI Bartender and CLIQUE Pix. If you're a business looking to hire us to build a website or an app, start at [Services](/services) or [Contact](/contact).
 
 Rationale: a prospective client who lands here by accident must not conclude that Xtend-AI is a support desk. This is also why Support is footer-only in the navigation (§3).
 
 - Support email: `support@xtend-ai.com`
-- Response time: 24–48 hours
+- Response time: 24-48 hours
 - FAQ: existing My AI Bartender entries stay, now under a "My AI Bartender" sub-heading — with two apps live, unlabelled FAQs read as if they apply to both. A closing note routes CLIQUE Pix questions to the support address until entries exist. **OWNER TO PROVIDE** CLIQUE Pix FAQ entries — do not invent app behavior, pricing, or platform support for CLIQUE Pix.
 - The email-support card no longer refers to "our support team". A one-person studio saying *team* contradicts the "small, senior, direct — no account manager" claim the rest of the site makes.
 
@@ -424,11 +424,11 @@ Submitted fields are HTML-escaped before being interpolated into the email's HTM
 
 | Page | Title | Description |
 |---|---|---|
-| `/` | Xtend-AI \| Web & Mobile App Development — Charlotte, NC | Xtend-AI designs and builds websites, mobile apps, and the Azure cloud that runs them — architected, not assembled. Charlotte & Harrisburg, NC, and remote. |
+| `/` | Xtend-AI \| Web & Mobile App Development in Charlotte, NC | Xtend-AI designs and builds websites, mobile apps, and the Azure cloud that runs them. Architected, not assembled. Charlotte & Harrisburg, NC, and remote. |
 | `/services` | Web, Mobile & Cloud Services \| Xtend-AI | Website design and development, iOS and Android apps from one Flutter codebase, and Azure architecture, deployment, and hosting. Charlotte, NC and remote. |
-| `/work` | Our Work \| Xtend-AI | Client engagements and the apps we've shipped ourselves — My AI Bartender and CLIQUE Pix, live on the App Store and Google Play. |
+| `/work` | Our Work \| Xtend-AI | Client engagements and the apps we've shipped ourselves: My AI Bartender and CLIQUE Pix, live on the App Store and Google Play. |
 | `/about` | About \| Xtend-AI | Xtend-AI is a Charlotte-area studio led by a solutions architect with 30 years in enterprise infrastructure and cloud. Azure certified, published author. |
-| `/contact` | Contact \| Xtend-AI | Start a project with Xtend-AI. Tell us whether you need a website, a mobile app, cloud and hosting, or product support — we respond within 24–48 hours. |
+| `/contact` | Contact \| Xtend-AI | Start a project with Xtend-AI. Tell us whether you need a website, a mobile app, cloud and hosting, or product support. We respond within 24-48 hours. |
 | `/support` | App Support \| Xtend-AI | Help with My AI Bartender and CLIQUE Pix. FAQs, bug reports, and support contact. For new project inquiries, see Services. |
 
 Product detail page titles keep their app focus.
