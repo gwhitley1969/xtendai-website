@@ -193,7 +193,7 @@ We are building a website and a Flutter mobile app for Needle Girlie, a medical 
 
 **Headline:** We don't assemble websites. We architect systems.
 
-**Cards (3)** — rewritten to speak to a client buyer. The previous three (multi-modal by design, purpose-built not generic, human UX first) are product-company claims and are removed from this page.
+**Three differentiators — rendered as editorial rows since 2026-07-25** (icon + title + body with hairline separators; the earlier three-equal-cards layout duplicated the services grid directly above it). Rewritten to speak to a client buyer. The previous three (multi-modal by design, purpose-built not generic, human UX first) are product-company claims and are removed from this page.
 
 1. **Architected, not assembled** — Static-first builds, infrastructure as code, real DNS delegation, security headers, CI/CD on every push, and per-client tenant isolation. The same discipline as enterprise systems, at the size of your business.
 2. **Both halves, one system** — Website and mobile app on the same design system, with AI features only where they earn their place. One team, one look, one place to call.
@@ -541,6 +541,8 @@ Approved by the owner with the Phase 1 audit fixes. Brand rules, not just implem
 - **Icons are stroke SVGs, never emoji** — rendered via `src/components/Icon.astro` (glyphs vendored from Tabler Icons, MIT) so every icon shares one stroke language and takes brand color. Emoji can do neither.
 - **Eyebrow badges are retired as decoration.** Pill badges appear only when they carry real status ("In progress" on Work, "Available Now" on the product pages) — never as section labels.
 - **The hero phone shows the real product.** The home hero renders an actual My AI Bartender screen capture, not a rebuilt imitation.
+- **No em- or en-dashes in site copy** (adopted 2026-07-25, Phase 2). Headlines, body, labels, titles, and meta descriptions restructure with commas, periods, colons, or parentheses; ranges use a plain hyphen ("24-48 hours"). Mechanical gate: zero `—` or `–` characters in the built HTML.
+- **One intent, one CTA label.** Buttons sharing a destination and intent share a label site-wide ("See what we build" → `/services`, "Start a project" → `/contact`). Support's "Contact Us" is the deliberate exception: help-seeking is a different intent than starting a project.
 - The letterhead watermark (§12.1a) is untouched by all of the above and remains on every page.
 
 ---
@@ -648,6 +650,6 @@ Deliverables:
 * ~~§8 — confirm the founder's name spelling~~ — Done (Gene Whitley)
 * **§6.1 — one or two sentences on the problem the Needle Girlie engagement solves**
 * **§9 — CLIQUE Pix FAQ entries**
-* §4.1 — hero visual decision (keep phone mock / add browser frame / replace)
+* §4.1 — hero visual: resolved 2026-07-25 with the real screen capture; the "browser frame" and "client site screenshot" upgrades stay open for when Needle Girlie launches
 * Screenshots for My AI Bartender and CLIQUE Pix (optional but recommended)
 * `needlegirlie.com` link — add at launch, not before

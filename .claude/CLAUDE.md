@@ -84,7 +84,7 @@ Navigation is **data-driven**, not hardcoded in markup. Nav changes are edits to
 
 5. **Fixed-position overlays must be DOM siblings of `<header>`, never descendants.** `.header` carries `backdrop-filter: blur(20px)`, which makes it the containing block for any `position: fixed` child — this silently collapsed the mobile menu to 0 px tall. Applies to any future drawer, modal, or toast.
 
-6. **Emoji cannot be recolored with CSS.** If an icon needs a brand color, use inline SVG with `fill: currentColor`.
+6. **Emoji cannot be recolored with CSS — and the site now contains none.** Icons come from `src/components/Icon.astro` (vendored Tabler stroke glyphs, `currentColor`); add glyphs there rather than hand-drawing SVG paths or reaching for emoji.
 
 7. **Don't commit the reference PNGs in the repo root.** `color01.png`, `old01.png`, `icon01.png` and similar are planning screenshots the owner drops in, and `CLIQUE_Pix/` holds source brand assets. They are not site assets — anything the site renders gets copied into `src/assets/` first.
 
