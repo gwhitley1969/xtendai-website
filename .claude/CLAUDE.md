@@ -53,7 +53,7 @@ There is **no linter, formatter, or type check in CI**. `npm run build` is the o
 ```
 src/
   layouts/BaseLayout.astro      # <head>, SEO/OG meta, Organization JSON-LD, named head slot, font preloads
-  components/                   # Header.astro, Footer.astro, FeatureCard.astro, StoreLinks.astro
+  components/                   # Header.astro, Footer.astro, FeatureCard.astro, StoreLinks.astro, Icon.astro
   pages/                        # file-based routing
     index.astro                 # home (largest file — hero, credibility bar, services-first sections)
     services.astro  work.astro  about.astro  contact.astro

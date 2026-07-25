@@ -39,16 +39,19 @@ All design tokens are defined on `:root` in `src/styles/global.css` and consumed
 
 ### Supporting palette (feature-icon variety)
 
-These are **not** brand colors — they're illustrative chrome for feature cards and the home-page phone mock.
+These are **not** brand colors — they're illustrative chrome for the feature-icon circles.
 
 | Token | Value | Role |
 |---|---|---|
 | `--xt-blue` | `#3b82f6` | Secondary blue (feature icons, `hero__glow--2`) |
 | `--xt-blue-light` | `#60a5fa` | Currently unused |
 | `--xt-cyan` | `#22d3ee` | Feature icons, global link hover color |
-| `--xt-coral` | `#f472b6` | **Misnamed — actually pink**; feature icons |
-| `--xt-gold` | `#fbbf24` | Feature icons, gold badge accent |
-| `--xt-green` | `#34d399` | Feature icons, profile avatar in the home-page phone mock |
+| `--xt-coral` | `#f472b6` | **Misnamed — actually pink**; feature icons, form `required` marker + error state |
+| `--xt-gold` | `#fbbf24` | Feature icons, "In progress" status badge, 21+ notice |
+| `--xt-green` | `#34d399` | Feature icons, app "Live" status lines on `/work`, form success state |
+| `--xt-phone-screen-bg` | `#10091f` | Sampled from the hero phone screenshot's page background — fills the frame below the cropped capture so it reads as the same screen |
+
+> **Icon-circle stroke colors are contrast-driven.** The glyphs inside `.icon-circle` are `currentColor` stroke SVGs: white on the dark fills (`--accent`, `--blue`), `--xt-bg-primary` on the light fills (`--green`, `--gold`, `--coral`, `--cyan`) — white on those four computes 1.7–2.6:1, under the 3:1 non-text minimum. The variant rules live next to `.icon-circle` in `global.css`; a new circle color needs its stroke side chosen the same way.
 
 ### Text
 
@@ -77,13 +80,15 @@ Gotchas if you touch this:
 
 | Token | Value | Role |
 |---|---|---|
-| `--xt-gradient-brand` | `linear-gradient(135deg, #022A56 0%, #188CFF 100%)` | Primary CTAs, card washes, section accents |
-| `--xt-gradient-accent-text` | `linear-gradient(135deg, #188CFF 0%, #7EC1FF 100%)` | Hero headline highlights via `.text-gradient` — brighter than the brand gradient so it reads as a shimmer on dark bg |
-| `--xt-gradient-blue` | `linear-gradient(135deg, #022A56 0%, #188CFF 100%)` | Alias of brand gradient |
+| `--xt-gradient-brand` | `linear-gradient(135deg, #022A56 0%, var(--xt-link) 100%)` | Primary CTAs, process-step numerals. Ends on `--xt-link` (`#0B6FE6`), **not** `--xt-accent`: white button text over `#188CFF` is ~3.4:1 — an AA fail at button text sizes — while `#0B6FE6` clears 4.5:1 (2026-07-25). |
+| `--xt-gradient-accent-text` | `linear-gradient(135deg, #188CFF 0%, #7EC1FF 100%)` | `.text-gradient` — **h1 hero headlines only** since the 2026-07-25 audit (one gradient phrase per page; section h2s are solid) |
 | `--xt-gradient-card` | `linear-gradient(145deg, rgba(24, 140, 255, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%)` | `.card--glow` subtle background |
-| `--xt-gradient-glow` | `radial-gradient(ellipse at 50% 0%, rgba(24, 140, 255, 0.15) 0%, transparent 70%)` | Section-glow washes (`.section--glow`) |
-| `--xt-gradient-hero` | `linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)` | Currently unused |
-| `--xt-gradient-warm` | `linear-gradient(135deg, #f472b6 0%, #fbbf24 100%)` | Currently unused |
+
+> `--xt-gradient-blue` (brand duplicate), `--xt-gradient-glow` (fed the removed `.section--glow`), `--xt-gradient-hero`, and `--xt-gradient-warm` were deleted 2026-07-25 — zero users each.
+
+### Reduced motion
+
+`global.css` ends with a blanket `@media (prefers-reduced-motion: reduce)` block: every animation and transition collapses to 0.01 ms (duration **and** delay) and smooth scroll turns off. New animations are covered automatically — do not add per-component reduced-motion overrides. `transition-delay` is zeroed deliberately: the mobile menu delays its `visibility` flip by `--transition-base` so the slide-out animation stays visible, and with the slide collapsed the delay must collapse with it or the menu would hang open invisibly for 250 ms.
 
 ### Legacy aliases
 
@@ -198,7 +203,7 @@ Both `is:inline` and `set:html` matter: without `is:inline` Astro processes the 
 
 ## Icon Placement Map
 
-Sources in `src/assets/`: `my-ai-bartender-icon.png`, `clique-pix-icon.png` (from `CLIQUE_Pix/play_app_icon_512x512.png`), and the three **reverse logo assets** `xtend-ai-mark-reverse.png` (431 × 399), `xtend-ai-wordmark-white.png` (744 × 135), and `xtend-ai-mark-watermark.png` (1024 w — the mark upscaled and slightly blurred, because the 431px source's hard binary-alpha edges stair-step when CSS scales it to viewport size).
+Sources in `src/assets/`: `my-ai-bartender-icon.png`, `clique-pix-icon.png` (from `CLIQUE_Pix/play_app_icon_512x512.png`), `my-ai-bartender-screen.png` (500 × 837 — see *Hero phone screenshot* below), and the three **reverse logo assets** `xtend-ai-mark-reverse.png` (431 × 399), `xtend-ai-wordmark-white.png` (744 × 135), and `xtend-ai-mark-watermark.png` (1024 w — the mark upscaled and slightly blurred, because the 431px source's hard binary-alpha edges stair-step when CSS scales it to viewport size).
 
 ### Reverse logo assets
 
@@ -214,12 +219,27 @@ A second script, `scripts/make-favicon-og.mjs` (run after the first — it reads
 | Every page — header | `src/components/Header.astro` | mark + wordmark | 40/44 h + 20/22 h | reverse lockup, tagline stacked under wordmark, eager |
 | Every page — footer | `src/components/Footer.astro` | mark + wordmark | 28 h + 18 h | reverse lockup, lazy |
 | Every page — letterhead watermark | `src/layouts/BaseLayout.astro` | watermark | `min(90vw, 97vh)` | fixed + centered, all viewports; `.site-watermark` in global.css, opacity `--xt-watermark-opacity` (6%), z-index 90 (above opaque section backgrounds, below header 100 / menu 99 / skip-link 1000), srcset 512/1024 |
-| Home — phone mock header | `src/pages/index.astro` | bartender | 36 × 36 | 10 px `border-radius`, `overflow: hidden` clip |
+| Home — hero phone screen | `src/pages/index.astro` | `my-ai-bartender-screen.png` | 250 w | real home-screen capture inside the CSS phone frame, eager; frame bg `--xt-phone-screen-bg` continues the capture below its crop |
 | Work — app cards | `src/pages/work.astro` | both apps | 72 × 72 | 22% squircle, soft drop shadow |
 | Product detail — hero | `products/my-ai-bartender.astro` | bartender | 120 × 120 | 22% squircle, centered below H1 |
 | Product detail — hero | `products/clique-pix.astro` | CLIQUE Pix | 120 × 120 | 22% squircle, centered below H1 |
 
-All placements go through `<Image>` with `densities={[2, 3]}` (except the watermark — a 6% opacity ghost needs no retina variants). Astro generates per-site size/density variants and deduplicates identical outputs.
+All placements go through `<Image>` with `densities={[2, 3]}` (except the watermark — a 6% opacity ghost needs no retina variants — and the hero phone screen, whose 500px source caps it at `densities={[2]}`). Astro generates per-site size/density variants and deduplicates identical outputs.
+
+### Hero phone screenshot
+
+The home hero's phone frame renders a **real My AI Bartender home-screen capture** (`src/assets/my-ai-bartender-screen.png`), replacing a ~300-line div-built imitation removed in the 2026-07-25 audit. Provenance and the two constraints that shaped it:
+
+- **Both store listings only publish marketing-framed renders** (blue background, caption, baked-in device) and every one of them **cuts the phone at the bottom edge** — a raw full-height capture does not exist in either listing (verified programmatically across all 7 App Store and 14 Play portrait images). The asset is the screen-glass interior cropped from the Play listing's "Premium Mixology Experience" render.
+- The crop therefore **ends cleanly below the Recipe Vault card**, and the frame's background (`--xt-phone-screen-bg`, sampled from the capture's own page background) fills the remaining frame height, reading as the same screen's empty space. The frame's `border-radius: 28px` + `overflow: hidden` also clips the capture's rounded glass corners.
+
+To refresh after an app redesign: pull the listing image (`https://play.google.com/store/apps/details?id=ai.mybartender.mybartenderai`, portrait image, `=h2400` size suffix), crop the screen interior, end at a clean card boundary, resize to 500 w, re-sample the page-background hex into `--xt-phone-screen-bg`.
+
+### Stroke icon glyphs — `Icon.astro`
+
+`src/components/Icon.astro` holds the site's icon dictionary: 18 outline glyphs **vendored from Tabler Icons v3.34.0 (MIT)** as inline SVG strings — 24 × 24, `stroke="currentColor"`, stroke-width 2, matching FeatureCard's larger hand-kept 48-grid set. No npm dependency; an unknown `name` **throws at build time** (pages are prerendered, so a typo fails `npm run build` instead of shipping a blank icon). Emoji are banned as icons (§12.5 of the brief): they can't take brand color (Known Gotcha #1) and they read as a second, unmatched icon language.
+
+To add a glyph: download the outline SVG from the Tabler set, drop its `class` attribute and leading no-op bounding path, add `aria-hidden="true"`, paste as one line. **Scoping trap:** the SVG is emitted via `set:html`, so it carries no Astro scope attribute — page-scoped CSS must target it with `:global(svg)` (same mechanism as the `<Image>` rule above); the `width`/`height="24"` attributes on each glyph are the reliable default size.
 
 > The letterhead watermark is the **LCP element on every viewport** (largest painted area beats the `<h1>` text block). Verified harmless 2026-07-24: ~49 KB WebP, paints ≈ 150–200 ms unthrottled; Lighthouse LCP 1.8 s mobile / 0.4 s desktop, all four categories 100 on both. If LCP ever regresses, look here first. In the header and footer the mark and wordmark are sized by **separate wrapper-scoped `:global(img)` selectors** — a shared `.header__logo :global(img)` rule would force both images to one height.
 
@@ -263,7 +283,7 @@ Both resolve to the same deployment; each deploy updates both simultaneously.
 
 ### 1. Emoji color cannot be set via CSS
 
-Emoji glyphs (`👤`, `🍸`, etc.) are rendered by the OS font stack with their own color tables. `color:` and `filter:` do not reliably recolor them. When an icon needs a specific color, use inline SVG with `fill: currentColor` — see `.phone-ui__header-profile` for the pattern.
+Emoji glyphs (`👤`, `🍸`, etc.) are rendered by the OS font stack with their own color tables. `color:` and `filter:` do not reliably recolor them. When an icon needs a specific color, use a `currentColor` SVG glyph from `Icon.astro` (see *Stroke icon glyphs* in the Icon Placement Map). As of 2026-07-25 the site contains no emoji at all — keep it that way.
 
 ### 2. `--xt-coral` is pink, not coral
 
@@ -328,3 +348,4 @@ Significant implementation decisions captured here for future reference:
 - **Reverse logo lockup + hero watermark (2026-07-24, commits `ec16277`…)** — The header logo was an opaque 1024² PNG ("white" = its background) rendered as an illegible 48 px white chip on the dark bar; no dark-surface logo variant existed anywhere. Added `scripts/make-reverse-logo.mjs` (see Icon Placement Map) generating the reverse mark and white wordmark from the transparent brand PNGs, rebuilt the header/footer as mark + readable wordmark + stacked tagline, deleted the chip asset, and added a 6% opacity X watermark behind the home hero (≥ 768px only, lazy — never fetched on mobile). Brand rule recorded in `XTEND-AI-WEB.md` §12: on dark surfaces navy ink inverts to white, `#188CFF` stays constant.
 - **Reverse favicons + OG card (2026-07-24, commits `96dfd18`…)** — The favicon was the navy-ink mark on transparency (its dark stroke vanished in dark browser tabs) and the default `og:image` was a transparent navy-ink PNG (invisible in dark-mode chat apps). `scripts/make-favicon-og.mjs` regenerates the favicon bundle as the reverse mark on a navy tile and builds the 1200×630 dark OG card now defaulted in `BaseLayout.astro`. The Organization JSON-LD logo deliberately keeps the transparent original for Google's light surfaces.
 - **Site-wide letterhead watermark (2026-07-24, commit `3adcbca`)** — Owner request: the hero watermark, much bigger, centered, on every page, phones included. Now a fixed X at ~90% of the viewport in `BaseLayout.astro` that all content scrolls over. Key layering fact: the site's section backgrounds are opaque, so a watermark truly *behind* content would vanish for whole scroll stretches — instead it sits at z-index 90 (above section backgrounds, below header/menu/skip-link), which at 6% on a no-dark-text site renders identically to being behind. Superseded and removed the hero-only watermark from `index.astro`. New softened 1024px asset (`makeWatermark()` in the script) because the raw mark stair-stepped at viewport scale.
+- **Design-taste audit, Phase 1 (2026-07-25, commits `bc082eb`…)** — The site was audited against the owner's design-taste skill and the code-only findings fixed in five commits, owner-approved plan. Accessibility: a blanket `prefers-reduced-motion` block (the site had none while running an infinite hero float), `100dvh` hero min-height, and the brand button gradient re-ended on `--xt-link` for AA text contrast. AI-tell removal: all 17 emoji icon sites replaced by `Icon.astro` (vendored Tabler stroke glyphs, contrast-driven per-fill stroke colors); the div-built fake phone UI replaced with a real Play-listing screen capture; section/footer/button glows removed (hero, page-header, and CTA-card glows kept); ten decorative eyebrow badges culled (semantic status badges kept); gradient headline text rationed to h1s; the home differentiators rebuilt as editorial rows because their three-equal-cards grid duplicated the services grid above. Dead tokens/keyframes deleted. **Deliberately untouched:** all copy (em-dashes, hero subtitle length, contact-page voice — Phase 2, brief-synced) and the letterhead watermark (owner invariant). Brand rules recorded in `XTEND-AI-WEB.md` §12.5.

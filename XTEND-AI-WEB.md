@@ -525,6 +525,17 @@ Secondary CTA:
 
 * Hover: very light tint background
 
+### 12.5 Visual restraint rules — adopted 2026-07-25 (design-taste audit)
+
+Approved by the owner with the Phase 1 audit fixes. Brand rules, not just implementation details:
+
+- **Gradient headline text is h1-only.** One gradient phrase per page, in the hero. Section h2s render solid white.
+- **No outer glows on interactive elements.** Buttons and badges carry no colored halo shadows; hover feedback is lift plus a plain dark depth shadow. Ambient radial glows are limited to the hero / page-header glow plus the closing CTA card.
+- **Icons are stroke SVGs, never emoji** — rendered via `src/components/Icon.astro` (glyphs vendored from Tabler Icons, MIT) so every icon shares one stroke language and takes brand color. Emoji can do neither.
+- **Eyebrow badges are retired as decoration.** Pill badges appear only when they carry real status ("In progress" on Work, "Available Now" on the product pages) — never as section labels.
+- **The hero phone shows the real product.** The home hero renders an actual My AI Bartender screen capture, not a rebuilt imitation.
+- The letterhead watermark (§12.1a) is untouched by all of the above and remains on every page.
+
 ---
 
 ## 13) Assets
@@ -549,6 +560,7 @@ App icons live in `src/assets/` and render through `<Image>`:
 |---|---|---|
 | My AI Bartender | supplied | `src/assets/my-ai-bartender-icon.png` |
 | CLIQUE Pix | `CLIQUE_Pix/play_app_icon_512x512.png` | `src/assets/clique-pix-icon.png` |
+| My AI Bartender home screen | Play-listing screenshot, screen region cropped (see `docs/IMPLEMENTATION.md`) | `src/assets/my-ai-bartender-screen.png` |
 
 ---
 
