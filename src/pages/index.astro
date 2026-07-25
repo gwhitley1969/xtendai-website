@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import FeatureCard from '../components/FeatureCard.astro';
+import Icon from '../components/Icon.astro';
 import { Image } from 'astro:assets';
 import bartenderIcon from '../assets/my-ai-bartender-icon.png';
 
@@ -44,19 +45,19 @@ const services = [
 
 const differentiators = [
   {
-    icon: '🏗️',
+    icon: 'building',
     color: 'accent',
     title: 'Architected, not assembled',
     description: 'Static-first builds, infrastructure as code, real DNS delegation, security headers, CI/CD on every push, and per-client tenant isolation. The same discipline as enterprise systems, at the size of your business.'
   },
   {
-    icon: '🧩',
+    icon: 'puzzle',
     color: 'cyan',
     title: 'Both halves, one system',
     description: 'Website and mobile app on the same design system, with AI features only where they earn their place. One team, one look, one place to call.'
   },
   {
-    icon: '🤝',
+    icon: 'heart-handshake',
     color: 'green',
     title: 'Small, senior, direct',
     description: 'You talk to the architect who builds it. No account manager, and no handoff to a junior team after the pitch.'
@@ -280,7 +281,7 @@ const differentiators = [
       <div class="grid grid--3">
         {differentiators.map((item) => (
           <div class="card card--glow">
-            <div class={`icon-circle icon-circle--${item.color}`}>{item.icon}</div>
+            <div class={`icon-circle icon-circle--${item.color}`}><Icon name={item.icon} /></div>
             <h3>{item.title}</h3>
             <p>{item.description}</p>
           </div>

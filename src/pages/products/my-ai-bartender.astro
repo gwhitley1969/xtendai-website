@@ -3,6 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import StoreLinks from '../../components/StoreLinks.astro';
+import Icon from '../../components/Icon.astro';
 import { Image } from 'astro:assets';
 import bartenderIcon from '../../assets/my-ai-bartender-icon.png';
 
@@ -37,12 +38,12 @@ const steps = [
 ];
 
 const features = [
-  { icon: '💬', title: 'Chat', description: 'Ask for cocktails, ideas, substitutions, and step-by-step help.', color: 'blue' },
-  { icon: '🎙️', title: 'Voice', description: 'Real-time voice bartender conversations, completely hands-free.', color: 'green' },
-  { icon: '📷', title: 'Scan My Bar', description: 'Use your camera to identify bottles and build your bar.', color: 'coral' },
-  { icon: '📚', title: 'Recipe Vault', description: 'Save your favorites and build your personal collection.', color: 'gold' },
-  { icon: '🎨', title: 'Create Studio', description: 'Build custom recipes with AI-powered suggestions.', color: 'accent' },
-  { icon: '🔗', title: 'Friends via Code', description: 'Share recipes instantly with simple codes or links.', color: 'green' }
+  { icon: 'message-circle', title: 'Chat', description: 'Ask for cocktails, ideas, substitutions, and step-by-step help.', color: 'blue' },
+  { icon: 'microphone', title: 'Voice', description: 'Real-time voice bartender conversations, completely hands-free.', color: 'green' },
+  { icon: 'camera', title: 'Scan My Bar', description: 'Use your camera to identify bottles and build your bar.', color: 'coral' },
+  { icon: 'book', title: 'Recipe Vault', description: 'Save your favorites and build your personal collection.', color: 'gold' },
+  { icon: 'palette', title: 'Create Studio', description: 'Build custom recipes with AI-powered suggestions.', color: 'accent' },
+  { icon: 'link', title: 'Friends via Code', description: 'Share recipes instantly with simple codes or links.', color: 'green' }
 ];
 ---
 
@@ -106,7 +107,7 @@ const features = [
       <div class="features-grid">
         {features.map((feature) => (
           <div class="feature-card card card--glow">
-            <div class={`icon-circle icon-circle--${feature.color}`}>{feature.icon}</div>
+            <div class={`icon-circle icon-circle--${feature.color}`}><Icon name={feature.icon} /></div>
             <h3 class="feature-card__title">{feature.title}</h3>
             <p class="feature-card__description">{feature.description}</p>
           </div>

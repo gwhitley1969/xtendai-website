@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import Icon from '../components/Icon.astro';
 
 const title = 'Contact | Xtend-AI';
 const description = 'Start a project with Xtend-AI. Tell us whether you need a website, a mobile app, cloud and hosting, or product support — we respond within 24–48 hours.';
@@ -81,7 +82,7 @@ const interests = [
             <h2>Other ways to reach us</h2>
 
             <div class="info-item">
-              <div class="icon-circle icon-circle--accent">✉️</div>
+              <div class="icon-circle icon-circle--accent"><Icon name="mail" /></div>
               <div>
                 <h3>Email</h3>
                 <a href="mailto:xtendai@xtend-ai.com">xtendai@xtend-ai.com</a>
@@ -89,7 +90,7 @@ const interests = [
             </div>
 
             <div class="info-item">
-              <div class="icon-circle icon-circle--blue">⏱️</div>
+              <div class="icon-circle icon-circle--blue"><Icon name="clock" /></div>
               <div>
                 <h3>Response Time</h3>
                 <p>Within 24-48 hours</p>

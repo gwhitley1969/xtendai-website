@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import Icon from '../components/Icon.astro';
 
 const title = 'About | Xtend-AI';
 const description = 'Xtend-AI is a Charlotte-area studio led by a solutions architect with 30 years in enterprise infrastructure and cloud. Azure certified, published author.';
@@ -22,10 +23,10 @@ const credentials = [
 ];
 
 const values = [
-  { icon: '✨', text: 'User experience comes first' },
-  { icon: '📐', text: 'Architecture before code' },
-  { icon: '🎯', text: 'AI should be helpful, not hype' },
-  { icon: '🤝', text: 'Ship it, then stand behind it' }
+  { icon: 'sparkles', text: 'User experience comes first' },
+  { icon: 'ruler', text: 'Architecture before code' },
+  { icon: 'target', text: 'AI should be helpful, not hype' },
+  { icon: 'heart-handshake', text: 'Ship it, then stand behind it' }
 ];
 ---
 
@@ -100,7 +101,7 @@ const values = [
             <ul class="values-list">
               {values.map((value) => (
                 <li class="values-item">
-                  <span class="values-icon">{value.icon}</span>
+                  <span class="values-icon"><Icon name={value.icon} /></span>
                   <span>{value.text}</span>
                 </li>
               ))}
@@ -260,7 +261,15 @@ const values = [
   }
 
   .values-icon {
-    font-size: 1.25rem;
+    display: inline-flex;
+    color: var(--xt-accent);
+  }
+
+  /* Icon renders via set:html, so the svg has no scope attribute —
+     :global() is required, same as the <Image> rule in CLAUDE.md. */
+  .values-icon :global(svg) {
+    width: 20px;
+    height: 20px;
   }
 
   .cta-text {

@@ -3,6 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import StoreLinks from '../../components/StoreLinks.astro';
+import Icon from '../../components/Icon.astro';
 import { Image } from 'astro:assets';
 import cliquePixIcon from '../../assets/clique-pix-icon.png';
 
@@ -14,25 +15,25 @@ const googlePlay = 'https://play.google.com/store/apps/details?id=com.cliquepix.
 
 const features = [
   {
-    icon: '📅',
+    icon: 'calendar',
     color: 'accent',
     title: 'Events',
     description: 'Create a temporary Event when you need to share around a single occasion.'
   },
   {
-    icon: '👥',
+    icon: 'users',
     color: 'blue',
     title: 'Cliques',
     description: 'Or keep a persistent Clique for a group you share with regularly.'
   },
   {
-    icon: '⚡',
+    icon: 'bolt',
     color: 'gold',
     title: 'Real time',
     description: 'Snap and share photos and videos as the moment is happening.'
   },
   {
-    icon: '⏳',
+    icon: 'hourglass',
     color: 'green',
     title: 'Then it disappears',
     description: "Everything goes when the moment's over. Nothing lingers."
@@ -86,7 +87,7 @@ const features = [
       <div class="features-grid">
         {features.map((feature) => (
           <div class="feature card card--glow">
-            <div class={`icon-circle icon-circle--${feature.color}`}>{feature.icon}</div>
+            <div class={`icon-circle icon-circle--${feature.color}`}><Icon name={feature.icon} /></div>
             <h3 class="feature__title">{feature.title}</h3>
             <p class="feature__description">{feature.description}</p>
           </div>

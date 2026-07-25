@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import Icon from '../components/Icon.astro';
 
 const title = 'App Support | Xtend-AI';
 const description = 'Help with My AI Bartender and CLIQUE Pix. FAQs, bug reports, and support contact. For new project inquiries, see Services.';
@@ -48,14 +49,14 @@ const faqs = [
     <div class="container">
       <div class="support-grid">
         <div class="support-card card card--glow">
-          <div class="icon-circle icon-circle--accent">✉️</div>
+          <div class="icon-circle icon-circle--accent"><Icon name="mail" /></div>
           <h2>Email Support</h2>
           <p>Have a question or a bug to report? Email us and you'll get a real answer.</p>
           <a href="mailto:support@xtend-ai.com" class="btn btn--primary">Email Us</a>
         </div>
 
         <div class="support-card card">
-          <div class="icon-circle icon-circle--blue">⏱️</div>
+          <div class="icon-circle icon-circle--blue"><Icon name="clock" /></div>
           <h2>Response Time</h2>
           <p>We typically respond within 24-48 hours during business days.</p>
         </div>

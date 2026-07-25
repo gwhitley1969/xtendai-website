@@ -370,6 +370,12 @@ li {
   justify-content: center;
   font-size: 1.5rem;
   flex-shrink: 0;
+  color: var(--xt-white);
+}
+
+.icon-circle svg {
+  width: 24px;
+  height: 24px;
 }
 
 .icon-circle--accent { background: var(--xt-accent); }
@@ -378,6 +384,17 @@ li {
 .icon-circle--gold { background: var(--xt-gold); }
 .icon-circle--green { background: var(--xt-green); }
 .icon-circle--cyan { background: var(--xt-cyan); }
+
+/* Stroke color per fill. A white stroke fails the 3:1 non-text contrast
+   minimum on the four light fills (green ≈1.9:1, gold ≈1.7:1,
+   coral ≈2.6:1, cyan ≈1.8:1), so those carry the near-black stroke;
+   accent and blue are dark enough for white. */
+.icon-circle--coral,
+.icon-circle--gold,
+.icon-circle--green,
+.icon-circle--cyan {
+  color: var(--xt-bg-primary);
+}
 
 /* Form Elements */
 .form-group {
