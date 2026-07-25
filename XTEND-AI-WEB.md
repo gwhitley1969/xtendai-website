@@ -132,18 +132,19 @@ Target shape, in order. Replaces the previous Hero → Features bar → What we 
 **H1:** Websites and apps, *architected to last*
 *("architected to last" carries the `.text-gradient` treatment.)*
 
-**Subheadline:** Xtend-AI designs and builds websites, mobile apps, and the cloud infrastructure that runs them. Based in the Charlotte area, working with clients anywhere — and you deal directly with the architect who builds it.
+**Subheadline:** Xtend-AI designs and builds websites, mobile apps, and the cloud infrastructure that runs them. You deal directly with the architect who builds it.
+
+> Trimmed 2026-07-25 (design audit): the previous subheadline ran ~33 words against a ~20-word hero guideline. The location claim it dropped ("Based in the Charlotte area, working with clients anywhere") is carried by the credibility bar directly below the hero.
 
 **Primary CTA:** See what we build → `/services`
 **Secondary CTA:** Start a project → `/contact`
 
 > The "starting with My AI Bartender" line is removed.
 
-**Open implementation question — the hero visual.** The hero currently renders a CSS phone mock of the My AI Bartender UI. On a services-first home page that image re-signals "app company" in the first screen. Three options, owner to decide in Phase 4:
-> **(a)** Keep it as-is — zero cost, and it is honest proof of shipped mobile work.
-> **(b)** Pair it with a browser frame so the visual says "both halves" — on-message, but real design work.
-> **(c)** Replace it once a client website screenshot exists.
-> Recommendation: **(a)** now, revisit at (b) or (c) when Needle Girlie launches.
+**The hero visual (updated 2026-07-25).** The CSS phone mock of the My AI Bartender UI was replaced with a **real home-screen capture** from the app's own store listing, rendered inside the CSS phone frame (design audit; see `docs/IMPLEMENTATION.md`, *Hero phone screenshot*). The earlier open question about what the visual should signal remains live for later:
+> **(b)** Pair the phone with a browser frame so the visual says "both halves" — on-message, but real design work.
+> **(c)** Replace it with a client website screenshot once one exists.
+> Recommendation: keep the real capture now, revisit (b) or (c) when Needle Girlie launches.
 
 ### 4.2 Credibility bar
 
@@ -175,7 +176,9 @@ Three cards, each linking to `/services`.
 2. **Mobile apps** — iOS and Android from a single Flutter codebase, with an Azure backend when the app needs one. We have shipped two of our own to both stores.
 3. **Cloud & hosting** — Azure architecture, infrastructure as code, custom domains and real DNS delegation, security headers, CI/CD on every push, and monitoring after launch.
 
-**CTA:** See all services → `/services`
+**CTA:** See what we build → `/services`
+
+> Relabelled from "See all services" 2026-07-25: it shares the hero primary CTA's destination and intent, and one intent gets one label site-wide.
 
 ### 4.5 Section: Proof
 
@@ -332,6 +335,8 @@ Live. Keep the existing structure: hero with app icon, name, short description, 
 
 Two stale strings were corrected during the repositioning: the closing CTA said *"Join the waitlist to be notified when My AI Bartender launches"* on a page that also carried an "Available Now" badge and links to both live stores, and the badge itself read "Available Now!!!". Both are fixed.
 
+**Closing CTA (revised 2026-07-25):** the section previously paired download-focused copy ("Ready to discover your next favorite cocktail?") with a "Contact Us" button pointing at the business contact form — mismatched intent, since download conversion belongs to the hero's store links. It now mirrors the CLIQUE Pix page's business pivot: heading "Building something like this?", body "My AI Bartender is available now on the App Store and Google Play. We ship our own apps end to end, and we can ship yours the same way.", CTA "Start a project" → `/contact`.
+
 ### 7.2 CLIQUE Pix — `/products/clique-pix` — NEW
 
 Parity with My AI Bartender.
@@ -391,6 +396,8 @@ Rationale: a prospective client who lands here by accident must not conclude tha
 ---
 
 ## 10) Contact Page
+
+**Page header (adopted 2026-07-25):** H1 "Let's *connect*" (gradient on "connect"), subtitle: *"Tell us what you're trying to build. You'll get a straight answer, and if we're the right fit, an architecture, a timeline, and a number."* — the same promise the closing CTAs make on the pages that link here. Replaced "We'd love to hear from you", which predated this brief and was the last generic filler line on the site.
 
 Contact form fields:
 
