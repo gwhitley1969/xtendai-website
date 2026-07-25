@@ -95,6 +95,10 @@
   /* Site-wide brand watermark strength (see .site-watermark) */
   --xt-watermark-opacity: 0.06;
 
+  /* Sampled from the hero phone screenshot's page background so the
+     frame area below the cropped capture reads as the same screen */
+  --xt-phone-screen-bg: #10091f;
+
   /* Transitions */
   --transition-fast: 150ms ease;
   --transition-base: 250ms ease;
