@@ -609,10 +609,19 @@ const differentiators = [
      transform is owned by the float loop above. */
   .hero,
   .cred-bar {
-    --rise-distance: 40px;
-    --rise-duration: 1400ms;
+    --rise-distance: 56px;
+    --rise-duration: 2200ms;
     --rise-ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --rise-step: 320ms;
+  }
+
+  /* The scroll reveal must not inherit the hero's ~3s pace — during
+     active scrolling that reads as broken. Pinned at the previous
+     roll-up values. */
+  .cred-bar {
+    --rise-duration: 1400ms;
     --rise-step: 220ms;
+    --rise-distance: 40px;
   }
 
   .hero__title,
@@ -627,7 +636,7 @@ const differentiators = [
   .hero__visual   { animation-delay: calc(var(--rise-step) * 3); }
 
   .hero__bg {
-    animation: bloom 1800ms ease-out both;
+    animation: bloom 2600ms ease-out both;
   }
 
   /* Cred bar: hidden only after JS arms it (below the fold, so the

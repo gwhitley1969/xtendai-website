@@ -90,7 +90,7 @@
   /* Header content spreads wider than page content (owner-approved
      2026-08-28) — consumed by .header__container in Header.astro */
   --header-max-width: 1440px;
-  --header-height: 84px;
+  --header-height: 96px;
   --radius: 12px;
   --radius-lg: 20px;
   --radius-xl: 28px;
@@ -114,7 +114,7 @@
    mobile menu offset, and the hero's min-height calc. */
 @media (min-width: 900px) {
   :root {
-    --header-height: 104px;
+    --header-height: 132px;
   }
 }
 

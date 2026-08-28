@@ -40,11 +40,11 @@ function isActive(href: string): boolean {
       {/* Reverse (dark-surface) assets from scripts/make-reverse-logo.mjs.
           alt="" on both — the anchor's aria-label is the accessible name. */}
       <span class="header__mark">
-        <Image src={mark} alt="" width={60} densities={[2, 3]} loading="eager" />
+        <Image src={mark} alt="" width={78} densities={[2, 3]} loading="eager" />
       </span>
       <span class="header__lockup">
         <span class="header__wordmark">
-          <Image src={wordmark} alt="" width={143} densities={[2, 3]} loading="eager" />
+          <Image src={wordmark} alt="" width={176} densities={[2, 3]} loading="eager" />
         </span>
         <span class="header__tagline">Web, mobile, and the cloud beneath</span>
       </span>
@@ -127,7 +127,7 @@ function isActive(href: string): boolean {
      :global(img) rule would force both to one height. */
   .header__mark :global(img) {
     display: block;
-    height: 48px;
+    height: 56px;
     width: auto;
   }
 
@@ -139,12 +139,12 @@ function isActive(href: string): boolean {
 
   .header__wordmark :global(img) {
     display: block;
-    height: 24px;
+    height: 27px;
     width: auto;
   }
 
   .header__tagline {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     line-height: 1.2;
     color: #ffffff;
     font-weight: 700;
@@ -154,11 +154,11 @@ function isActive(href: string): boolean {
 
   @media (min-width: 768px) {
     .header__mark :global(img) {
-      height: 56px;
+      height: 72px;
     }
 
     .header__wordmark :global(img) {
-      height: 26px;
+      height: 32px;
     }
 
     .header__tagline {
@@ -168,7 +168,7 @@ function isActive(href: string): boolean {
 
   @media (min-width: 1100px) {
     .header__tagline {
-      font-size: 1rem;
+      font-size: 1.1rem;
     }
   }
 
@@ -198,7 +198,9 @@ function isActive(href: string): boolean {
     display: flex;
     align-items: center;
     gap: var(--space-1);
-    padding: var(--space-2) var(--space-4);
+    /* Tighter sides below 1100px: at exactly 900px the banner-scale
+       logo plus five links otherwise fit with zero slack. */
+    padding: var(--space-2) var(--space-3);
     color: var(--xt-text-secondary);
     font-size: 1.125rem;
     font-weight: 500;
@@ -214,6 +216,15 @@ function isActive(href: string): boolean {
 
   .nav__link--active {
     color: var(--xt-accent-light);
+  }
+
+  /* 20px nav only where there's room: in the 900-1100px band the 72px
+     mark + lockup + five links would collide at this size. */
+  @media (min-width: 1100px) {
+    .nav__link {
+      font-size: 1.25rem;
+      padding: var(--space-2) var(--space-4);
+    }
   }
 
   /* Mobile Toggle */
