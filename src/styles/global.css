@@ -512,7 +512,10 @@ li {
 /* Reduced motion: collapse every animation and transition to effectively
    instant. transition-delay is included deliberately — the mobile menu
    delays its visibility flip to keep the slide-out animation visible,
-   and with the slide gone the delay must go too. */
+   and with the slide gone the delay must go too. animation-delay is
+   included for the same reason: the home hero's staggered entrance
+   hides elements at their `from` frame (fill-mode: both) until each
+   delay elapses, so a surviving delay would hold content invisible. */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -520,6 +523,7 @@ li {
 
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
+    animation-delay: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     transition-delay: 0.01ms !important;
