@@ -40,11 +40,11 @@ function isActive(href: string): boolean {
       {/* Reverse (dark-surface) assets from scripts/make-reverse-logo.mjs.
           alt="" on both — the anchor's aria-label is the accessible name. */}
       <span class="header__mark">
-        <Image src={mark} alt="" width={48} densities={[2, 3]} loading="eager" />
+        <Image src={mark} alt="" width={60} densities={[2, 3]} loading="eager" />
       </span>
       <span class="header__lockup">
         <span class="header__wordmark">
-          <Image src={wordmark} alt="" width={121} densities={[2, 3]} loading="eager" />
+          <Image src={wordmark} alt="" width={143} densities={[2, 3]} loading="eager" />
         </span>
         <span class="header__tagline">Web, mobile, and the cloud beneath</span>
       </span>
@@ -110,6 +110,9 @@ function isActive(href: string): boolean {
     align-items: center;
     justify-content: space-between;
     height: 100%;
+    /* Header content spreads wider than the 1200px page content
+       (owner-approved 2026-08-28) — overrides .container's cap. */
+    max-width: var(--header-max-width);
   }
 
   .header__logo {
@@ -124,7 +127,7 @@ function isActive(href: string): boolean {
      :global(img) rule would force both to one height. */
   .header__mark :global(img) {
     display: block;
-    height: 40px;
+    height: 48px;
     width: auto;
   }
 
@@ -136,12 +139,12 @@ function isActive(href: string): boolean {
 
   .header__wordmark :global(img) {
     display: block;
-    height: 20px;
+    height: 24px;
     width: auto;
   }
 
   .header__tagline {
-    font-size: 0.65rem;
+    font-size: 0.7rem;
     line-height: 1.2;
     color: #ffffff;
     font-weight: 700;
@@ -151,21 +154,21 @@ function isActive(href: string): boolean {
 
   @media (min-width: 768px) {
     .header__mark :global(img) {
-      height: 44px;
+      height: 56px;
     }
 
     .header__wordmark :global(img) {
-      height: 22px;
+      height: 26px;
     }
 
     .header__tagline {
-      font-size: 0.85rem;
+      font-size: 0.95rem;
     }
   }
 
   @media (min-width: 1100px) {
     .header__tagline {
-      font-size: 0.9rem;
+      font-size: 1rem;
     }
   }
 
@@ -181,7 +184,7 @@ function isActive(href: string): boolean {
 
   .nav__list {
     display: flex;
-    gap: var(--space-1);
+    gap: var(--space-2);
     list-style: none;
     padding: 0;
     margin: 0;
@@ -197,6 +200,7 @@ function isActive(href: string): boolean {
     gap: var(--space-1);
     padding: var(--space-2) var(--space-4);
     color: var(--xt-text-secondary);
+    font-size: 1.125rem;
     font-weight: 500;
     text-decoration: none;
     border-radius: var(--radius);

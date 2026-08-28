@@ -80,7 +80,7 @@ Use this exact tagline (header / hero / footer as appropriate):
 
 The previous tagline, *"Your next favorite app, made smarter,"* is product-only and is superseded. Replace it everywhere it appears — currently `Header.astro` (beside the logo) and `Footer.astro` (`.footer__tagline`).
 
-**Implementation constraint:** the header renders the tagline at `white-space: nowrap`, 0.65rem on mobile. The superseded tagline was 36 characters and fit at 375 px; this one is 34. Treat ~36 characters as the hard ceiling for any future change, and re-check at 375 px whenever it changes.
+**Implementation constraint:** the header renders the tagline at `white-space: nowrap`, 0.7rem on mobile (raised from 0.65rem with the 2026-08-28 statement header). The superseded tagline was 36 characters and fit at 375 px; this one is 34. Treat ~36 characters as the hard ceiling for any future change, and re-check at 375 px whenever it changes.
 
 ---
 
@@ -510,6 +510,8 @@ Fallback (no external fonts):
 
 * Max content width: 1120–1200px
 
+* Header content is the one exception: it spreads to 1440px so the logo and nav reach past the content edges on large screens (approved 2026-08-28, co-founder request; bar height 84px mobile / 104px desktop)
+
 * 8px spacing grid
 
 * Section padding: 72–96px desktop, 48–64px mobile
@@ -543,7 +545,7 @@ Approved by the owner with the Phase 1 audit fixes. Brand rules, not just implem
 - **The hero phone shows the real product.** The home hero renders an actual My AI Bartender screen capture, not a rebuilt imitation.
 - **No em- or en-dashes in site copy** (adopted 2026-07-25, Phase 2). Headlines, body, labels, titles, and meta descriptions restructure with commas, periods, colons, or parentheses; ranges use a plain hyphen ("24-48 hours"). Mechanical gate: zero `—` or `–` characters in the built HTML.
 - **One intent, one CTA label.** Buttons sharing a destination and intent share a label site-wide ("See what we build" → `/services`, "Start a project" → `/contact`). Support's "Contact Us" is the deliberate exception: help-seeking is a different intent than starting a project.
-- **Motion is entrance-only** (adopted 2026-08-28). The home hero plays a one-time ~1.3s rise-and-fade stagger on load (title, subtitle, CTAs, phone visual, with the background glow blooming underneath), and the credibility bar rises in once as it first scrolls into view. The phone float remains the only looping animation. Reduced-motion users get the finished layout instantly, and content is never hidden for visitors whose browsers skip animations. The letterhead watermark and header never animate. No other scroll-triggered or looping motion without owner approval.
+- **Motion is entrance-only** (adopted 2026-08-28). The home hero plays a one-time ~2s rise-and-fade stagger on load (elements stay visible through the tail of their travel so the motion reads as rolling up, not flashing in) (title, subtitle, CTAs, phone visual, with the background glow blooming underneath), and the credibility bar rises in once as it first scrolls into view. The phone float remains the only looping animation. Reduced-motion users get the finished layout instantly, and content is never hidden for visitors whose browsers skip animations. The letterhead watermark and header never animate. No other scroll-triggered or looping motion without owner approval.
 - The letterhead watermark (§12.1a) is untouched by all of the above and remains on every page.
 
 ---

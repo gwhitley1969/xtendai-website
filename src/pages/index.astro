@@ -609,10 +609,10 @@ const differentiators = [
      transform is owned by the float loop above. */
   .hero,
   .cred-bar {
-    --rise-distance: 20px;
-    --rise-duration: 900ms;
-    --rise-ease: cubic-bezier(0.33, 1, 0.68, 1);
-    --rise-step: 140ms;
+    --rise-distance: 40px;
+    --rise-duration: 1400ms;
+    --rise-ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --rise-step: 220ms;
   }
 
   .hero__title,
@@ -627,7 +627,7 @@ const differentiators = [
   .hero__visual   { animation-delay: calc(var(--rise-step) * 3); }
 
   .hero__bg {
-    animation: bloom 1300ms ease-out both;
+    animation: bloom 1800ms ease-out both;
   }
 
   /* Cred bar: hidden only after JS arms it (below the fold, so the
@@ -644,8 +644,13 @@ const differentiators = [
   .cred-bar__grid.is-revealed .cred:nth-child(3) { animation-delay: calc(var(--rise-step) * 2); }
   .cred-bar__grid.is-revealed .cred:nth-child(4) { animation-delay: calc(var(--rise-step) * 3); }
 
+  /* Opacity completes at the 60% keyframe while the translate runs the
+     full duration, so each element is fully visible during the tail of
+     its travel. That visible glide is what reads as "rolling up" rather
+     than fading in; without it the eye only registers the fade. */
   @keyframes rise {
     from { opacity: 0; transform: translateY(var(--rise-distance)); }
+    60%  { opacity: 1; }
     to   { opacity: 1; transform: translateY(0); }
   }
 
