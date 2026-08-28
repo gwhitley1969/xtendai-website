@@ -610,9 +610,9 @@ const differentiators = [
   .hero,
   .cred-bar {
     --rise-distance: 20px;
-    --rise-duration: 600ms;
-    --rise-ease: cubic-bezier(0.16, 1, 0.3, 1);
-    --rise-step: 90ms;
+    --rise-duration: 900ms;
+    --rise-ease: cubic-bezier(0.33, 1, 0.68, 1);
+    --rise-step: 140ms;
   }
 
   .hero__title,
@@ -627,7 +627,7 @@ const differentiators = [
   .hero__visual   { animation-delay: calc(var(--rise-step) * 3); }
 
   .hero__bg {
-    animation: bloom 900ms ease-out both;
+    animation: bloom 1300ms ease-out both;
   }
 
   /* Cred bar: hidden only after JS arms it (below the fold, so the
