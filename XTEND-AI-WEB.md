@@ -543,6 +543,7 @@ Approved by the owner with the Phase 1 audit fixes. Brand rules, not just implem
 - **The hero phone shows the real product.** The home hero renders an actual My AI Bartender screen capture, not a rebuilt imitation.
 - **No em- or en-dashes in site copy** (adopted 2026-07-25, Phase 2). Headlines, body, labels, titles, and meta descriptions restructure with commas, periods, colons, or parentheses; ranges use a plain hyphen ("24-48 hours"). Mechanical gate: zero `—` or `–` characters in the built HTML.
 - **One intent, one CTA label.** Buttons sharing a destination and intent share a label site-wide ("See what we build" → `/services`, "Start a project" → `/contact`). Support's "Contact Us" is the deliberate exception: help-seeking is a different intent than starting a project.
+- **Motion is entrance-only** (adopted 2026-08-28). The home hero plays a one-time ~0.9s rise-and-fade stagger on load (title, subtitle, CTAs, phone visual, with the background glow blooming underneath), and the credibility bar rises in once as it first scrolls into view. The phone float remains the only looping animation. Reduced-motion users get the finished layout instantly, and content is never hidden for visitors whose browsers skip animations. The letterhead watermark and header never animate. No other scroll-triggered or looping motion without owner approval.
 - The letterhead watermark (§12.1a) is untouched by all of the above and remains on every page.
 
 ---

@@ -240,6 +240,25 @@ const differentiators = [
   <Footer slot="footer" />
 </BaseLayout>
 
+<script>
+  // Cred-bar scroll reveal. Arms the hidden state only when it can also
+  // reveal it; without JS (or with reduced motion) the bar is simply
+  // visible. The grid sits below the 100dvh hero, so the arming race
+  // against first paint is invisible.
+  const grid = document.querySelector('.cred-bar__grid');
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (grid && !reduced && 'IntersectionObserver' in window) {
+    grid.classList.add('is-pending');
+    const io = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        grid.classList.add('is-revealed');
+        io.disconnect();
+      }
+    }, { threshold: 0.3 });
+    io.observe(grid);
+  }
+</script>
+
 <style>
   /* Hero */
   .hero {
@@ -579,5 +598,59 @@ const differentiators = [
   @keyframes float {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-15px); }
+  }
+
+  /* Entrance (Linear-style rise on load) + cred-bar scroll reveal.
+     animation-fill-mode: both hides each element during its stagger
+     delay via the `from` frame. There is deliberately NO static
+     opacity: 0 in the load sequence, so if animations never run
+     (old browser, reader mode) the content is simply visible.
+     .hero__visual carries the rise, NOT .hero__phone, whose
+     transform is owned by the float loop above. */
+  .hero,
+  .cred-bar {
+    --rise-distance: 20px;
+    --rise-duration: 600ms;
+    --rise-ease: cubic-bezier(0.16, 1, 0.3, 1);
+    --rise-step: 90ms;
+  }
+
+  .hero__title,
+  .hero__subtitle,
+  .hero__actions,
+  .hero__visual {
+    animation: rise var(--rise-duration) var(--rise-ease) both;
+  }
+
+  .hero__subtitle { animation-delay: var(--rise-step); }
+  .hero__actions  { animation-delay: calc(var(--rise-step) * 2); }
+  .hero__visual   { animation-delay: calc(var(--rise-step) * 3); }
+
+  .hero__bg {
+    animation: bloom 900ms ease-out both;
+  }
+
+  /* Cred bar: hidden only after JS arms it (below the fold, so the
+     arming race is invisible); no JS or reduced motion = just visible. */
+  .cred-bar__grid.is-pending .cred {
+    opacity: 0;
+  }
+
+  .cred-bar__grid.is-revealed .cred {
+    animation: rise var(--rise-duration) var(--rise-ease) both;
+  }
+
+  .cred-bar__grid.is-revealed .cred:nth-child(2) { animation-delay: var(--rise-step); }
+  .cred-bar__grid.is-revealed .cred:nth-child(3) { animation-delay: calc(var(--rise-step) * 2); }
+  .cred-bar__grid.is-revealed .cred:nth-child(4) { animation-delay: calc(var(--rise-step) * 3); }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(var(--rise-distance)); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes bloom {
+    from { opacity: 0; }
+    to   { opacity: 1; }
   }
 </style>
