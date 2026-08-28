@@ -313,7 +313,7 @@ The repo root contains several untracked screenshot PNGs (`color01.png`, `old01.
 
 Several CSS properties — `filter`, `transform`, `perspective`, `backdrop-filter`, `will-change`, and `contain` — make an element behave as the **containing block** for any `position: fixed` descendants, overriding the usual viewport-relative resolution. A fixed-positioned child of such an element anchors to the parent's box, not the viewport.
 
-This bit the mobile menu. `.header` has `backdrop-filter: blur(20px)` (Header.astro:103) for its glass look. Originally `.mobile-menu` was nested inside `<header>`, so its `position: fixed; top: var(--header-height); bottom: 0` coordinates resolved against the 72 px header box instead of the viewport:
+This bit the mobile menu. `.header` has `backdrop-filter: blur(20px)` (Header.astro:103) for its glass look. Originally `.mobile-menu` was nested inside `<header>`, so its `position: fixed; top: var(--header-height); bottom: 0` coordinates resolved against the header box instead of the viewport (the header was 72 px tall at the time; the math below uses that value):
 
 ```
 top:    72 px from the top of the 72 px header     = y=72 in viewport
