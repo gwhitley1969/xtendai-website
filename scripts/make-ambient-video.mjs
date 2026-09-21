@@ -21,12 +21,20 @@
  *   BT.601 otherwise). The black floor is LIFTED to the page background
  *   #0a0a0f rather than crushed: the video sits on the page at partial
  *   opacity, and pixels darker than the page would read as a dirty box.
- * - Deband + dither + a little luma noise: dark navy gradients band badly
- *   in 8-bit H.264. `noise` is 8-bit only in ffmpeg, so it runs last.
+ * - Deband + error-diffusion dither: dark navy gradients band badly in
+ *   8-bit H.264. Added luma noise (`grade.grain`) exists per clip but is OFF
+ *   by default: measured on real footage it took a loop from 0.26 MB to
+ *   8 MB at crf 16, because x264 faithfully encodes per-frame noise, and at
+ *   sane crf it is quantized away before it can hide anything. `noise` is
+ *   8-bit only in ffmpeg, so when used it runs last.
  * - Encode: H.264 High with an explicit level (veryslow alone lands at
  *   L5.1, which some phone hardware decoders refuse), a single GOP so the
  *   loop has no mid-clip keyframe pulse, no audio track at all, CFR, and
  *   +faststart so playback can begin before the file has fully arrived.
+ *   The one keyframe at the loop restart differs from the frame before it
+ *   by a mean of about 0.5 luma levels (of 255), measured; flattening
+ *   ipratio/pbratio or disabling mbtree did not reduce that and cost size,
+ *   so x264's defaults stay.
  * - Budget: a rendition over budget is deleted and the run fails. Budgets
  *   are part of the brief (XTEND-AI-WEB.md §14.2), not a suggestion.
  */
@@ -40,7 +48,7 @@ const OUT = 'src/assets/video';
 const DEFAULT_GRADE = {
   balance: 'rs=-0.04:bs=0.06:rm=-0.03:bm=0.05',
   curve: '0/0 0.5/0.46 1/0.94',
-  grain: 4,
+  grain: 0,
 };
 
 /**
@@ -53,8 +61,8 @@ const CLIPS = {
     master: 'beneath-hero-master.mp4',
     fadeSeconds: 1.5,
     renditions: [
-      { suffix: 'd', width: 1600, height: 900, level: '4.0', crf: 24, budgetBytes: 1_500_000 },
-      { suffix: 'm', width: 540, height: 960, level: '3.1', crf: 25, budgetBytes: 600_000, cropX: 0.8 },
+      { suffix: 'd', width: 1600, height: 900, level: '4.0', crf: 20, budgetBytes: 1_500_000 },
+      { suffix: 'm', width: 540, height: 960, level: '3.1', crf: 21, budgetBytes: 600_000, cropX: 0.8 },
     ],
   },
 };
