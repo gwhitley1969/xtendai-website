@@ -43,6 +43,9 @@
  *   --ambient-fade-left-start / --ambient-fade-left   left scrim stops
  *   --ambient-fade-top-start  / --ambient-fade-top    top scrim stops
  *   --ambient-fade-bottom                             bottom scrim end
+ *   --ambient-plate-size / -at / -strength   a soft dark ellipse behind a
+ *       text block, so a bright clip can run under text without costing
+ *       its contrast (size e.g. `44% 62%`, at e.g. `26% 58%`, strength %)
  */
 import { getImage } from 'astro:assets';
 
@@ -61,11 +64,25 @@ interface Props {
    * the layout breakpoint at which the box turns from tall to wide.
    */
   desktopMedia?: string;
+  /**
+   * Optional opening clip, played ONCE per browser session before the loop.
+   * It must begin and end on the loop's first frame (generate it with that
+   * frame as both start and end image): it then rises out of the still and
+   * hands off to the loop without a visible seam.
+   */
+  intro?: string;
+  introMobile?: string;
+  /**
+   * Milliseconds after `load` before the clip may start. The default keeps a
+   * background clip out of the page's way; an opening clip that is part of
+   * the page's entrance wants to start sooner.
+   */
+  startDelay?: number;
   /** Never load video below this viewport width in px. */
   minWidth?: number;
 }
 
-const { desktop, mobile, desktopStill, mobileStill, desktopMedia = '(min-width: 1024px)', minWidth = 0 } = Astro.props;
+const { desktop, mobile, desktopStill, mobileStill, desktopMedia = '(min-width: 1024px)', intro, introMobile, startDelay = 2500, minWidth = 0 } = Astro.props;
 
 /* WebP at quality 70: about 22 KB desktop / 15 KB mobile for this footage.
    Deliberately not squeezed further: Chrome drops images under roughly
@@ -75,10 +92,9 @@ const stillD = desktopStill && (await getImage({ src: desktopStill, widths: [960
 const stillM = mobileStill && (await getImage({ src: mobileStill, widths: [360, 540], format: 'webp', quality: 70 }));
 const stillBase = stillM || stillD;
 
-/* Worst-case measurement only: `AMBIENT_DELAY_MS=0 npm run build` starts the
-   clip at load so Lighthouse and the LCP check see it. Production keeps the
-   default, which also lands the clip as the last beat of the home entrance. */
-const delay = Number(process.env.AMBIENT_DELAY_MS ?? 2500);
+/* Worst-case measurement only: `AMBIENT_DELAY_MS=0 npm run build` starts
+   every clip at load so Lighthouse and the LCP check see it. */
+const delay = Number(process.env.AMBIENT_DELAY_MS ?? startDelay);
 ---
 
 <div class="ambient" data-ambient data-delay={delay} data-min-width={minWidth} data-desktop-media={desktopMedia}>
@@ -102,6 +118,7 @@ const delay = Number(process.env.AMBIENT_DELAY_MS ?? 2500);
     )}
     <video
       class="ambient__video"
+      data-role="loop"
       muted
       loop
       playsinline
@@ -112,6 +129,20 @@ const delay = Number(process.env.AMBIENT_DELAY_MS ?? 2500);
       data-src-desktop={desktop}
       data-src-mobile={mobile ?? desktop}
     ></video>
+    {intro && (
+      <video
+        class="ambient__video ambient__video--intro"
+        data-role="intro"
+        muted
+        playsinline
+        preload="none"
+        tabindex="-1"
+        disablepictureinpicture
+        disableremoteplayback
+        data-src-desktop={intro}
+        data-src-mobile={introMobile ?? intro}
+      ></video>
+    )}
     <div class="ambient__scrim"></div>
   </div>
 </div>
@@ -134,15 +165,31 @@ const delay = Number(process.env.AMBIENT_DELAY_MS ?? 2500);
   let userOff = false;
   try { userOff = localStorage.getItem(KEY) === 'off'; } catch { /* storage blocked */ }
 
-  const states = boxes.map((box) => ({
-    box,
-    video: box.querySelector('video') as HTMLVideoElement,
-    minWidth: Number(box.dataset.minWidth ?? 0),
-    armed: false,
-    inView: false,
-    blocked: false,
-    wanted: false,
-  }));
+  // The opening clip plays once per browser session; after that, straight
+  // to the loop.
+  const INTRO_KEY = 'xt-ambient-intro';
+  let introSeen = false;
+  try { introSeen = sessionStorage.getItem(INTRO_KEY) === '1'; } catch { /* storage blocked */ }
+
+  const states = boxes.map((box) => {
+    const loop = box.querySelector('video[data-role="loop"]') as HTMLVideoElement;
+    const intro = introSeen ? null : (box.querySelector('video[data-role="intro"]') as HTMLVideoElement | null);
+    return {
+      box,
+      loop,
+      intro,
+      video: intro ?? loop, // the element currently responsible for playback
+      minWidth: Number(box.dataset.minWidth ?? 0),
+      armed: false,
+      inView: false,
+      blocked: false,
+      wanted: false,
+    };
+  });
+
+  /** One media query picks both the still and the clip, so they always match. */
+  const pick = (box: HTMLElement, v: HTMLVideoElement) =>
+    (matchMedia(box.dataset.desktopMedia ?? '(min-width: 1024px)').matches ? v.dataset.srcDesktop : v.dataset.srcMobile) as string;
 
   function paint() {
     root.toggleAttribute('data-ambient-off', userOff);
@@ -159,12 +206,11 @@ const delay = Number(process.env.AMBIENT_DELAY_MS ?? 2500);
   function start(s: (typeof states)[number]) {
     const v = s.video;
     if (!v.src) {
-      // The same query as the <picture> source, so the clip always fades in
-      // over the still of its own rendition.
-      const wide = matchMedia(s.box.dataset.desktopMedia ?? '(min-width: 1024px)').matches;
-      v.src = (wide ? v.dataset.srcDesktop : v.dataset.srcMobile) as string;
-      const rate = parseFloat(getComputedStyle(s.box).getPropertyValue('--ambient-video-rate'));
-      if (rate > 0) v.defaultPlaybackRate = v.playbackRate = rate;
+      v.src = pick(s.box, v);
+      if (v === s.loop) {
+        const rate = parseFloat(getComputedStyle(s.box).getPropertyValue('--ambient-video-rate'));
+        if (rate > 0) v.defaultPlaybackRate = v.playbackRate = rate;
+      }
     }
     v.muted = true;
     s.wanted = true;
@@ -174,7 +220,7 @@ const delay = Number(process.env.AMBIENT_DELAY_MS ?? 2500);
       s.wanted = false;
       v.removeAttribute('src');
       v.load(); // cancels the download
-      s.box.classList.remove('is-playing');
+      s.box.classList.remove('is-playing', 'is-intro', 'is-loop');
       paint();
     });
   }
@@ -205,10 +251,46 @@ const delay = Number(process.env.AMBIENT_DELAY_MS ?? 2500);
 
     for (const s of states) {
       io.observe(s.box);
-      s.video.addEventListener('playing', () => { s.box.classList.add('is-playing'); paint(); });
+
+      // `is-playing` = something is showing motion (drives the toggle);
+      // `is-intro` / `is-loop` = which layer is visible.
+      s.loop.addEventListener('playing', () => {
+        s.box.classList.add('is-playing', 'is-loop');
+        s.box.classList.remove('is-intro'); // intro fades away over the running loop
+        paint();
+      });
+
+      if (s.intro) {
+        const intro = s.intro;
+        intro.addEventListener('playing', () => { s.box.classList.add('is-playing', 'is-intro'); paint(); });
+        // Buffer the loop during the intro's last moments so the handoff
+        // has nothing to wait for.
+        intro.addEventListener('timeupdate', () => {
+          if (!s.loop.src && intro.duration && intro.currentTime > intro.duration - 2) {
+            s.loop.preload = 'auto';
+            s.loop.src = pick(s.box, s.loop);
+          }
+        });
+        // The intro ends on the loop's first frame, so the loop simply
+        // takes over. The same path covers a failed intro.
+        const handoff = () => {
+          try { sessionStorage.setItem(INTRO_KEY, '1'); } catch { /* storage blocked */ }
+          s.video = s.loop;
+          s.intro = null;
+          s.box.classList.add('is-handoff'); // loop appears instantly, no slow fade
+          sync();
+        };
+        intro.addEventListener('ended', handoff, { once: true });
+        intro.addEventListener('error', handoff, { once: true });
+      }
+
       // A pause we did not ask for (power saving kicked in): hide the frozen
       // frame rather than leave a stalled picture behind the content.
-      s.video.addEventListener('pause', () => { if (s.wanted) { s.box.classList.remove('is-playing'); paint(); } });
+      for (const v of [s.loop, s.intro]) {
+        v?.addEventListener('pause', () => {
+          if (s.wanted && v === s.video && !v.ended) { s.box.classList.remove('is-playing', 'is-intro', 'is-loop'); paint(); }
+        });
+      }
     }
 
     for (const t of toggles) {
@@ -239,6 +321,10 @@ const delay = Number(process.env.AMBIENT_DELAY_MS ?? 2500);
     max-height: var(--ambient-max-height, none);
     overflow: hidden;
     pointer-events: none;
+    /* Own stacking context: the layers inside carry z-indexes (intro 1,
+       scrim 2) that must never compete with the page's content (which sits
+       at z-index 1), or the scrim ends up dimming the text it protects. */
+    isolation: isolate;
   }
 
   .ambient__media {
@@ -269,8 +355,22 @@ const delay = Number(process.env.AMBIENT_DELAY_MS ?? 2500);
     transition: opacity var(--ambient-video-fade, 2400ms) ease;
   }
 
-  .ambient.is-playing .ambient__video {
+  .ambient.is-loop .ambient__video[data-role='loop'],
+  .ambient.is-intro .ambient__video--intro {
     opacity: 1;
+  }
+
+  /* The opening clip rides above the loop. It starts and ends on the
+     still's frame, so it can appear and leave quickly without a pop. */
+  .ambient__video--intro {
+    z-index: 1;
+    transition: opacity 500ms ease;
+  }
+
+  /* Taking over from the intro: the loop must already be fully there when
+     the intro lifts away, not mid-way through its own slow fade-in. */
+  .ambient.is-handoff .ambient__video[data-role='loop'] {
+    transition: none;
   }
 
   /* Static gradient layers over the clip, not a mask on it: masking a
@@ -283,7 +383,14 @@ const delay = Number(process.env.AMBIENT_DELAY_MS ?? 2500);
     --veil: color-mix(in srgb, var(--scrim) calc((1 - var(--ambient-video-opacity, 0.6)) * 100%), transparent);
     position: absolute;
     inset: 0;
+    z-index: 2; /* above both clips; the intro sits at 1 */
     background:
+      radial-gradient(
+        ellipse var(--ambient-plate-size, 0% 0%) at var(--ambient-plate-at, 50% 50%),
+        color-mix(in srgb, var(--scrim) var(--ambient-plate-strength, 0%), transparent) 0%,
+        color-mix(in srgb, var(--scrim) calc(var(--ambient-plate-strength, 0%) * 0.75), transparent) 45%,
+        transparent 100%
+      ),
       linear-gradient(to right, var(--scrim) var(--ambient-fade-left-start, 0%), transparent var(--ambient-fade-left, 0%)),
       linear-gradient(to bottom, var(--scrim) var(--ambient-fade-top-start, 0%), transparent var(--ambient-fade-top, 0%)),
       linear-gradient(to top, var(--scrim) 0%, transparent var(--ambient-fade-bottom, 0%)),
