@@ -30,3 +30,8 @@ api/local.settings.json
 
 # Claude Code machine-local settings (CLAUDE.md itself is tracked)
 .claude/settings.local.json
+
+# Ambient video working files: generated masters, style frames, loop
+# intermediates. Only the encoded renditions in src/assets/video/ are
+# committed (see scripts/make-ambient-video.mjs).
+video-masters/

@@ -1,0 +1,5 @@
+# Ambient video renditions are binary. Without this Git relies on its
+# content heuristic alone. Deliberately NOT `* text=auto`: that would
+# renormalize line endings across the whole repo and produce whole-file
+# diffs (docs/IMPLEMENTATION.md, Known Gotchas #6).
+*.mp4 binary
