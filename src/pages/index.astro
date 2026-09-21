@@ -14,6 +14,8 @@ import heroLoopDesktop from '../assets/video/beneath-hero-d.mp4';
 import heroLoopMobile from '../assets/video/beneath-hero-m.mp4';
 import heroStillDesktop from '../assets/video/beneath-hero-d.png';
 import heroStillMobile from '../assets/video/beneath-hero-m.png';
+import heroRideDesktop from '../assets/video/beneath-ride-d.mp4';
+import heroRideMobile from '../assets/video/beneath-ride-m.mp4';
 
 const title = 'Xtend-AI | Web & Mobile App Development in Charlotte, NC';
 const description = 'Xtend-AI designs and builds websites, mobile apps, and the Azure cloud that runs them. Architected, not assembled. Charlotte & Harrisburg, NC, and remote.';
@@ -88,6 +90,9 @@ const differentiators = [
       desktopStill={heroStillDesktop}
       mobileStill={heroStillMobile}
       desktopMedia="(min-width: 1024px)"
+      intro={heroRideDesktop}
+      introMobile={heroRideMobile}
+      startDelay={600}
     />
     <div class="hero__bg">
       <div class="hero__glow hero__glow--1"></div>
@@ -668,13 +673,16 @@ const differentiators = [
      URL bar collapses. A browser without svh drops the clamp and the clip
      simply covers the whole hero. */
   .hero {
-    --ambient-video-opacity: 0.75;
-    --ambient-video-fade: 2400ms;
+    --ambient-video-opacity: 0.92;
+    --ambient-video-fade: 600ms;
     --ambient-video-rate: 1;
     --ambient-max-height: calc(100svh - var(--header-height));
-    --ambient-fade-top-start: 42%;
-    --ambient-fade-top: 90%;
-    --ambient-fade-bottom: 14%;
+    --ambient-fade-top-start: 22%;
+    --ambient-fade-top: 72%;
+    --ambient-fade-bottom: 10%;
+    --ambient-plate-size: 120% 46%;
+    --ambient-plate-at: 50% 40%;
+    --ambient-plate-strength: 80%;
   }
 
   /* Two columns: content fills both from top to bottom (measured: text
@@ -683,14 +691,48 @@ const differentiators = [
      scrim keeps the text column on the page background. */
   @media (min-width: 1024px) {
     .hero {
-      --ambient-video-opacity: 0.95;
+      --ambient-video-opacity: 1;
       --ambient-max-height: none;
-      --ambient-fade-left-start: 8%;
-      --ambient-fade-left: 52%;
+      --ambient-fade-left-start: 0%;
+      --ambient-fade-left: 26%;
       --ambient-fade-top-start: 0%;
-      --ambient-fade-top: 16%;
-      --ambient-fade-bottom: 8%;
+      --ambient-fade-top: 12%;
+      --ambient-fade-bottom: 6%;
+      --ambient-plate-size: 44% 58%;
+      --ambient-plate-at: 25% 60%;
+      --ambient-plate-strength: 64%;
     }
+  }
+
+  /* The light now runs under the text, so the text carries its own
+     separation instead of sitting on a wall of black: layered dark halos
+     hugging the glyphs, the way film subtitles stay legible over anything.
+     The subtitle also steps up from --xt-text-secondary, which was chosen
+     for flat dark surfaces, not for moving light. */
+  .hero__title,
+  .hero__subtitle {
+    text-shadow:
+      0 0 3px color-mix(in srgb, var(--xt-bg-primary) 95%, transparent),
+      0 0 10px color-mix(in srgb, var(--xt-bg-primary) 90%, transparent),
+      0 0 26px color-mix(in srgb, var(--xt-bg-primary) 85%, transparent);
+  }
+
+  .hero__subtitle {
+    color: color-mix(in srgb, var(--xt-text-primary) 80%, var(--xt-text-secondary));
+  }
+
+  /* The outline button is see-through everywhere else; over moving light
+     it gets a smoked-glass backing (measured 3.7:1 without it at the ride's
+     brightest frame). */
+  .hero__actions .btn--secondary {
+    background: color-mix(in srgb, var(--xt-bg-primary) 60%, transparent);
+  }
+
+  /* A text-shadow paints over a background-clip:text fill and muddies the
+     gradient phrase; a drop-shadow filter acts on the finished glyphs. */
+  .hero__title :global(.text-gradient) {
+    text-shadow: none;
+    filter: drop-shadow(0 0 18px color-mix(in srgb, var(--xt-bg-primary) 85%, transparent));
   }
 
   /* Pause control: top corner on the single-column layout (the 72px above
