@@ -4,23 +4,30 @@
  * Brand rules live in XTEND-AI-WEB.md §12.5; the pipeline that makes the
  * clips is scripts/make-ambient-video.mjs.
  *
- * It is an enhancement that is never part of first paint:
- * - The markup carries NO `autoplay`, NO `src` and NO `poster`, and the
- *   video starts at exactly `opacity: 0`. Chrome ignores opacity-0 paints
- *   for Largest Contentful Paint and does not reconsider an element whose
- *   opacity later changes on the compositor, so a full-bleed clip (larger
- *   than the watermark, the real LCP element) cannot become a late LCP.
- *   Do not add a poster, a non-zero starting opacity, or any style that
- *   repaints the video once it is visible.
+ * The video is an enhancement that is never part of first paint, and the
+ * still underneath it is what keeps Largest Contentful Paint honest:
+ * - A full-bleed clip is larger than the watermark (the old LCP element).
+ *   Measured with Lighthouse on a build that starts the clip at load:
+ *   Chrome DOES register a video that fades in from opacity 0 as the LCP
+ *   element, timed at its first visible frame. In production that would be
+ *   load + delay + download, a late LCP that lab runs never see because
+ *   they end before the clip exists.
+ * - So pass `desktopStill` / `mobileStill` for any clip that can out-size
+ *   the page's other content. The still is the clip's own first frame,
+ *   painted with the page at full strength (never from opacity 0, never
+ *   inside a wrapper that animates from 0). It becomes the LCP element at
+ *   an early, truthful time, and the video, occupying the identical box,
+ *   is never LARGER, so it cannot replace it. The clip then fades in over
+ *   a pixel-identical frame: the picture simply starts to move. Visitors
+ *   who get no video keep the still.
+ * - The <video> itself carries NO `autoplay`, NO `src` and NO `poster`.
  * - The script assigns `src` only after `load` + a delay + idle, and only
  *   when nothing says "don't": reduced motion, Save-Data, 2g/3g, low
  *   device memory, a stored user choice, a hidden tab, or a box that is
- *   off screen. Visitors in any of those states get the page as designed
- *   without video. The global reduced-motion CSS block cannot stop a
- *   <video>, which is why this guard is in JS.
+ *   off screen. The global reduced-motion CSS block cannot stop a <video>,
+ *   which is why this guard is in JS.
  * - If the browser refuses playback (iOS Low Power Mode), the download is
- *   cancelled and nothing ever shows. No retry: the user asked the device
- *   to save power.
+ *   cancelled. No retry: the user asked the device to save power.
  *
  * Pair it with <AmbientToggle /> in the same section: auto-starting motion
  * longer than five seconds needs a pause control (WCAG 2.2.2, Level A).
@@ -37,16 +44,36 @@
  *   --ambient-fade-top-start  / --ambient-fade-top    top scrim stops
  *   --ambient-fade-bottom                             bottom scrim end
  */
+import { getImage } from 'astro:assets';
+
 interface Props {
   /** URL of the landscape rendition (import the .mp4 from src/assets/video/). */
   desktop: string;
-  /** URL of the portrait rendition, used when the box is taller than wide. */
+  /** URL of the portrait rendition, used where `desktopMedia` does not match. */
   mobile?: string;
-  /** Never load below this viewport width in px. */
+  /** First frame of `desktop` (the .png the pipeline writes beside it). */
+  desktopStill?: ImageMetadata;
+  /** First frame of `mobile`. */
+  mobileStill?: ImageMetadata;
+  /**
+   * Where the landscape clip AND still apply. One query drives both, so the
+   * video always fades in over the still of the same rendition. Match it to
+   * the layout breakpoint at which the box turns from tall to wide.
+   */
+  desktopMedia?: string;
+  /** Never load video below this viewport width in px. */
   minWidth?: number;
 }
 
-const { desktop, mobile, minWidth = 0 } = Astro.props;
+const { desktop, mobile, desktopStill, mobileStill, desktopMedia = '(min-width: 1024px)', minWidth = 0 } = Astro.props;
+
+/* WebP at quality 70: about 22 KB desktop / 15 KB mobile for this footage.
+   Deliberately not squeezed further: Chrome drops images under roughly
+   0.05 bits per displayed pixel from LCP as placeholders, and the whole
+   point of the still is to BE the LCP element. */
+const stillD = desktopStill && (await getImage({ src: desktopStill, widths: [960, 1280, 1600], format: 'webp', quality: 70 }));
+const stillM = mobileStill && (await getImage({ src: mobileStill, widths: [360, 540], format: 'webp', quality: 70 }));
+const stillBase = stillM || stillD;
 
 /* Worst-case measurement only: `AMBIENT_DELAY_MS=0 npm run build` starts the
    clip at load so Lighthouse and the LCP check see it. Production keeps the
@@ -54,8 +81,25 @@ const { desktop, mobile, minWidth = 0 } = Astro.props;
 const delay = Number(process.env.AMBIENT_DELAY_MS ?? 2500);
 ---
 
-<div class="ambient" data-ambient data-delay={delay} data-min-width={minWidth}>
+<div class="ambient" data-ambient data-delay={delay} data-min-width={minWidth} data-desktop-media={desktopMedia}>
   <div class="ambient__media" aria-hidden="true">
+    {stillBase && (
+      <picture>
+        {stillM && stillD && <source media={desktopMedia} srcset={stillD.srcSet.attribute} sizes="100vw" type="image/webp" />}
+        <img
+          class="ambient__still"
+          src={stillBase.src}
+          srcset={stillBase.srcSet.attribute}
+          sizes="100vw"
+          width={stillBase.attributes.width}
+          height={stillBase.attributes.height}
+          alt=""
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+        />
+      </picture>
+    )}
     <video
       class="ambient__video"
       muted
@@ -115,10 +159,10 @@ const delay = Number(process.env.AMBIENT_DELAY_MS ?? 2500);
   function start(s: (typeof states)[number]) {
     const v = s.video;
     if (!v.src) {
-      const r = s.box.getBoundingClientRect();
-      // By box shape, not a breakpoint: the home hero is a tall single
-      // column until 1024px, so a portrait tablet needs the portrait clip.
-      v.src = (r.height > r.width ? v.dataset.srcMobile : v.dataset.srcDesktop) as string;
+      // The same query as the <picture> source, so the clip always fades in
+      // over the still of its own rendition.
+      const wide = matchMedia(s.box.dataset.desktopMedia ?? '(min-width: 1024px)').matches;
+      v.src = (wide ? v.dataset.srcDesktop : v.dataset.srcMobile) as string;
       const rate = parseFloat(getComputedStyle(s.box).getPropertyValue('--ambient-video-rate'));
       if (rate > 0) v.defaultPlaybackRate = v.playbackRate = rate;
     }
@@ -202,31 +246,47 @@ const delay = Number(process.env.AMBIENT_DELAY_MS ?? 2500);
     inset: 0;
   }
 
-  /* Exactly 0 until it plays. See the LCP note at the top of this file. */
+  /* Same box, same fit, same strength as the clip that fades in over it.
+     Static and visible from first paint: this is the LCP element. */
+  .ambient__still,
   .ambient__video {
+    position: absolute;
+    inset: 0;
     display: block;
     width: 100%;
     height: 100%;
+    max-width: none;
     object-fit: cover;
     object-position: var(--ambient-position, center);
+  }
+
+  /* The clip crossfades over its own first frame at full opacity, so the
+     handover is invisible. Intensity is NOT opacity on these two layers
+     (that would dip or ghost mid-fade, and group opacity would cost an
+     offscreen pass per video frame): it is the veil in the scrim below. */
+  .ambient__video {
     opacity: 0;
     transition: opacity var(--ambient-video-fade, 2400ms) ease;
   }
 
   .ambient.is-playing .ambient__video {
-    opacity: var(--ambient-video-opacity, 0.6);
+    opacity: 1;
   }
 
-  /* A static gradient layer over the clip, not a mask on it: masking a
+  /* Static gradient layers over the clip, not a mask on it: masking a
      playing video costs an offscreen pass per frame. This works because
-     only the section's own surface sits beneath the clip. */
+     only the section's own surface sits beneath the clip. The last layer
+     is the intensity veil: surface colour at (1 - opacity), which is
+     exactly the clip at `--ambient-video-opacity` over that surface. */
   .ambient__scrim {
     --scrim: var(--ambient-scrim-color, var(--xt-bg-primary));
+    --veil: color-mix(in srgb, var(--scrim) calc((1 - var(--ambient-video-opacity, 0.6)) * 100%), transparent);
     position: absolute;
     inset: 0;
     background:
       linear-gradient(to right, var(--scrim) var(--ambient-fade-left-start, 0%), transparent var(--ambient-fade-left, 0%)),
       linear-gradient(to bottom, var(--scrim) var(--ambient-fade-top-start, 0%), transparent var(--ambient-fade-top, 0%)),
-      linear-gradient(to top, var(--scrim) 0%, transparent var(--ambient-fade-bottom, 0%));
+      linear-gradient(to top, var(--scrim) 0%, transparent var(--ambient-fade-bottom, 0%)),
+      linear-gradient(var(--veil), var(--veil));
   }
 </style>

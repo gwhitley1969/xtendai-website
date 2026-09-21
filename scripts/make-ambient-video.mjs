@@ -133,6 +133,15 @@ function encodeRendition(loop, out, src, r, grade) {
   ]);
 }
 
+/**
+ * First frame of the finished rendition, as the still that paints under the
+ * clip. Taken from the encode itself, not the master, so the video fades in
+ * over a pixel-identical frame and the picture simply starts to move.
+ */
+function exportStill(rendition, still) {
+  run('ffmpeg', ['-y', '-hide_banner', '-v', 'error', '-i', rendition, '-frames:v', '1', '-update', '1', still]);
+}
+
 function checkBudget(out, budgetBytes) {
   const size = statSync(out).size;
   if (size > budgetBytes) {
@@ -162,6 +171,9 @@ function makeClip(name) {
     encodeRendition(loop, out, src, r, grade);
     const size = checkBudget(out, r.budgetBytes);
     console.log(`wrote ${out} (${r.width}x${r.height}, ${(size / 1e6).toFixed(2)} MB)`);
+    const still = `${OUT}/${name}-${r.suffix}.png`;
+    exportStill(out, still);
+    console.log(`wrote ${still}`);
   }
 }
 

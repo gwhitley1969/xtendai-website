@@ -12,6 +12,8 @@ import bartenderScreen from '../assets/my-ai-bartender-screen.png';
    /assets/<name>.<hash>.mp4 URLs, and a missing clip fails the build. */
 import heroLoopDesktop from '../assets/video/beneath-hero-d.mp4';
 import heroLoopMobile from '../assets/video/beneath-hero-m.mp4';
+import heroStillDesktop from '../assets/video/beneath-hero-d.png';
+import heroStillMobile from '../assets/video/beneath-hero-m.png';
 
 const title = 'Xtend-AI | Web & Mobile App Development in Charlotte, NC';
 const description = 'Xtend-AI designs and builds websites, mobile apps, and the Azure cloud that runs them. Architected, not assembled. Charlotte & Harrisburg, NC, and remote.';
@@ -76,11 +78,18 @@ const differentiators = [
 
   <!-- Hero Section -->
   <section class="hero">
+    {/* "The cloud beneath". BEFORE .hero__bg, not inside it: .hero__bg
+        blooms in from opacity 0, and the still must paint at full strength
+        with the page to be the honest LCP element (see AmbientVideo.astro).
+        The glows and grid still bloom in over it. */}
+    <AmbientVideo
+      desktop={heroLoopDesktop}
+      mobile={heroLoopMobile}
+      desktopStill={heroStillDesktop}
+      mobileStill={heroStillMobile}
+      desktopMedia="(min-width: 1024px)"
+    />
     <div class="hero__bg">
-      {/* "The cloud beneath": first child, so it sits under the glows and
-          grid. Without it (reduced motion, Save-Data, Low Power Mode) the
-          layers below are the whole background, exactly as before. */}
-      <AmbientVideo desktop={heroLoopDesktop} mobile={heroLoopMobile} />
       <div class="hero__glow hero__glow--1"></div>
       <div class="hero__glow hero__glow--2"></div>
       <div class="hero__grid"></div>
