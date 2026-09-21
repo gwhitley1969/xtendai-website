@@ -4,8 +4,14 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import FeatureCard from '../components/FeatureCard.astro';
 import Icon from '../components/Icon.astro';
+import AmbientVideo from '../components/AmbientVideo.astro';
+import AmbientToggle from '../components/AmbientToggle.astro';
 import { Image } from 'astro:assets';
 import bartenderScreen from '../assets/my-ai-bartender-screen.png';
+/* Imported, not served from public/: Vite emits content-hashed
+   /assets/<name>.<hash>.mp4 URLs, and a missing clip fails the build. */
+import heroLoopDesktop from '../assets/video/beneath-hero-d.mp4';
+import heroLoopMobile from '../assets/video/beneath-hero-m.mp4';
 
 const title = 'Xtend-AI | Web & Mobile App Development in Charlotte, NC';
 const description = 'Xtend-AI designs and builds websites, mobile apps, and the Azure cloud that runs them. Architected, not assembled. Charlotte & Harrisburg, NC, and remote.';
@@ -71,6 +77,10 @@ const differentiators = [
   <!-- Hero Section -->
   <section class="hero">
     <div class="hero__bg">
+      {/* "The cloud beneath": first child, so it sits under the glows and
+          grid. Without it (reduced motion, Save-Data, Low Power Mode) the
+          layers below are the whole background, exactly as before. */}
+      <AmbientVideo desktop={heroLoopDesktop} mobile={heroLoopMobile} />
       <div class="hero__glow hero__glow--1"></div>
       <div class="hero__glow hero__glow--2"></div>
       <div class="hero__grid"></div>
@@ -116,6 +126,9 @@ const differentiators = [
         </div>
       </div>
     </div>
+    {/* After .hero__container, not inside .hero__bg: the content grid
+        (z-index 1) would otherwise swallow its clicks. */}
+    <AmbientToggle />
   </section>
 
   <!-- Credibility Bar -->
@@ -634,6 +647,64 @@ const differentiators = [
   .hero__subtitle { animation-delay: var(--rise-step); }
   .hero__actions  { animation-delay: calc(var(--rise-step) * 2); }
   .hero__visual   { animation-delay: calc(var(--rise-step) * 3); }
+
+  /* Ambient video knobs (consumed by AmbientVideo.astro, which inherits
+     them). Intensity is --ambient-video-opacity; the fades are what keep
+     text legible, and were set by measuring contrast against real frames:
+     the subtitle is #a1a1aa, so whatever sits behind it has to stay dark.
+
+     Single column (below 1024px): the clip is clamped to the first screen
+     and fades in from the top, so light rises behind the CTAs and the
+     phone's top edge. svh, not dvh: the box must not resize when a mobile
+     URL bar collapses. A browser without svh drops the clamp and the clip
+     simply covers the whole hero. */
+  .hero {
+    --ambient-video-opacity: 0.75;
+    --ambient-video-fade: 2400ms;
+    --ambient-video-rate: 1;
+    --ambient-max-height: calc(100svh - var(--header-height));
+    --ambient-fade-top-start: 42%;
+    --ambient-fade-top: 90%;
+    --ambient-fade-bottom: 14%;
+  }
+
+  /* Two columns: content fills both from top to bottom (measured: text
+     11% to 92% of the hero height at 1280x800), so there is no free band.
+     The light lives on the right, around the phone, and a left-to-right
+     scrim keeps the text column on the page background. */
+  @media (min-width: 1024px) {
+    .hero {
+      --ambient-video-opacity: 0.95;
+      --ambient-max-height: none;
+      --ambient-fade-left-start: 8%;
+      --ambient-fade-left: 52%;
+      --ambient-fade-top-start: 0%;
+      --ambient-fade-top: 16%;
+      --ambient-fade-bottom: 8%;
+    }
+  }
+
+  /* Pause control: top corner on the single-column layout (the 72px above
+     the headline is the one area no wrapping text or phone can reach),
+     bottom corner beside the phone on desktop. */
+  .hero :global(.ambient-toggle) {
+    top: var(--space-3);
+    right: var(--space-3);
+    bottom: auto;
+  }
+
+  @media (min-width: 1024px) {
+    .hero :global(.ambient-toggle) {
+      top: auto;
+      right: var(--space-4);
+      bottom: var(--space-4);
+    }
+  }
+
+  /* Pausing background motion pauses the phone float too. */
+  :global(html[data-ambient-off]) .hero__phone {
+    animation-play-state: paused;
+  }
 
   .hero__bg {
     animation: bloom 2600ms ease-out both;
