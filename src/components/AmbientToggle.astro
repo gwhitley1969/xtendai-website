@@ -1,0 +1,81 @@
+---
+/**
+ * Pause / play control for ambient video. Auto-starting motion that runs
+ * longer than five seconds alongside other content needs one (WCAG 2.2.2,
+ * Level A); honoring prefers-reduced-motion alone does not satisfy that.
+ *
+ * Wired by the script in AmbientVideo.astro, which finds every
+ * [data-ambient-toggle] on the page. One site-wide choice, remembered in
+ * localStorage, and mirrored as `data-ambient-off` on <html> so pages can
+ * pause their own CSS loops with it (the home hero's phone float does).
+ *
+ * Placement is the page's job: render it as a sibling AFTER the section's
+ * content wrapper and position it with `:global(.ambient-toggle)`. Inside
+ * a background layer it would sit under the content grid, which would
+ * swallow its clicks.
+ *
+ * It ships `hidden`. The script reveals it only while a clip is playing,
+ * or after the visitor paused one (so it can be resumed). Icon-only with
+ * an aria-label, so it adds no visible copy.
+ */
+import Icon from './Icon.astro';
+---
+
+<button class="ambient-toggle" type="button" data-ambient-toggle hidden aria-pressed="false" aria-label="Pause background motion">
+  <span class="ambient-toggle__icon ambient-toggle__icon--pause"><Icon name="player-pause" /></span>
+  <span class="ambient-toggle__icon ambient-toggle__icon--play"><Icon name="player-play" /></span>
+</button>
+
+<style>
+  .ambient-toggle {
+    position: absolute;
+    right: var(--space-4);
+    bottom: var(--space-4);
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--xt-bg-primary) 60%, transparent);
+    color: var(--xt-text-secondary);
+    cursor: pointer;
+    transition: color var(--transition-fast), border-color var(--transition-fast);
+  }
+
+  /* `display: grid` above would otherwise beat the UA's [hidden] rule. */
+  .ambient-toggle[hidden] {
+    display: none;
+  }
+
+  .ambient-toggle:hover {
+    color: var(--xt-text-primary);
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+
+  .ambient-toggle:focus-visible {
+    outline: 2px solid var(--xt-accent-light);
+    outline-offset: 2px;
+  }
+
+  .ambient-toggle__icon {
+    display: grid;
+    place-items: center;
+  }
+
+  .ambient-toggle__icon :global(svg) {
+    width: 18px;
+    height: 18px;
+  }
+
+  .ambient-toggle__icon--play,
+  .ambient-toggle[aria-pressed='true'] .ambient-toggle__icon--pause {
+    display: none;
+  }
+
+  .ambient-toggle[aria-pressed='true'] .ambient-toggle__icon--play {
+    display: grid;
+  }
+</style>

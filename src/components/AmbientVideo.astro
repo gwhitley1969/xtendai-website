@@ -1,0 +1,232 @@
+---
+/**
+ * Ambient background video: a muted, decorative loop behind content.
+ * Brand rules live in XTEND-AI-WEB.md §12.5; the pipeline that makes the
+ * clips is scripts/make-ambient-video.mjs.
+ *
+ * It is an enhancement that is never part of first paint:
+ * - The markup carries NO `autoplay`, NO `src` and NO `poster`, and the
+ *   video starts at exactly `opacity: 0`. Chrome ignores opacity-0 paints
+ *   for Largest Contentful Paint and does not reconsider an element whose
+ *   opacity later changes on the compositor, so a full-bleed clip (larger
+ *   than the watermark, the real LCP element) cannot become a late LCP.
+ *   Do not add a poster, a non-zero starting opacity, or any style that
+ *   repaints the video once it is visible.
+ * - The script assigns `src` only after `load` + a delay + idle, and only
+ *   when nothing says "don't": reduced motion, Save-Data, 2g/3g, low
+ *   device memory, a stored user choice, a hidden tab, or a box that is
+ *   off screen. Visitors in any of those states get the page as designed
+ *   without video. The global reduced-motion CSS block cannot stop a
+ *   <video>, which is why this guard is in JS.
+ * - If the browser refuses playback (iOS Low Power Mode), the download is
+ *   cancelled and nothing ever shows. No retry: the user asked the device
+ *   to save power.
+ *
+ * Pair it with <AmbientToggle /> in the same section: auto-starting motion
+ * longer than five seconds needs a pause control (WCAG 2.2.2, Level A).
+ *
+ * Knobs are inherited custom properties, set by the page on any ancestor
+ * (same convention as the `--rise-*` entrance knobs):
+ *   --ambient-video-opacity   how strong the clip is once playing
+ *   --ambient-video-fade      fade-in duration
+ *   --ambient-video-rate      playback rate, 0.5 to 1 (slower = calmer)
+ *   --ambient-position        object-position of the clip
+ *   --ambient-max-height      clamps the box (e.g. to the first screen)
+ *   --ambient-scrim-color     what the edges fade to; the surface behind
+ *   --ambient-fade-left-start / --ambient-fade-left   left scrim stops
+ *   --ambient-fade-top-start  / --ambient-fade-top    top scrim stops
+ *   --ambient-fade-bottom                             bottom scrim end
+ */
+interface Props {
+  /** URL of the landscape rendition (import the .mp4 from src/assets/video/). */
+  desktop: string;
+  /** URL of the portrait rendition, used when the box is taller than wide. */
+  mobile?: string;
+  /** Never load below this viewport width in px. */
+  minWidth?: number;
+}
+
+const { desktop, mobile, minWidth = 0 } = Astro.props;
+
+/* Worst-case measurement only: `AMBIENT_DELAY_MS=0 npm run build` starts the
+   clip at load so Lighthouse and the LCP check see it. Production keeps the
+   default, which also lands the clip as the last beat of the home entrance. */
+const delay = Number(process.env.AMBIENT_DELAY_MS ?? 2500);
+---
+
+<div class="ambient" data-ambient data-delay={delay} data-min-width={minWidth}>
+  <div class="ambient__media" aria-hidden="true">
+    <video
+      class="ambient__video"
+      muted
+      loop
+      playsinline
+      preload="none"
+      tabindex="-1"
+      disablepictureinpicture
+      disableremoteplayback
+      data-src-desktop={desktop}
+      data-src-mobile={mobile ?? desktop}
+    ></video>
+    <div class="ambient__scrim"></div>
+  </div>
+</div>
+
+<script>
+  const KEY = 'xt-ambient';
+  const root = document.documentElement;
+  const boxes = [...document.querySelectorAll<HTMLElement>('[data-ambient]')];
+  const toggles = [...document.querySelectorAll<HTMLButtonElement>('[data-ambient-toggle]')];
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  const nav = navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string }; deviceMemory?: number };
+
+  /** The visitor or the device asked for less; never load video then. */
+  const constrained = () =>
+    reduced.matches ||
+    nav.connection?.saveData === true ||
+    /^(slow-2g|2g|3g)$/.test(nav.connection?.effectiveType ?? '') ||
+    (nav.deviceMemory ?? 8) <= 2;
+
+  let userOff = false;
+  try { userOff = localStorage.getItem(KEY) === 'off'; } catch { /* storage blocked */ }
+
+  const states = boxes.map((box) => ({
+    box,
+    video: box.querySelector('video') as HTMLVideoElement,
+    minWidth: Number(box.dataset.minWidth ?? 0),
+    armed: false,
+    inView: false,
+    blocked: false,
+    wanted: false,
+  }));
+
+  function paint() {
+    root.toggleAttribute('data-ambient-off', userOff);
+    const anyPlaying = states.some((s) => s.box.classList.contains('is-playing'));
+    for (const t of toggles) {
+      // Shown while something plays, or when the visitor paused it (so it
+      // can be resumed). Never shown where video is unavailable anyway.
+      t.hidden = !(anyPlaying || (userOff && !constrained() && states.some((s) => s.armed && !s.blocked)));
+      t.setAttribute('aria-pressed', String(userOff));
+      t.setAttribute('aria-label', userOff ? 'Play background motion' : 'Pause background motion');
+    }
+  }
+
+  function start(s: (typeof states)[number]) {
+    const v = s.video;
+    if (!v.src) {
+      const r = s.box.getBoundingClientRect();
+      // By box shape, not a breakpoint: the home hero is a tall single
+      // column until 1024px, so a portrait tablet needs the portrait clip.
+      v.src = (r.height > r.width ? v.dataset.srcMobile : v.dataset.srcDesktop) as string;
+      const rate = parseFloat(getComputedStyle(s.box).getPropertyValue('--ambient-video-rate'));
+      if (rate > 0) v.defaultPlaybackRate = v.playbackRate = rate;
+    }
+    v.muted = true;
+    s.wanted = true;
+    v.play().catch((err: DOMException) => {
+      if (err.name !== 'NotAllowedError') return; // AbortError = our own pause() mid-load
+      s.blocked = true;
+      s.wanted = false;
+      v.removeAttribute('src');
+      v.load(); // cancels the download
+      s.box.classList.remove('is-playing');
+      paint();
+    });
+  }
+
+  function stop(s: (typeof states)[number]) {
+    s.wanted = false;
+    if (!s.video.paused) s.video.pause();
+  }
+
+  function sync() {
+    for (const s of states) {
+      const want =
+        s.armed && s.inView && !userOff && !s.blocked && !constrained() &&
+        !document.hidden && innerWidth >= s.minWidth && s.box.offsetParent !== null;
+      if (want) start(s); else stop(s);
+    }
+    paint();
+  }
+
+  if (states.length && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        const s = states.find((x) => x.box === e.target);
+        if (s) s.inView = e.isIntersecting;
+      }
+      sync();
+    }, { threshold: 0.15 });
+
+    for (const s of states) {
+      io.observe(s.box);
+      s.video.addEventListener('playing', () => { s.box.classList.add('is-playing'); paint(); });
+      // A pause we did not ask for (power saving kicked in): hide the frozen
+      // frame rather than leave a stalled picture behind the content.
+      s.video.addEventListener('pause', () => { if (s.wanted) { s.box.classList.remove('is-playing'); paint(); } });
+    }
+
+    for (const t of toggles) {
+      t.addEventListener('click', () => {
+        userOff = !userOff;
+        try { localStorage.setItem(KEY, userOff ? 'off' : 'on'); } catch { /* storage blocked */ }
+        sync();
+      });
+    }
+
+    document.addEventListener('visibilitychange', sync);
+    addEventListener('pageshow', (e) => { if (e.persisted) sync(); }); // bfcache restore fires no observer
+    reduced.addEventListener('change', sync);
+
+    const arm = () => { for (const s of states) s.armed = true; sync(); };
+    const delay = Math.max(0, ...states.map((s) => Number(s.box.dataset.delay ?? 0)));
+    const afterLoad = () => setTimeout(() => ('requestIdleCallback' in window ? requestIdleCallback(arm, { timeout: 2000 }) : arm()), delay);
+    if (document.readyState === 'complete') afterLoad(); else addEventListener('load', afterLoad, { once: true });
+
+    paint();
+  }
+</script>
+
+<style>
+  .ambient {
+    position: absolute;
+    inset: 0;
+    max-height: var(--ambient-max-height, none);
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .ambient__media {
+    position: absolute;
+    inset: 0;
+  }
+
+  /* Exactly 0 until it plays. See the LCP note at the top of this file. */
+  .ambient__video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--ambient-position, center);
+    opacity: 0;
+    transition: opacity var(--ambient-video-fade, 2400ms) ease;
+  }
+
+  .ambient.is-playing .ambient__video {
+    opacity: var(--ambient-video-opacity, 0.6);
+  }
+
+  /* A static gradient layer over the clip, not a mask on it: masking a
+     playing video costs an offscreen pass per frame. This works because
+     only the section's own surface sits beneath the clip. */
+  .ambient__scrim {
+    --scrim: var(--ambient-scrim-color, var(--xt-bg-primary));
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to right, var(--scrim) var(--ambient-fade-left-start, 0%), transparent var(--ambient-fade-left, 0%)),
+      linear-gradient(to bottom, var(--scrim) var(--ambient-fade-top-start, 0%), transparent var(--ambient-fade-top, 0%)),
+      linear-gradient(to top, var(--scrim) 0%, transparent var(--ambient-fade-bottom, 0%));
+  }
+</style>
