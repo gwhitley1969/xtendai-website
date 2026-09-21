@@ -45,24 +45,56 @@ const MASTERS = 'video-masters';
 const WORK = 'video-masters/.work';
 const OUT = 'src/assets/video';
 
+/**
+ * The curve rolls the highlights off (1.0 -> 0.84): mid-ride the flare blows
+ * out to white right under the headline, and a capped, still-saturated blue
+ * costs the text far less contrast. The ride and the loop MUST share one
+ * grade, or the lattice nodes would change brightness at each handover.
+ */
 const DEFAULT_GRADE = {
   balance: 'rs=-0.04:bs=0.06:rm=-0.03:bm=0.05',
-  curve: '0/0 0.5/0.46 1/0.94',
+  curve: '0/0 0.5/0.46 0.85/0.76 1/0.84',
   grain: 0,
 };
 
 /**
- * One entry per shipped clip. `cropX` / `cropY` (0..1) steer the crop window
- * when a rendition's aspect differs from the master's: 0 = left/top edge,
- * 1 = right/bottom edge.
+ * One entry per shipped clip.
+ * - `fadeSeconds`: length of the tail-into-head crossfade that closes a
+ *   loop. 0 = the clip plays once (an intro) and is left as generated.
+ * - `denoise`: light temporal denoise; good for calm footage, smears fast
+ *   motion, so energetic clips switch it off.
+ * - `still`: export the first frame beside each rendition (default true).
+ * - `cropX` / `cropY` steer the crop window when a rendition's aspect
+ *   differs from the master's: 0 = left/top edge, 1 = right/bottom edge. A
+ *   string is an ffmpeg expression of `t` (seconds) with `D` = duration, so
+ *   the window can travel: the ride's portrait crop starts and ends where
+ *   the loop's crop sits (0.8, on the lattice) and swings to the centre,
+ *   where the vanishing point is, in between.
  */
 const CLIPS = {
+  // The living loop under the home hero. Generated with the approved still
+  // as BOTH start and end frame, which brings the end back near the start
+  // (measured SSIM 0.93, clouds still differ), so a crossfade closes it.
+  // The lattice is fixed across the clip, so the fade cannot ghost it.
   'beneath-hero': {
     master: 'beneath-hero-master.mp4',
-    fadeSeconds: 1.5,
+    fadeSeconds: 1.2,
+    denoise: false,
     renditions: [
-      { suffix: 'd', width: 1600, height: 900, level: '4.0', crf: 20, budgetBytes: 1_500_000 },
-      { suffix: 'm', width: 540, height: 960, level: '3.1', crf: 21, budgetBytes: 600_000, cropX: 0.8 },
+      { suffix: 'd', width: 1600, height: 900, level: '4.0', crf: 23, budgetBytes: 2_500_000 },
+      { suffix: 'm', width: 540, height: 960, level: '3.1', crf: 24, budgetBytes: 1_200_000, cropX: 0.8 },
+    ],
+  },
+  // The opening ride: plays once per session, then hands off to the loop.
+  // Same start and end frame as the loop, so both handovers are seamless.
+  'beneath-ride': {
+    master: 'beneath-ride-master.mp4',
+    fadeSeconds: 0,
+    denoise: false,
+    still: false,
+    renditions: [
+      { suffix: 'd', width: 1600, height: 900, level: '4.0', crf: 26, budgetBytes: 3_500_000 },
+      { suffix: 'm', width: 540, height: 960, level: '3.1', crf: 27, budgetBytes: 1_500_000, cropX: '0.8-0.3*sin(PI*t/D)' },
     ],
   },
 };
@@ -86,31 +118,39 @@ function probe(file) {
   return { width: s.width, height: s.height, fps: num / den, fpsExpr: s.r_frame_rate, frames: Number(s.nb_read_frames) };
 }
 
-/** Crossfades the last `fadeFrames` into the first: N frames in, N - fadeFrames out. */
-function buildLoop(master, loop, { fpsExpr, fps, frames, fadeFrames }) {
-  const fadeDur = (fadeFrames / fps).toFixed(4);
-  const offset = ((frames - 2 * fadeFrames) / fps - 0.001).toFixed(3);
-  run('ffmpeg', [
-    '-y', '-hide_banner', '-v', 'error', '-i', master, '-an',
-    '-filter_complex',
-    `[0:v]fps=${fpsExpr},format=yuv444p10le,hqdn3d=0:0:3:3,split[a][b];` +
+/**
+ * Lossless 10-bit intermediate. For a loop, the last `fadeFrames` are
+ * crossfaded into the first (N frames in, N - fadeFrames out). A play-once
+ * clip (`fadeFrames` 0) passes through untouched. `denoise` is a light
+ * temporal filter that helps calm footage compress; it smears fast motion,
+ * so energetic clips turn it off.
+ */
+function buildIntermediate(master, out, { fpsExpr, fps, frames, fadeFrames, denoise }) {
+  const pre = `fps=${fpsExpr},format=yuv444p10le${denoise ? ',hqdn3d=0:0:3:3' : ''}`;
+  const graph = fadeFrames > 0
+    ? `[0:v]${pre},split[a][b];` +
       `[a]trim=start_frame=${fadeFrames},setpts=PTS-STARTPTS[body];` +
       `[b]trim=end_frame=${fadeFrames},setpts=PTS-STARTPTS[head];` +
-      `[body][head]xfade=transition=fade:duration=${fadeDur}:offset=${offset}[v]`,
-    '-map', '[v]', '-c:v', 'ffv1', '-level', '3', '-pix_fmt', 'yuv444p10le', loop,
+      `[body][head]xfade=transition=fade:duration=${(fadeFrames / fps).toFixed(4)}:offset=${((frames - 2 * fadeFrames) / fps - 0.001).toFixed(3)}[v]`
+    : `[0:v]${pre}[v]`;
+  run('ffmpeg', [
+    '-y', '-hide_banner', '-v', 'error', '-i', master, '-an', '-filter_complex', graph,
+    '-map', '[v]', '-c:v', 'ffv1', '-level', '3', '-pix_fmt', 'yuv444p10le', out,
   ]);
-  const got = probe(loop).frames;
+  const got = probe(out).frames;
   const want = frames - fadeFrames;
-  if (got !== want) throw new Error(`loop has ${got} frames, expected ${want}`);
+  if (got !== want) throw new Error(`intermediate has ${got} frames, expected ${want}`);
 }
 
 function cropFilter(src, r) {
   const srcAspect = src.width / src.height;
   const dstAspect = r.width / r.height;
   if (Math.abs(srcAspect - dstAspect) < 0.01) return [];
+  // Expressions may use `t`; `D` is substituted with the clip duration.
+  const pos = (v) => String(v ?? 0.5).replaceAll('D', (src.frames / src.fps).toFixed(4));
   return dstAspect < srcAspect
-    ? [`crop=w=ih*${r.width}/${r.height}:h=ih:x=(iw-ow)*${r.cropX ?? 0.5}:y=0`]
-    : [`crop=w=iw:h=iw*${r.height}/${r.width}:x=0:y=(ih-oh)*${r.cropY ?? 0.5}`];
+    ? [`crop=w=ih*${r.width}/${r.height}:h=ih:x='(iw-ow)*(${pos(r.cropX)})':y=0`]
+    : [`crop=w=iw:h=iw*${r.height}/${r.width}:x=0:y='(ih-oh)*(${pos(r.cropY)})'`];
 }
 
 function encodeRendition(loop, out, src, r, grade) {
@@ -160,20 +200,24 @@ function makeClip(name) {
   mkdirSync(OUT, { recursive: true });
 
   const src = probe(master);
-  const fadeFrames = Math.round(clip.fadeSeconds * src.fps);
-  const loop = `${WORK}/${name}-loop.mkv`;
-  buildLoop(master, loop, { ...src, fadeFrames });
-  console.log(`looped ${name}: ${src.frames} -> ${src.frames - fadeFrames} frames @ ${src.fpsExpr} fps`);
+  const fadeFrames = Math.round((clip.fadeSeconds ?? 0) * src.fps);
+  const intermediate = `${WORK}/${name}.mkv`;
+  buildIntermediate(master, intermediate, { ...src, fadeFrames, denoise: clip.denoise ?? true });
+  console.log(fadeFrames
+    ? `looped ${name}: ${src.frames} -> ${src.frames - fadeFrames} frames @ ${src.fpsExpr} fps`
+    : `prepared ${name}: ${src.frames} frames @ ${src.fpsExpr} fps (plays once, no loop)`);
 
   const grade = { ...DEFAULT_GRADE, ...clip.grade };
   for (const r of clip.renditions) {
     const out = `${OUT}/${name}-${r.suffix}.mp4`;
-    encodeRendition(loop, out, src, r, grade);
+    encodeRendition(intermediate, out, src, r, grade);
     const size = checkBudget(out, r.budgetBytes);
     console.log(`wrote ${out} (${r.width}x${r.height}, ${(size / 1e6).toFixed(2)} MB)`);
-    const still = `${OUT}/${name}-${r.suffix}.png`;
-    exportStill(out, still);
-    console.log(`wrote ${still}`);
+    if (clip.still ?? true) {
+      const still = `${OUT}/${name}-${r.suffix}.png`;
+      exportStill(out, still);
+      console.log(`wrote ${still}`);
+    }
   }
 }
 
