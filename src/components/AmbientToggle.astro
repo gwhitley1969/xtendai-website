@@ -7,16 +7,20 @@
  * Wired by the script in AmbientVideo.astro, which finds every
  * [data-ambient-toggle] on the page. One site-wide choice, remembered in
  * localStorage, and mirrored as `data-ambient-off` on <html> so pages can
- * pause their own CSS loops with it (the home hero's phone float does).
+ * pause their own CSS loops with it, and other scripted motion sources
+ * (the home hero's tesseract) register with the same script through the
+ * `data-motion` / `data-motion-playing` attributes and the `xt-motion`
+ * event, so one button governs everything that moves.
  *
  * Placement is the page's job: render it as a sibling AFTER the section's
  * content wrapper and position it with `:global(.ambient-toggle)`. Inside
  * a background layer it would sit under the content grid, which would
  * swallow its clicks.
  *
- * It ships `hidden`. The script reveals it only while a clip is playing,
- * or after the visitor paused one (so it can be resumed). Icon-only with
- * an aria-label, so it adds no visible copy.
+ * It ships `hidden`. The script reveals it only while a clip or another
+ * registered motion source is playing, or after the visitor paused them (so
+ * they can be resumed). Icon-only with an aria-label, so it adds no visible
+ * copy.
  */
 import Icon from './Icon.astro';
 ---
