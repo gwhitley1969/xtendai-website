@@ -146,6 +146,8 @@ Target shape, in order. Replaces the previous Hero → Features bar → What we 
 > **(c)** Replace it with a client website screenshot once one exists.
 > Recommendation: keep the real capture now, revisit (b) or (c) when Needle Girlie launches.
 
+**The hero backdrop (added 2026-09-21, owner-approved).** Behind the whole hero runs a muted, decorative AI-generated clip of the world the tagline names: a night cloud sea with a blueprint lattice of blue light beneath it ("the cloud beneath"). An opening ride (the camera dives through the clouds, races over the lattice and climbs back) plays once per browser session, then a living loop takes over, with pulses of light running through the lattice under the headline. It is atmosphere, never evidence: no people, text, logos, products or client work appear in it, it carries no sound and no information, it is hidden from assistive technology, and visitors who ask for less (reduced motion, Save-Data, slow connections, low-memory devices, iOS Low Power Mode) see the clip's first frame as a still instead. A pause button in the hero stops it, and the phone float, for the whole site. The clip's first frame is also what paints first, so the video never delays the page. Engineering detail: `docs/IMPLEMENTATION.md`, *Ambient video*.
+
 ### 4.2 Credibility bar
 
 Replaces the Chat / Voice / Scan My Bar / Create features bar, which is My AI Bartender feature copy sitting on the company home page.
@@ -545,7 +547,7 @@ Approved by the owner with the Phase 1 audit fixes. Brand rules, not just implem
 - **The hero phone shows the real product.** The home hero renders an actual My AI Bartender screen capture, not a rebuilt imitation.
 - **No em- or en-dashes in site copy** (adopted 2026-07-25, Phase 2). Headlines, body, labels, titles, and meta descriptions restructure with commas, periods, colons, or parentheses; ranges use a plain hyphen ("24-48 hours"). Mechanical gate: zero `—` or `–` characters in the built HTML.
 - **One intent, one CTA label.** Buttons sharing a destination and intent share a label site-wide ("See what we build" → `/services`, "Start a project" → `/contact`). Support's "Contact Us" is the deliberate exception: help-seeking is a different intent than starting a project.
-- **Motion is entrance-only** (adopted 2026-08-28). The home hero plays a one-time ~3.2s rise-and-fade stagger on load (elements stay visible through the tail of their travel so the motion reads as rolling up, not flashing in) (title, subtitle, CTAs, phone visual, with the background glow blooming underneath), and the credibility bar rises in once as it first scrolls into view. The phone float remains the only looping animation. Reduced-motion users get the finished layout instantly, and content is never hidden for visitors whose browsers skip animations. The letterhead watermark and header never animate. No other scroll-triggered or looping motion without owner approval.
+- **Motion is entrance-only** (adopted 2026-08-28). The home hero plays a one-time ~3.2s rise-and-fade stagger on load (elements stay visible through the tail of their travel so the motion reads as rolling up, not flashing in) (title, subtitle, CTAs, phone visual, with the background glow blooming underneath), and the credibility bar rises in once as it first scrolls into view. The home hero's ambient video (§4.1, approved 2026-09-21) and the phone float are the approved looping motion. Every auto-playing placement carries a pause control (WCAG 2.2.2), never loads under reduced motion, Save-Data, slow connections or low device memory, and never plays sound. Reduced-motion users get the finished layout instantly, and content is never hidden for visitors whose browsers skip animations. The letterhead watermark and header never animate. No other scroll-triggered or looping motion without owner approval.
 - The letterhead watermark (§12.1a) is untouched by all of the above and remains on every page.
 
 ---
@@ -574,6 +576,16 @@ App icons live in `src/assets/` and render through `<Image>`:
 | CLIQUE Pix | `CLIQUE_Pix/play_app_icon_512x512.png` | `src/assets/clique-pix-icon.png` |
 | My AI Bartender home screen | Play-listing screenshot, screen region cropped (see `docs/IMPLEMENTATION.md`) | `src/assets/my-ai-bartender-screen.png` |
 
+Ambient video (home hero) lives in `src/assets/video/` and is imported so the build emits hashed `.mp4` URLs. AI-generated via Higgsfield (a GPT Image 2.5 style frame animated by Seedance 2.5; prompts and settings in `docs/IMPLEMENTATION.md`, *Ambient video*). No people, text, logos, products or client work appear in it.
+
+| File | Role | Size |
+|---|---|---|
+| `beneath-ride-d.mp4` / `-m.mp4` | opening clip, landscape / portrait, plays once per session | 2.41 MB / 0.89 MB |
+| `beneath-hero-d.mp4` / `-m.mp4` | seamless loop, landscape / portrait | 1.25 MB / 0.71 MB |
+| `beneath-hero-d.png` / `-m.png` | first frame of each loop, painted as the still under the clip (the LCP element) | served as ~22 / 15 KB WebP |
+
+Masters (1080p, 10 s) stay in the gitignored `video-masters/` folder; renditions are regenerated with `node scripts/make-ambient-video.mjs`.
+
 ---
 
 ## 14) Technical Requirements (Azure Static Web Apps)
@@ -597,6 +609,10 @@ App icons live in `src/assets/` and render through `<Image>`:
 * Optimize images (WebP/AVIF), lazy-load below fold
 
 * Checked at 375 px, 768 px, and 1280 px
+
+* Ambient video budgets, enforced by `scripts/make-ambient-video.mjs` (an over-budget rendition is deleted and the run fails): landscape loop ≤ 2.5 MB, portrait loop ≤ 1.2 MB, landscape opening clip ≤ 3.5 MB, portrait opening clip ≤ 1.5 MB. Video is never part of first paint: it loads after `load` plus a delay, and only where nothing says no.
+
+* The LCP element on the home page must remain the still image painted under the clip, never the video. Gate: a worst-case build (`AMBIENT_DELAY_MS=0 npm run build`, every clip starting at load) must keep mobile Performance ≥ 95 with that still as the LCP element (2026-09-21: 99 mobile, 100 desktop).
 
 ### 14.3 SEO essentials
 
