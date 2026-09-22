@@ -55,7 +55,7 @@ npm run preview
 │   └── assets/           # Images optimized by astro:assets at build time
 ├── public/               # Static assets served as-is
 ├── api/                  # Azure Functions
-├── scripts/              # Derived-asset generators (reverse logo, favicons, OG card, ambient video loops) — run manually, outputs committed
+├── scripts/              # Derived-asset generators (reverse logo, favicons, OG card, ambient video loops, tesseract core glow) — run manually, outputs committed
 └── docs/                 # Documentation
 ```
 
