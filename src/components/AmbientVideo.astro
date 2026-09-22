@@ -28,6 +28,10 @@
  *   which is why this guard is in JS.
  * - If the browser refuses playback (iOS Low Power Mode), the download is
  *   cancelled. No retry: the user asked the device to save power.
+ * - A box can also carry ONLY an opening clip: with no loop rendition, the
+ *   clip plays once per browser session and fades back to the still, which
+ *   is its own first frame. The home hero does this since 2026-09-22 (the
+ *   flight plays once, then the tesseract floats over the held view).
  *
  * Pair it with <AmbientToggle /> in the same section: auto-starting motion
  * longer than five seconds needs a pause control (WCAG 2.2.2, Level A).
@@ -52,8 +56,11 @@
 import { getImage } from 'astro:assets';
 
 interface Props {
-  /** URL of the landscape rendition (import the .mp4 from src/assets/video/). */
-  desktop: string;
+  /**
+   * URL of the landscape loop rendition (import the .mp4 from src/assets/video/).
+   * Optional: without it the opening clip plays once and fades to the still.
+   */
+  desktop?: string;
   /** URL of the portrait rendition, used where `desktopMedia` does not match. */
   mobile?: string;
   /** First frame of `desktop` (the .png the pipeline writes beside it). */
@@ -118,19 +125,21 @@ const delay = Number(process.env.AMBIENT_DELAY_MS ?? startDelay);
         />
       </picture>
     )}
-    <video
-      class="ambient__video"
-      data-role="loop"
-      muted
-      loop
-      playsinline
-      preload="none"
-      tabindex="-1"
-      disablepictureinpicture
-      disableremoteplayback
-      data-src-desktop={desktop}
-      data-src-mobile={mobile ?? desktop}
-    ></video>
+    {desktop && (
+      <video
+        class="ambient__video"
+        data-role="loop"
+        muted
+        loop
+        playsinline
+        preload="none"
+        tabindex="-1"
+        disablepictureinpicture
+        disableremoteplayback
+        data-src-desktop={desktop}
+        data-src-mobile={mobile ?? desktop}
+      ></video>
+    )}
     {intro && (
       <video
         class="ambient__video ambient__video--intro"
@@ -174,13 +183,13 @@ const delay = Number(process.env.AMBIENT_DELAY_MS ?? startDelay);
   try { introSeen = sessionStorage.getItem(INTRO_KEY) === '1'; } catch { /* storage blocked */ }
 
   const states = boxes.map((box) => {
-    const loop = box.querySelector('video[data-role="loop"]') as HTMLVideoElement;
+    const loop = box.querySelector('video[data-role="loop"]') as HTMLVideoElement | null;
     const intro = introSeen ? null : (box.querySelector('video[data-role="intro"]') as HTMLVideoElement | null);
     return {
       box,
       loop,
       intro,
-      video: intro ?? loop, // the element currently responsible for playback
+      video: intro ?? loop, // the element currently responsible for playback; null = nothing left to play
       minWidth: Number(box.dataset.minWidth ?? 0),
       armed: false,
       inView: false,
@@ -216,12 +225,11 @@ const delay = Number(process.env.AMBIENT_DELAY_MS ?? startDelay);
 
   function start(s: (typeof states)[number]) {
     const v = s.video;
+    if (!v) return;
     if (!v.src) {
       v.src = pick(s.box, v);
-      if (v === s.loop) {
-        const rate = parseFloat(getComputedStyle(s.box).getPropertyValue('--ambient-video-rate'));
-        if (rate > 0) v.defaultPlaybackRate = v.playbackRate = rate;
-      }
+      const rate = parseFloat(getComputedStyle(s.box).getPropertyValue('--ambient-video-rate'));
+      if (rate > 0) v.defaultPlaybackRate = v.playbackRate = rate;
     }
     v.muted = true;
     s.wanted = true;
@@ -238,13 +246,13 @@ const delay = Number(process.env.AMBIENT_DELAY_MS ?? startDelay);
 
   function stop(s: (typeof states)[number]) {
     s.wanted = false;
-    if (!s.video.paused) s.video.pause();
+    if (s.video && !s.video.paused) s.video.pause();
   }
 
   function sync() {
     for (const s of states) {
       const want =
-        s.armed && s.inView && !userOff && !s.blocked && !constrained() &&
+        !!s.video && s.armed && s.inView && !userOff && !s.blocked && !constrained() &&
         !document.hidden && innerWidth >= s.minWidth && s.box.offsetParent !== null;
       if (want) start(s); else stop(s);
     }
@@ -265,7 +273,7 @@ const delay = Number(process.env.AMBIENT_DELAY_MS ?? startDelay);
 
       // `is-playing` = something is showing motion (drives the toggle);
       // `is-intro` / `is-loop` = which layer is visible.
-      s.loop.addEventListener('playing', () => {
+      s.loop?.addEventListener('playing', () => {
         s.box.classList.add('is-playing', 'is-loop');
         s.box.classList.remove('is-intro'); // intro fades away over the running loop
         paint();
@@ -277,19 +285,27 @@ const delay = Number(process.env.AMBIENT_DELAY_MS ?? startDelay);
         // Buffer the loop during the intro's last moments so the handoff
         // has nothing to wait for.
         intro.addEventListener('timeupdate', () => {
-          if (!s.loop.src && intro.duration && intro.currentTime > intro.duration - 2) {
-            s.loop.preload = 'auto';
-            s.loop.src = pick(s.box, s.loop);
+          const loop = s.loop;
+          if (loop && !loop.src && intro.duration && intro.currentTime > intro.duration - 2) {
+            loop.preload = 'auto';
+            loop.src = pick(s.box, loop);
           }
         });
         // The intro ends on the loop's first frame, so the loop simply
-        // takes over. The same path covers a failed intro.
+        // takes over. Without a loop it fades back to the still, which is
+        // its own first frame. The same path covers a failed intro.
         const handoff = () => {
           try { sessionStorage.setItem(INTRO_KEY, '1'); } catch { /* storage blocked */ }
-          s.video = s.loop;
           s.intro = null;
-          s.box.classList.add('is-handoff'); // loop appears instantly, no slow fade
-          sync();
+          if (s.loop) {
+            s.video = s.loop;
+            s.box.classList.add('is-handoff'); // loop appears instantly, no slow fade
+            sync();
+          } else {
+            s.video = null; // played once; the still holds from here
+            s.box.classList.remove('is-playing', 'is-intro');
+            paint();
+          }
         };
         intro.addEventListener('ended', handoff, { once: true });
         intro.addEventListener('error', handoff, { once: true });

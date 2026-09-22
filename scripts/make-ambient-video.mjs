@@ -73,21 +73,22 @@ const DEFAULT_GRADE = {
  *   where the vanishing point is, in between.
  */
 const CLIPS = {
-  // The perpetual flight under the home hero (2026-09-22, owner request:
-  // the opening ride, on repeat): from the high wide view the camera dives,
-  // races over the lattice and climbs back to the same view, so the end
-  // lands near the start and a short crossfade closes the cycle. Generated
-  // with the cloudless frame as BOTH start and end image; the lattice glows
+  // The flight under the home hero (2026-09-22): from the high wide view the
+  // camera dives, races over the lattice and climbs back to the same view.
+  // It plays ONCE per visit, then the page holds its first frame (the still
+  // exported beside it), so no loop closure: fadeSeconds 0. Generated with
+  // the cloudless frame as both start and end image, motion-interpolated to
+  // half speed (docs/IMPLEMENTATION.md, Ambient video); the lattice glows
   // steadily (co-founder request), so nothing pulses. The portrait crop
   // travels with the camera: it starts and ends where the lattice sits
   // (0.8) and swings to the centre, where the vanishing point is.
-  'beneath-hero': {
-    master: 'beneath-flight-master.mp4',
-    fadeSeconds: 0.8,
+  'beneath-flight': {
+    master: 'beneath-flight-slow-master.mp4',
+    fadeSeconds: 0,
     denoise: false,
     renditions: [
-      { suffix: 'd', width: 1600, height: 900, level: '4.0', crf: 27, budgetBytes: 3_500_000 },
-      { suffix: 'm', width: 540, height: 960, level: '3.1', crf: 27, budgetBytes: 1_500_000, cropX: '0.8-0.3*sin(PI*t/D)' },
+      { suffix: 'd', width: 1600, height: 900, level: '4.0', crf: 29, budgetBytes: 4_500_000 },
+      { suffix: 'm', width: 540, height: 960, level: '3.1', crf: 28, budgetBytes: 2_000_000, cropX: '0.8-0.3*sin(PI*t/D)' },
     ],
   },
 };

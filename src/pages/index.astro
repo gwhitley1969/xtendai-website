@@ -9,10 +9,10 @@ import AmbientToggle from '../components/AmbientToggle.astro';
 import HeroTesseract from '../components/HeroTesseract.astro';
 /* Imported, not served from public/: Vite emits content-hashed
    /assets/<name>.<hash>.mp4 URLs, and a missing clip fails the build. */
-import heroLoopDesktop from '../assets/video/beneath-hero-d.mp4';
-import heroLoopMobile from '../assets/video/beneath-hero-m.mp4';
-import heroStillDesktop from '../assets/video/beneath-hero-d.png';
-import heroStillMobile from '../assets/video/beneath-hero-m.png';
+import flightDesktop from '../assets/video/beneath-flight-d.mp4';
+import flightMobile from '../assets/video/beneath-flight-m.mp4';
+import flightStillDesktop from '../assets/video/beneath-flight-d.png';
+import flightStillMobile from '../assets/video/beneath-flight-m.png';
 
 const title = 'Xtend-AI | Web & Mobile App Development in Charlotte, NC';
 const description = 'Xtend-AI designs and builds websites, mobile apps, and the Azure cloud that runs them. Architected, not assembled. Charlotte & Harrisburg, NC, and remote.';
@@ -77,15 +77,16 @@ const differentiators = [
 
   <!-- Hero Section -->
   <section class="hero">
-    {/* The flight over the lattice, on a loop. BEFORE .hero__bg, not inside
-        it: .hero__bg blooms in from opacity 0, and the still must paint at
-        full strength with the page to be the honest LCP element (see
-        AmbientVideo.astro). The glows and grid still bloom in over it. */}
+    {/* The flight over the lattice, once per visit, then its first frame
+        holds as the still. BEFORE .hero__bg, not inside it: .hero__bg blooms
+        in from opacity 0, and the still must paint at full strength with the
+        page to be the honest LCP element (see AmbientVideo.astro). The glows
+        and grid still bloom in over it. */}
     <AmbientVideo
-      desktop={heroLoopDesktop}
-      mobile={heroLoopMobile}
-      desktopStill={heroStillDesktop}
-      mobileStill={heroStillMobile}
+      intro={flightDesktop}
+      introMobile={flightMobile}
+      desktopStill={flightStillDesktop}
+      mobileStill={flightStillMobile}
       desktopMedia="(min-width: 1024px)"
       startDelay={600}
     />
