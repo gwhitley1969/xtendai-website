@@ -1,0 +1,825 @@
+---
+/**
+ * Hero tesseract: a floating, transparent four-dimensional cube drawn in
+ * light, with the logo lockup at its core. Replaces the phone mockup in the
+ * home hero (owner decision, 2026-09-22; brand rules in XTEND-AI-WEB.md
+ * §4.1 and §12.5).
+ *
+ * Why it is drawn live on a <canvas> and not shipped as video: the geometry
+ * must be exact, the rotation must run forever without a loop seam, the
+ * object must be truly transparent over the ambient clip behind it, and it
+ * must react to the visitor. Higgsfield supplied the look (style frames the
+ * canvas was calibrated to) and the energy-core glow stills layered behind
+ * the cage; the logo is the site's own reverse lockup.
+ *
+ * Layers, back to front (all inside .tess__float, which owns the float
+ * transform; the entrance rise stays on the page's .hero__visual, because two
+ * transform animations on one element fight):
+ *   .tess__backing   CSS radial glow of --xt-accent: the wide haze the style
+ *                    frames have around the object, and a contrast plate
+ *   .tess__core--a/b optional RGBA glow stills (props), counter-rotating and
+ *                    breathing in CSS, normal blending, no blend modes
+ *   .tess__canvas    the cage: faces, bloom, edges, nodes, pulses, embers,
+ *                    with the lockup drawn BETWEEN the far and the near edges
+ *                    so the cube truly surrounds it
+ *   .tess__logo      the DOM lockup: the no-JS fallback and the bitmap source
+ *                    for the canvas, hidden once the canvas draws it
+ *
+ * Motion: yaw about the vertical axis (positive = the front face travels
+ * left to right), the four-dimensional XW rotation that turns the cube
+ * inside out (inner cube swelling through to become the outer), a small ZW
+ * oscillation, a CSS float. On fine pointers the cube tilts toward the
+ * cursor and surges (faster inside-out turn, brighter glow) as the cursor
+ * approaches; scrolling adds a little spin; a click inside it sends a pulse
+ * through the cage. It assembles out of light on load, locked to the
+ * .hero__visual rise animation's own clock.
+ *
+ * Every CSS loop is gated on .is-live, so without JavaScript the visitor gets
+ * a static glowing core and the lockup, and nothing that would need a pause
+ * control. With JavaScript, reduced motion and the constrained-device signals
+ * draw ONE static frame; the pause control shared with the ambient video
+ * (data-ambient-off on <html>) freezes it; it stops off screen and in hidden
+ * tabs. It registers with the shared toggle through the data-motion /
+ * data-motion-playing attributes and the xt-motion event (AmbientVideo.astro).
+ *
+ * Knobs are inherited custom properties, set by the page on .hero (the
+ * --rise-* / --ambient-* convention); every one has a default here:
+ *   --cube-size            box width (CSS length)
+ *   --cube-backing         strength of the CSS haze behind the cube (0..1)
+ *   --cube-core-opacity    strength of the glow stills (0..1)
+ *   --cube-core-period     one rotation of the core stills
+ *   --cube-float-period    one float cycle
+ *   --cube-logo            lockup width as a fraction of the box
+ *   --cube-logo-plate      dark pocket behind the lockup (0..1), for legibility
+ *   --cube-yaw-period      one full turn left to right (negative reverses)
+ *   --cube-4d-period       one full inside-out cycle
+ *   --cube-zw-period / --cube-zw-amp   the second, gentler 4-D wobble
+ *   --cube-tilt            camera tilt (deg), positive shows the top face
+ *   --cube-4d-depth        4D->3D perspective distance (nesting contrast)
+ *   --cube-perspective     3D->2D perspective distance
+ *   --cube-glow            bloom strength multiplier
+ *   --cube-face-alpha      glass tint of the 24 faces
+ *   --cube-pulses          light pulses travelling the edges (count)
+ *   --cube-embers          drifting particles around the cube (count)
+ *   --cube-hover-boost     inside-out speed multiplier at the cursor
+ *   --cube-scroll-spin     radians of extra yaw per scrolled pixel
+ *   --cube-entrance        assembly duration
+ *
+ * Calibration (2026-09-22, Higgsfield frame fe264493…, "Energy lattice"):
+ * crisp core about 1.2% of the cube's extent with a pale cyan-white peak,
+ * half-max at a deep saturated blue, the visible halo about 6.5% of the
+ * extent, bright nodes, a wide dark-blue haze around the object.
+ */
+import { Image } from 'astro:assets';
+import mark from '../assets/xtend-ai-mark-reverse.png';
+import wordmark from '../assets/xtend-ai-wordmark-white.png';
+
+interface Props {
+  /** Energy-core glow still A (RGBA, vignetted to transparent). Optional. */
+  coreA?: ImageMetadata;
+  /** Energy-core glow still B, counter-rotating over A. Optional. */
+  coreB?: ImageMetadata;
+}
+
+const { coreA, coreB } = Astro.props;
+---
+
+<div class="tess" data-tess aria-hidden="true">
+  <div class="tess__float">
+    <div class="tess__backing"></div>
+    {coreA && (
+      <span class="tess__core tess__core--a">
+        <Image src={coreA} alt="" width={512} quality={65} loading="eager" fetchpriority="low" />
+      </span>
+    )}
+    {coreB && (
+      <span class="tess__core tess__core--b">
+        <Image src={coreB} alt="" width={512} quality={65} loading="eager" fetchpriority="low" />
+      </span>
+    )}
+    <canvas class="tess__canvas"></canvas>
+    <div class="tess__logo">
+      <span class="tess__mark">
+        <Image src={mark} alt="" width={120} densities={[2, 3]} loading="eager" />
+      </span>
+      <span class="tess__wordmark">
+        <Image src={wordmark} alt="" width={200} densities={[2, 3]} loading="eager" />
+      </span>
+    </div>
+  </div>
+</div>
+
+<script>
+  const host = document.querySelector<HTMLElement>('[data-tess]');
+  if (host) boot(host);
+
+  function boot(host: HTMLElement) {
+    const canvas = host.querySelector<HTMLCanvasElement>('canvas.tess__canvas');
+    const ctx = canvas?.getContext('2d', { alpha: true });
+    if (!canvas || !ctx) return; // the DOM fallback stays as it is
+    const section = host.closest('section') ?? host.parentElement ?? document.body;
+    const rise = host.parentElement; // .hero__visual, which carries the rise
+    const markImg = host.querySelector<HTMLImageElement>('.tess__mark img');
+    const wordImg = host.querySelector<HTMLImageElement>('.tess__wordmark img');
+    const root = document.documentElement;
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+    const finePointer = matchMedia('(pointer: fine)');
+    const nav = navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string }; deviceMemory?: number };
+
+    /* Same predicate as AmbientVideo.astro: the toggle's resume path is gated
+       on it, so a cube that animated under it could never be resumed. */
+    const constrained = () =>
+      reduced.matches ||
+      nav.connection?.saveData === true ||
+      /^(slow-2g|2g|3g)$/.test(nav.connection?.effectiveType ?? '') ||
+      (nav.deviceMemory ?? 8) <= 2;
+
+    const TAU = Math.PI * 2;
+    const clamp = (v: number, lo: number, hi: number) => (v < lo ? lo : v > hi ? hi : v);
+    const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+    const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+
+    /* ---------- tokens and knobs ---------- */
+
+    const rootStyle = getComputedStyle(root);
+    const hex = (name: string, fallback: string) => {
+      const m = /#([0-9a-f]{6})/i.exec(rootStyle.getPropertyValue(name));
+      const v = parseInt(m ? m[1] : fallback, 16);
+      return [(v >> 16) & 255, (v >> 8) & 255, v & 255];
+    };
+    const accent = hex('--xt-accent', '188cff');
+    const light = hex('--xt-accent-light', '7ec1ff');
+    const white = hex('--xt-text-primary', 'ffffff');
+    const mix = (a: number[], b: number[], t: number) => a.map((v, i) => Math.round(v + (b[i] - v) * t));
+    const css = (c: number[]) => `rgb(${c[0]} ${c[1]} ${c[2]})`;
+    const C_ACCENT = css(accent);
+    const C_LIGHT = css(light);
+    const C_HOT = css(mix(light, white, 0.55)); // the pale cyan-white core of the frames
+    const C_WHITE = css(white);
+    const bg = hex('--xt-bg-primary', '0a0a0f');
+    const C_PLATE = `rgb(${bg[0]} ${bg[1]} ${bg[2]} / 1)`, C_PLATE_0 = `rgb(${bg[0]} ${bg[1]} ${bg[2]} / 0)`;
+
+    const knobs = {
+      yawPeriod: 14, xwPeriod: 22, zwPeriod: 37, zwAmp: 0.3, tilt: 18, d4: 2.4, d3: 14,
+      glow: 1, faceAlpha: 0.03, pulses: 5, embers: 24, hoverBoost: 1.6, scrollSpin: 0.002,
+      entrance: 2000, logo: 0.34, logoPlate: 0.3,
+    };
+    function readKnobs() {
+      const st = getComputedStyle(host);
+      const raw = (n: string) => st.getPropertyValue(n).trim();
+      const num = (n: string, d: number) => { const v = parseFloat(raw(n)); return Number.isFinite(v) ? v : d; };
+      const secs = (n: string, d: number) => { const r = raw(n); const v = parseFloat(r); return !Number.isFinite(v) ? d : r.endsWith('ms') ? v / 1000 : v; };
+      knobs.yawPeriod = secs('--cube-yaw-period', 14);
+      knobs.xwPeriod = secs('--cube-4d-period', 22);
+      knobs.zwPeriod = secs('--cube-zw-period', 37);
+      knobs.zwAmp = num('--cube-zw-amp', 0.3);
+      knobs.tilt = num('--cube-tilt', 18);
+      knobs.d4 = num('--cube-4d-depth', 2.4);
+      knobs.d3 = num('--cube-perspective', 14);
+      knobs.glow = num('--cube-glow', 1);
+      knobs.faceAlpha = num('--cube-face-alpha', 0.03);
+      knobs.pulses = clamp(Math.round(num('--cube-pulses', 5)), 0, 12);
+      knobs.embers = clamp(Math.round(num('--cube-embers', 24)), 0, 64);
+      knobs.hoverBoost = num('--cube-hover-boost', 1.6);
+      knobs.scrollSpin = num('--cube-scroll-spin', 0.002);
+      knobs.entrance = secs('--cube-entrance', 2) * 1000;
+      knobs.logo = num('--cube-logo', 0.34);
+      knobs.logoPlate = num('--cube-logo-plate', 0.3);
+    }
+
+    /* ---------- geometry (built once) ---------- */
+
+    const V4 = new Float32Array(64); // 16 vertices × (x, y, z, w)
+    for (let i = 0; i < 16; i++) for (let k = 0; k < 4; k++) V4[i * 4 + k] = (i >> k) & 1 ? 1 : -1;
+    const EDGES: number[] = []; // 32 edges: index pairs differing in exactly one bit
+    for (let i = 0; i < 16; i++) for (let j = i + 1; j < 16; j++) { const d = i ^ j; if ((d & (d - 1)) === 0) EDGES.push(i, j); }
+    const FACES: number[] = []; // 24 faces: an axis pair × the four settings of the other two bits
+    for (let a = 0; a < 4; a++) for (let b = a + 1; b < 4; b++) {
+      const others = [0, 1, 2, 3].filter((k) => k !== a && k !== b);
+      for (let f = 0; f < 4; f++) {
+        const base = (f & 1 ? 1 << others[0] : 0) | (f & 2 ? 1 << others[1] : 0);
+        FACES.push(base, base | (1 << a), base | (1 << a) | (1 << b), base | (1 << b));
+      }
+    }
+    const ADJ = new Uint8Array(64); // the 4 edges at each vertex, for pulse hopping
+    { const n = new Uint8Array(16); for (let e = 0; e < 32; e++) { const a = EDGES[2 * e], b = EDGES[2 * e + 1]; ADJ[a * 4 + n[a]++] = e; ADJ[b * 4 + n[b]++] = e; } }
+
+    const SX = new Float32Array(16), SY = new Float32Array(16), SZ = new Float32Array(16);
+    const EN = new Float32Array(32), ED = new Float32Array(32); // per edge: nearness 0..1, average depth
+    const ORDER = new Uint8Array(32); // edges sorted far to near
+    const BIRTH = new Float32Array(32); // entrance: when each edge starts drawing (ms)
+    const NEARV = new Uint8Array(32); // entrance: which endpoint is nearer the centre in the hero pose
+    const EP = new Float32Array(32); // entrance progress per edge, this frame
+
+    /* ---------- state ---------- */
+
+    const HERO = { yaw: (30 * Math.PI) / 180, xw: 0.55, zw: 0 };
+    let yaw = HERO.yaw, xw = HERO.xw, zw = HERO.zw, clock = 0;
+    let tiltX = 0, tiltXTarget = 0, yawOff = 0, yawOffTarget = 0; // pointer, radians
+    let surge = 0, surgeTarget = 0, scrollSpin = 0, flash = 0;
+    let running = false, playing = false, inView = true, off = false, armed = false;
+    let raf = 0, last = 0, lastDraw = 0, idleSince = 0;
+    let eLast = -1; // entrance clock, ms; Infinity = complete
+    let t0 = 0; // wall-clock fallback for the entrance
+    let riseAnim: CSSAnimation | null = null, riseDelay = 0;
+    let tier = 2;
+    let dpr = 1, size = 0, cx = 0, cy = 0, S = 1, rhoRest = 1, lw = 1, margin = 26;
+    let octaves: { k: number; c: HTMLCanvasElement; x: CanvasRenderingContext2D; alpha: number }[] = [];
+    let lockup: HTMLCanvasElement | null = null, lockupW = 0, lockupH = 0, plateR = 0;
+    let plate: CanvasGradient | null = null; // built with the lockup, centred on the origin
+    const frameTimes: number[] = []; let frameWindowStart = 0, badFrames = 0, tierSince = 0;
+    let rectX = 0, rectY = 0, rectAt = 0; // cube centre in page coordinates, cached
+    let lastScrollY = scrollY;
+
+    // pulses: edge, t, dir, speed, boost
+    const PMAX = 12; const PE = new Uint8Array(PMAX), PT = new Float32Array(PMAX), PD = new Float32Array(PMAX), PS = new Float32Array(PMAX), PB = new Float32Array(PMAX);
+    // embers: x, y (box units, -1..1), vx, vy, phase, radius
+    const MMAX = 64; const MX = new Float32Array(MMAX), MY = new Float32Array(MMAX), MVX = new Float32Array(MMAX), MVY = new Float32Array(MMAX), MP = new Float32Array(MMAX), MR = new Float32Array(MMAX);
+
+    function seedPulses() {
+      for (let i = 0; i < PMAX; i++) { PE[i] = (i * 7) % 32; PT[i] = (i * 0.37) % 1; PD[i] = i % 2 ? 1 : -1; PS[i] = 0.55 + ((i * 0.23) % 0.5); PB[i] = 0; }
+    }
+    function seedEmbers() {
+      for (let i = 0; i < MMAX; i++) {
+        const a = Math.random() * TAU, r = 0.35 + Math.random() * 0.6;
+        MX[i] = Math.cos(a) * r; MY[i] = Math.sin(a) * r;
+        MVX[i] = (Math.random() - 0.5) * 0.05; MVY[i] = -0.01 - Math.random() * 0.04;
+        MP[i] = Math.random() * TAU; MR[i] = 0.6 + Math.random() * 1.1;
+      }
+    }
+    seedPulses(); seedEmbers();
+
+    /* ---------- projection ---------- */
+
+    function project(yawA: number, tiltA: number, a: number, b: number) {
+      const { d4, d3 } = knobs;
+      const ca = Math.cos(a), sa = Math.sin(a), cb = Math.cos(b), sb = Math.sin(b);
+      const cyw = Math.cos(yawA), syw = Math.sin(yawA), ct = Math.cos(tiltA), st = Math.sin(tiltA);
+      for (let i = 0; i < 16; i++) {
+        const x = V4[i * 4], y = V4[i * 4 + 1], z = V4[i * 4 + 2], w = V4[i * 4 + 3];
+        const x1 = x * ca - w * sa, w1 = x * sa + w * ca; // XW: the inside-out turn
+        const z1 = z * cb - w1 * sb, w2 = z * sb + w1 * cb; // ZW: the gentle wobble
+        const s = d4 / (d4 - w2); // 4D -> 3D
+        const X = x1 * s, Y = y * s, Z = z1 * s;
+        const X2 = X * cyw + Z * syw, Z2 = -X * syw + Z * cyw; // yaw: +yaw moves the front face right
+        const Y3 = Y * ct - Z2 * st, Z3 = Y * st + Z2 * ct; // tilt: +tilt shows the top face
+        const f = d3 / (d3 - Z3); // 3D -> 2D
+        SX[i] = cx + S * X2 * f; SY[i] = cy - S * Y3 * f; SZ[i] = Z3;
+      }
+      for (let e = 0; e < 32; e++) {
+        const d = (SZ[EDGES[2 * e]] + SZ[EDGES[2 * e + 1]]) * 0.5;
+        ED[e] = d; EN[e] = clamp((d + rhoRest) / (2 * rhoRest), 0, 1);
+      }
+      // counting sort into 8 depth bins, far to near
+      const counts = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+      for (let e = 0; e < 32; e++) counts[Math.min(7, (EN[e] * 8) | 0) + 1]++;
+      for (let i = 1; i < 9; i++) counts[i] += counts[i - 1];
+      for (let e = 0; e < 32; e++) ORDER[counts[Math.min(7, (EN[e] * 8) | 0)]++] = e;
+    }
+
+    /* Sizing: with d4 and the ZW amplitude, the largest projected radius is
+       rho(w) = d4·sqrt(4 − w²)/(d4 − w) at w = min(w_max, 4/d4), and the sphere of
+       that radius seen from d3 has screen radius rho·d3/sqrt(d3² − rho²). S fits
+       that inside half the box minus the bloom margin, so nothing ever clips. */
+    function computeScale() {
+      const { d4, d3, zwAmp } = knobs;
+      const wMax = Math.min(Math.sin(zwAmp) + Math.SQRT2 * Math.cos(zwAmp), 4 / d4);
+      const rho = (w: number) => (d4 * Math.sqrt(4 - w * w)) / (d4 - w);
+      const rhoMax = rho(wMax);
+      rhoRest = rho(1);
+      margin = Math.max(18, size * 0.06);
+      S = ((size / 2 - margin) * Math.sqrt(d3 * d3 - rhoMax * rhoMax)) / (d3 * rhoMax);
+      lw = Math.max(0.8, size / 435); // line weights were calibrated on a 435 px box
+      cx = size / 2; cy = size / 2;
+    }
+
+    /* Entrance order: edges nearer the centre (in the hero pose) draw first. */
+    function planEntrance() {
+      project(HERO.yaw, (knobs.tilt * Math.PI) / 180, HERO.xw, HERO.zw);
+      const dist = new Float32Array(32);
+      for (let e = 0; e < 32; e++) {
+        const a = EDGES[2 * e], b = EDGES[2 * e + 1];
+        const da = Math.hypot(SX[a] - cx, SY[a] - cy), db = Math.hypot(SX[b] - cx, SY[b] - cy);
+        NEARV[e] = da <= db ? 0 : 1;
+        dist[e] = Math.min(da, db) + (Math.hypot((SX[a] + SX[b]) / 2 - cx, (SY[a] + SY[b]) / 2 - cy)) * 0.5;
+      }
+      const idx = Array.from({ length: 32 }, (_, i) => i).sort((p, q) => dist[p] - dist[q]);
+      const step = Math.max(20, (knobs.entrance - 500) / 32);
+      idx.forEach((e, rank) => { BIRTH[e] = rank * step; });
+    }
+
+    /* ---------- lockup bitmap (pre-scaled once per resize) ---------- */
+
+    function stepDown(img: HTMLImageElement, tw: number, th: number) {
+      let w = img.naturalWidth, h = img.naturalHeight;
+      let src: CanvasImageSource = img;
+      tw = Math.max(1, tw); th = Math.max(1, th);
+      // Halve until one more halving would undershoot. The bounds on w/h are
+      // what keep this finite whatever the target is.
+      while (w >= tw * 2 && h >= th * 2 && w > 2 && h > 2) {
+        w = Math.round(w / 2); h = Math.round(h / 2);
+        const c = document.createElement('canvas'); c.width = w; c.height = h;
+        const x = c.getContext('2d')!; x.imageSmoothingQuality = 'high'; x.drawImage(src, 0, 0, w, h);
+        src = c;
+      }
+      return src;
+    }
+    function buildLockup() {
+      if (!size) return; // an image can finish loading before the first resize
+      if (!markImg || !wordImg || !markImg.complete || !wordImg.complete || !markImg.naturalWidth || !wordImg.naturalWidth) { lockup = null; return; }
+      const Lcss = knobs.logo * size; // wordmark width in CSS px
+      const wordW = Math.round(Lcss * dpr), wordH = Math.round((wordW * wordImg.naturalHeight) / wordImg.naturalWidth);
+      const markW = Math.round(wordW * 0.52), markH = Math.round((markW * markImg.naturalHeight) / markImg.naturalWidth);
+      const gap = Math.round(size * 0.03 * dpr);
+      const W = wordW, H = markH + gap + wordH;
+      const c = document.createElement('canvas'); c.width = Math.max(1, W); c.height = Math.max(1, H);
+      const x = c.getContext('2d')!; x.imageSmoothingQuality = 'high';
+      x.drawImage(stepDown(markImg, markW, markH), Math.round((W - markW) / 2), 0, markW, markH);
+      x.drawImage(stepDown(wordImg, wordW, wordH), 0, markH + gap, wordW, wordH);
+      lockup = c; lockupW = W / dpr; lockupH = H / dpr;
+      plateR = Math.max(lockupW, lockupH) * 0.68;
+      plate = ctx.createRadialGradient(0, 0, 0, 0, 0, plateR);
+      plate.addColorStop(0, C_PLATE); plate.addColorStop(0.55, C_PLATE); plate.addColorStop(1, C_PLATE_0);
+      host.classList.add('has-logo'); // the canvas draws it from now on
+    }
+    for (const img of [markImg, wordImg]) img?.addEventListener('load', () => { buildLockup(); if (!running) drawStatic(); }, { once: true });
+
+    /* ---------- resize ---------- */
+
+    function resize(devW?: number, devH?: number) {
+      readKnobs();
+      const cssW = canvas.clientWidth || host.clientWidth;
+      if (!cssW) return;
+      const cap = tier === 2 ? 2 : tier === 1 ? 1.5 : 1;
+      dpr = Math.min(devicePixelRatio || 1, cap);
+      let w = devW && devH ? Math.min(devW, devH) : Math.round(cssW * dpr);
+      if (w > 1024) { dpr = dpr * (1024 / w); w = 1024; } // iOS canvas memory
+      size = cssW;
+      canvas.width = Math.max(1, w); canvas.height = Math.max(1, w);
+      dpr = w / cssW;
+      computeScale();
+      planEntrance();
+      const ks = tier === 2 ? [4, 8, 16, 32] : tier === 1 ? [8, 16] : [];
+      const alphas: Record<number, number> = { 4: 0.5, 8: 0.45, 16: 0.4, 32: 0.35 };
+      octaves = ks.map((k) => {
+        const c = document.createElement('canvas');
+        c.width = Math.max(1, Math.ceil(w / k)); c.height = Math.max(1, Math.ceil(w / k));
+        return { k, c, x: c.getContext('2d')!, alpha: alphas[k] };
+      });
+      buildLockup();
+      rectAt = 0;
+      if (!running) drawStatic();
+    }
+    try {
+      const ro = new ResizeObserver((entries) => {
+        const box = entries[0].devicePixelContentBoxSize?.[0];
+        resize(box?.inlineSize, box?.blockSize);
+      });
+      ro.observe(canvas, { box: 'device-pixel-content-box' } as ResizeObserverOptions);
+    } catch {
+      new ResizeObserver(() => resize()).observe(canvas); // Safari: no device-pixel box
+      addEventListener('resize', () => resize(), { passive: true }); // zoom changes DPR
+    }
+
+    /* ---------- drawing ---------- */
+
+    function strokeEdge(x: CanvasRenderingContext2D, e: number, p: number) {
+      const a = EDGES[2 * e], b = EDGES[2 * e + 1];
+      const near = NEARV[e] === 0 ? a : b, far = NEARV[e] === 0 ? b : a;
+      x.beginPath(); x.moveTo(SX[near], SY[near]);
+      if (p >= 1) x.lineTo(SX[far], SY[far]);
+      else x.lineTo(SX[near] + (SX[far] - SX[near]) * p, SY[near] + (SY[far] - SY[near]) * p);
+      x.stroke();
+    }
+    function dot(x: CanvasRenderingContext2D, px: number, py: number, r: number) {
+      x.beginPath(); x.arc(px, py, r, 0, TAU); x.fill();
+    }
+    function nodeProgress(v: number) { // a node appears as its edges reach it
+      let m = 0; for (let i = 0; i < 4; i++) { const e = ADJ[v * 4 + i]; const p = EP[e]; const arrives = (NEARV[e] === 0 ? EDGES[2 * e + 1] : EDGES[2 * e]) === v ? p : (p > 0 ? 1 : 0); if (arrives > m) m = arrives; }
+      return m;
+    }
+
+    /* The cage (edges, nodes, pulses, embers) in one style; used for the bloom
+       octaves (low resolution, then upscaled) and, with finer widths, the crisp
+       pass. `depthMin`/`depthMax` select the far or the near half. */
+    function drawCage(x: CanvasRenderingContext2D, unit: number, crisp: boolean, glowMul: number, depthMin: number, depthMax: number, ent: number) {
+      x.lineCap = 'round'; x.lineJoin = 'round';
+      x.globalCompositeOperation = 'lighter';
+      for (let i = 0; i < 32; i++) {
+        const e = ORDER[i]; const d = ED[e]; if (d < depthMin || d >= depthMax) continue;
+        const p = EP[e]; if (p <= 0) continue;
+        const near = EN[e];
+        if (crisp) {
+          x.strokeStyle = near < 0.4 ? C_ACCENT : near < 0.75 ? C_LIGHT : C_HOT;
+          x.lineWidth = (1.1 + 0.8 * near) * lw;
+          x.globalAlpha = (0.35 + 0.65 * near) * (0.85 + 0.15 * ent) * (1 + 0.6 * flash);
+        } else {
+          x.strokeStyle = C_ACCENT;
+          x.lineWidth = unit * 1.4;
+          x.globalAlpha = (0.45 + 0.55 * near) * glowMul;
+        }
+        strokeEdge(x, e, p);
+        if (p < 1) { // the bright tip of an edge still drawing in
+          const a = EDGES[2 * e], b = EDGES[2 * e + 1]; const nv = NEARV[e] === 0 ? a : b, fv = NEARV[e] === 0 ? b : a;
+          x.fillStyle = C_WHITE; x.globalAlpha = crisp ? 0.9 : glowMul;
+          dot(x, SX[nv] + (SX[fv] - SX[nv]) * p, SY[nv] + (SY[fv] - SY[nv]) * p, crisp ? 2.2 * lw : unit * 1.6);
+        }
+      }
+      // nodes
+      for (let v = 0; v < 16; v++) {
+        const d = SZ[v]; if (d < depthMin || d >= depthMax) continue;
+        const np = ent >= 1 ? 1 : nodeProgress(v); if (np <= 0) continue;
+        const near = clamp((d + rhoRest) / (2 * rhoRest), 0, 1);
+        if (crisp) { x.fillStyle = near > 0.6 ? C_WHITE : C_LIGHT; x.globalAlpha = (0.5 + 0.5 * near) * np; dot(x, SX[v], SY[v], (1.5 + 1.5 * near) * lw); }
+        else { x.fillStyle = C_LIGHT; x.globalAlpha = (0.5 + 0.5 * near) * glowMul * np; dot(x, SX[v], SY[v], unit * 1.5); }
+      }
+    }
+    function drawPulses(x: CanvasRenderingContext2D, unit: number, crisp: boolean, glowMul: number) {
+      x.globalCompositeOperation = 'lighter'; x.lineCap = 'round';
+      for (let i = 0; i < knobs.pulses; i++) {
+        const e = PE[i]; if (EP[e] < 1) continue;
+        const a = EDGES[2 * e], b = EDGES[2 * e + 1];
+        const hx = SX[a] + (SX[b] - SX[a]) * PT[i], hy = SY[a] + (SY[b] - SY[a]) * PT[i];
+        const near = EN[e], boost = 1 + PB[i];
+        // trail: three stepped segments behind the head
+        for (let s = 0; s < 3; s++) {
+          const t1 = clamp(PT[i] - PD[i] * 0.09 * s, 0, 1), t2 = clamp(PT[i] - PD[i] * 0.09 * (s + 1), 0, 1);
+          x.strokeStyle = C_LIGHT; x.globalAlpha = (crisp ? 0.55 : glowMul) * (1 - s * 0.3) * (0.6 + 0.4 * near) * boost;
+          x.lineWidth = crisp ? (2.2 - s * 0.5) * lw : unit * 1.6;
+          x.beginPath(); x.moveTo(SX[a] + (SX[b] - SX[a]) * t1, SY[a] + (SY[b] - SY[a]) * t1); x.lineTo(SX[a] + (SX[b] - SX[a]) * t2, SY[a] + (SY[b] - SY[a]) * t2); x.stroke();
+        }
+        x.fillStyle = C_WHITE; x.globalAlpha = (crisp ? 0.95 : glowMul) * (0.7 + 0.3 * near) * Math.min(1, boost);
+        dot(x, hx, hy, crisp ? 2 * lw : unit * 1.8);
+      }
+    }
+    function drawEmbers(x: CanvasRenderingContext2D, unit: number, crisp: boolean, glowMul: number) {
+      x.globalCompositeOperation = 'lighter';
+      const R = size * 0.5;
+      for (let i = 0; i < knobs.embers; i++) {
+        const tw = 0.5 + 0.5 * Math.sin(MP[i] + clock * 1.7);
+        x.fillStyle = i % 3 ? C_ACCENT : C_LIGHT;
+        x.globalAlpha = (crisp ? 0.25 + 0.55 * tw : glowMul * (0.3 + 0.5 * tw));
+        dot(x, cx + MX[i] * R, cy + MY[i] * R, crisp ? MR[i] * lw : unit * 1.3);
+      }
+    }
+
+    function drawFrame(e: number) {
+      const W = canvas.width;
+      const ent = e === Infinity ? 1 : clamp(e / Math.max(1, knobs.entrance * 0.75), 0, 1);
+      for (let i = 0; i < 32; i++) EP[i] = e === Infinity ? 1 : easeOutCubic(clamp((e - BIRTH[i]) / 450, 0, 1));
+      const logoA = e === Infinity ? 1 : easeOutCubic(clamp((e - 300) / 1100, 0, 1));
+      const glowMul = knobs.glow * (1 + 0.5 * (knobs.hoverBoost - 1) * surge) * (0.5 + 0.5 * ent) * (1 + 0.4 * flash);
+
+      project(yaw + yawOff, (knobs.tilt * Math.PI) / 180 + tiltX, xw, zw);
+
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, size, size);
+
+      // faces: order-independent additive glass
+      if (tier > 0 && knobs.faceAlpha > 0) {
+        ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = C_ACCENT;
+        const aRef = Math.pow(2 * S * (knobs.d4 / (knobs.d4 - 1)), 2) * 0.6;
+        for (let f = 0; f < 24; f++) {
+          const i0 = FACES[f * 4], i1 = FACES[f * 4 + 1], i2 = FACES[f * 4 + 2], i3 = FACES[f * 4 + 3];
+          const area = Math.abs((SX[i0] * SY[i1] - SX[i1] * SY[i0]) + (SX[i1] * SY[i2] - SX[i2] * SY[i1]) + (SX[i2] * SY[i3] - SX[i3] * SY[i2]) + (SX[i3] * SY[i0] - SX[i0] * SY[i3])) * 0.5;
+          const facing = clamp(area / aRef, 0, 1); if (facing < 0.08) continue;
+          ctx.globalAlpha = knobs.faceAlpha * facing * ent * ent;
+          ctx.beginPath(); ctx.moveTo(SX[i0], SY[i0]); ctx.lineTo(SX[i1], SY[i1]); ctx.lineTo(SX[i2], SY[i2]); ctx.lineTo(SX[i3], SY[i3]); ctx.closePath(); ctx.fill();
+        }
+      }
+
+      // bloom: the whole cage at low resolution, upscaled (bilinear = blur)
+      for (const o of octaves) {
+        const sc = o.c.width / size; // device px per CSS px on this octave
+        o.x.setTransform(sc, 0, 0, sc, 0, 0);
+        o.x.clearRect(0, 0, size, size);
+        const unit = 1 / sc; // one device pixel, in CSS px
+        drawCage(o.x, unit, false, o.alpha * glowMul, -Infinity, Infinity, ent);
+        drawPulses(o.x, unit, false, o.alpha * glowMul);
+        if (tier === 2 && o.k === 8) drawEmbers(o.x, unit, false, o.alpha * glowMul);
+        ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 1; ctx.imageSmoothingEnabled = true;
+        ctx.drawImage(o.c, 0, 0, size, size);
+      }
+
+      // far half of the cage, then the lockup, then the near half
+      drawCage(ctx, 1, true, glowMul, -Infinity, 0, ent);
+      if (lockup && logoA > 0) {
+        ctx.globalCompositeOperation = 'source-over';
+        const sc = 0.92 + 0.08 * logoA;
+        const w = lockupW * sc, h = lockupH * sc;
+        const px = -yawOff * 12, py = tiltX * 12; // a hint of parallax against the cage
+        if (plate && knobs.logoPlate > 0) { // a calm pocket in the light, so the lockup stays legible
+          ctx.globalAlpha = knobs.logoPlate * logoA; ctx.fillStyle = plate;
+          ctx.translate(cx + px, cy + py); ctx.fillRect(-plateR, -plateR, plateR * 2, plateR * 2); ctx.translate(-(cx + px), -(cy + py));
+        }
+        ctx.globalAlpha = logoA;
+        ctx.drawImage(lockup, cx - w / 2 + px, cy - h / 2 + py, w, h);
+      }
+      drawCage(ctx, 1, true, glowMul, 0, Infinity, ent);
+      drawPulses(ctx, 1, true, glowMul);
+      if (tier === 2) drawEmbers(ctx, 1, true, glowMul);
+      ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
+      void W;
+    }
+
+    function drawStatic() {
+      if (!size) return;
+      yaw = HERO.yaw; xw = HERO.xw; zw = HERO.zw; tiltX = 0; yawOff = 0; surge = 0; flash = 0;
+      host.classList.add('is-live');
+      drawFrame(Infinity);
+    }
+
+    /* ---------- simulation ---------- */
+
+    function step(dt: number) {
+      clock += dt;
+      const eNow = entranceClock(dt);
+      const speed = eNow === Infinity ? 1 : easeInOutCubic(clamp(eNow / 2400, 0, 1));
+      const xwMul = (eNow === Infinity ? 1 : 1 + Math.exp(-Math.max(0, eNow - 800) / 1600)) * (1 + (knobs.hoverBoost - 1) * surge);
+      yaw += ((TAU / knobs.yawPeriod) * speed + scrollSpin) * dt;
+      xw += (TAU / knobs.xwPeriod) * speed * xwMul * dt;
+      zw = knobs.zwAmp * Math.sin((TAU * clock) / knobs.zwPeriod);
+      if (yaw > TAU) yaw -= TAU; if (yaw < 0) yaw += TAU; if (xw > TAU) xw -= TAU;
+      const k1 = 1 - Math.exp(-dt / 0.25), k2 = 1 - Math.exp(-dt / 0.4);
+      tiltX += (tiltXTarget - tiltX) * k1; yawOff += (yawOffTarget - yawOff) * k1; surge += (surgeTarget - surge) * k2;
+      scrollSpin *= Math.exp(-dt / 0.6); flash *= Math.exp(-dt / 0.35);
+      // pulses hop across vertices along the adjacency
+      for (let i = 0; i < PMAX; i++) {
+        PB[i] *= Math.exp(-dt / 0.8);
+        PT[i] += PD[i] * PS[i] * (1 + 2 * PB[i]) * (0.6 + 0.8 * surge + 0.4) * dt;
+        if (PT[i] > 1 || PT[i] < 0) {
+          const e = PE[i]; const v = PT[i] > 1 ? EDGES[2 * e + 1] : EDGES[2 * e];
+          let ne = e; for (let tries = 0; tries < 4 && ne === e; tries++) ne = ADJ[v * 4 + ((Math.random() * 4) | 0)];
+          PE[i] = ne; const startsAtV = EDGES[2 * ne] === v; PT[i] = startsAtV ? 0 : 1; PD[i] = startsAtV ? 1 : -1;
+        }
+      }
+      if (tier === 2) for (let i = 0; i < knobs.embers; i++) {
+        MX[i] += MVX[i] * dt; MY[i] += MVY[i] * dt;
+        if (MX[i] * MX[i] + MY[i] * MY[i] > 0.92 || MY[i] < -0.95) { const a = Math.random() * TAU; MX[i] = Math.cos(a) * 0.5; MY[i] = 0.6 + Math.random() * 0.3; }
+      }
+      return eNow;
+    }
+
+    /* The assembly follows the rise animation's own clock while it runs, so it
+       can never run ahead of the column's fade-in; afterwards it advances by dt. */
+    function entranceClock(dt: number) {
+      if (eLast === Infinity) return Infinity;
+      if (riseAnim && riseAnim.playState === 'running') {
+        const ct = riseAnim.currentTime; eLast = typeof ct === 'number' ? ct - riseDelay : eLast + dt * 1000;
+      } else if (riseAnim && riseAnim.playState === 'finished' && eLast < 0) {
+        eLast = 0;
+      } else if (riseAnim && riseAnim.playState !== 'finished') {
+        eLast = Math.max(eLast, 0);
+      } else if (t0) {
+        eLast = performance.now() - t0;
+      } else {
+        eLast = eLast + dt * 1000;
+      }
+      if (eLast > knobs.entrance + 3000) eLast = Infinity;
+      return eLast;
+    }
+
+    function watchFrames(now: number, dtMs: number) {
+      if (now - tierSince < 2000) return; // settle time after each start / demotion
+      if (!frameWindowStart) frameWindowStart = now;
+      frameTimes.push(dtMs); if (dtMs > 34) badFrames++;
+      if (now - frameWindowStart >= 3000) {
+        if (frameTimes.length >= 20 && badFrames / frameTimes.length > 0.15 && tier > 0) { tier--; tierSince = now; resize(); }
+        frameTimes.length = 0; badFrames = 0; frameWindowStart = now;
+      }
+    }
+
+    function tick(now: number) {
+      if (!running) return;
+      raf = requestAnimationFrame(tick);
+      const dtMs = last ? now - last : 16; last = now;
+      watchFrames(now, dtMs);
+      const throttled = tier === 0 || (now - idleSince > 60000);
+      if (throttled && now - lastDraw < 30) return;
+      const dt = Math.min(dtMs / 1000, 0.05);
+      const e = step(dt);
+      if (e < 0) return; // the column is still invisible during its rise delay
+      if (!playing) { playing = true; host.classList.add('is-live'); announce(); }
+      drawFrame(e);
+      lastDraw = now;
+    }
+
+    /* ---------- lifecycle ---------- */
+
+    function announce() {
+      host.toggleAttribute('data-motion-playing', playing);
+      document.dispatchEvent(new CustomEvent('xt-motion'));
+    }
+    function start() { running = true; last = 0; tierSince = performance.now(); idleSince = performance.now(); raf = requestAnimationFrame(tick); }
+    function stop() { running = false; cancelAnimationFrame(raf); if (playing) { playing = false; announce(); } }
+    function sync() {
+      off = root.hasAttribute('data-ambient-off');
+      const want = armed && inView && !document.hidden && !off && !constrained();
+      if (want && !running) start(); else if (!want && running) stop();
+      if (!want && !running && off && size && !host.classList.contains('is-live')) drawStatic();
+    }
+
+    function armEntrance() {
+      const anims = rise?.getAnimations?.() ?? [];
+      const found = anims.find((a) => a instanceof CSSAnimation && a.animationName === 'rise') as CSSAnimation | undefined;
+      if (found && found.playState !== 'idle') {
+        riseAnim = found;
+        riseDelay = (found.effect?.getComputedTiming().delay as number) || 0;
+        const ct = typeof found.currentTime === 'number' ? found.currentTime : 0;
+        if (found.playState === 'finished' || ct - riseDelay > 400) eLast = Infinity; // late: the column is already showing
+        armed = true; sync(); return;
+      }
+      const onStart = (ev: AnimationEvent) => {
+        if (ev.animationName !== 'rise' || ev.target !== rise) return;
+        document.removeEventListener('animationstart', onStart, true);
+        t0 = performance.now(); armed = true; sync();
+      };
+      document.addEventListener('animationstart', onStart, true);
+      setTimeout(() => { if (!armed) { document.removeEventListener('animationstart', onStart, true); t0 = performance.now(); armed = true; sync(); } }, 3000);
+    }
+
+    /* ---------- interaction ---------- */
+
+    function cubeCentre() {
+      const now = performance.now();
+      if (now - rectAt > 250) { const r = canvas.getBoundingClientRect(); rectX = r.left + r.width / 2 + scrollX; rectY = r.top + r.height / 2 + scrollY; rectAt = now; }
+    }
+    if (finePointer.matches) {
+      section.addEventListener('pointermove', (ev) => {
+        if (!size) return; cubeCentre(); idleSince = performance.now();
+        const nx = clamp((ev.pageX - rectX) / (size / 2), -1.5, 1.5), ny = clamp((ev.pageY - rectY) / (size / 2), -1.5, 1.5);
+        yawOffTarget = (nx * 10 * Math.PI) / 180; tiltXTarget = (-ny * 10 * Math.PI) / 180;
+        surgeTarget = clamp(1.5 - Math.hypot(nx, ny), 0, 1);
+      }, { passive: true });
+      section.addEventListener('pointerleave', () => { yawOffTarget = 0; tiltXTarget = 0; surgeTarget = 0; }, { passive: true });
+    }
+    addEventListener('scroll', () => {
+      const dy = scrollY - lastScrollY; lastScrollY = scrollY; idleSince = performance.now();
+      scrollSpin = clamp(scrollSpin + dy * knobs.scrollSpin, -3, 3);
+    }, { passive: true });
+    section.addEventListener('click', (ev) => {
+      if (!size || !running) return; cubeCentre();
+      if (Math.hypot(ev.pageX - rectX, ev.pageY - rectY) > size * 0.45) return;
+      flash = 1; idleSince = performance.now();
+      for (let i = 0; i < Math.min(4, knobs.pulses); i++) PB[i] = 1;
+    });
+
+    /* ---------- wiring ---------- */
+
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver((entries) => { inView = entries[0].isIntersecting; sync(); }, { threshold: 0 }).observe(host);
+    }
+    new MutationObserver(sync).observe(root, { attributes: true, attributeFilter: ['data-ambient-off'] });
+    document.addEventListener('visibilitychange', sync);
+    addEventListener('pageshow', (e) => { if (e.persisted) sync(); });
+    reduced.addEventListener('change', () => {
+      if (constrained()) { stop(); host.removeAttribute('data-motion'); drawStatic(); }
+      else { host.setAttribute('data-motion', ''); eLast = Infinity; armed = true; }
+      sync(); document.dispatchEvent(new CustomEvent('xt-motion'));
+    });
+
+    if (tier === 2 && ((nav.deviceMemory ?? 8) <= 4 || (matchMedia('(pointer: coarse)').matches && (navigator.hardwareConcurrency ?? 8) <= 4))) tier = 1;
+    try { off = root.hasAttribute('data-ambient-off') || localStorage.getItem('xt-ambient') === 'off'; } catch { /* storage blocked */ }
+    readKnobs();
+    if (constrained()) {
+      resize(); drawStatic(); // one frame, no loop, no pause control needed
+    } else {
+      host.setAttribute('data-motion', '');
+      document.dispatchEvent(new CustomEvent('xt-motion'));
+      if (off) { resize(); eLast = Infinity; drawStatic(); armed = true; }
+      else armEntrance();
+    }
+
+    // Read-only hook for verification (direction, timing, tier).
+    (host as HTMLElement & { tess?: unknown }).tess = {
+      get state() {
+        let fi = 0; for (let i = 1; i < 16; i++) if (SZ[i] > SZ[fi]) fi = i;
+        return { yaw, xw, zw, tier, running, playing, entrance: eLast, size, dpr, frontVertexX: SX[fi], tiltTarget: [yawOffTarget, tiltXTarget], surge };
+      },
+      project: (phi: number) => Math.sin(phi), // screen x of the front-face direction after a yaw of phi
+    };
+  }
+</script>
+
+<style>
+  .tess {
+    --_size: min(var(--cube-size, 320px), 100%);
+    position: relative;
+    width: var(--_size);
+    aspect-ratio: 1;
+    align-self: center;
+    pointer-events: none; /* the section listens; the CTAs and the toggle stay clickable */
+  }
+
+  .tess__float {
+    position: absolute;
+    inset: 0;
+  }
+
+  .tess.is-live .tess__float {
+    animation: tess-float var(--cube-float-period, 6s) ease-in-out infinite;
+  }
+
+  /* The wide haze the style frames have around the object, and the contrast
+     plate that keeps thin lines readable over bright cloud. */
+  .tess__backing {
+    position: absolute;
+    inset: 4%;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      color-mix(in srgb, var(--xt-accent) calc(var(--cube-backing, 0.35) * 100%), transparent) 0%,
+      color-mix(in srgb, var(--xt-accent) calc(var(--cube-backing, 0.35) * 40%), transparent) 34%,
+      transparent 68%
+    );
+  }
+
+  .tess__core {
+    position: absolute;
+    inset: 12%;
+    opacity: var(--cube-core-opacity, 0.85);
+  }
+
+  .tess__core :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  /* Two stills turning against each other read as slow churn. `scale` is its
+     own property, so the breathe and the spin do not fight over transform. */
+  .tess.is-live .tess__core--a {
+    animation:
+      tess-spin var(--cube-core-period, 40s) linear infinite,
+      tess-breathe 7s ease-in-out infinite;
+  }
+
+  .tess.is-live .tess__core--b {
+    animation:
+      tess-spin-rev calc(var(--cube-core-period, 40s) * 1.35) linear infinite,
+      tess-breathe 5s ease-in-out infinite reverse;
+  }
+
+  .tess__canvas {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .tess__logo {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: calc(var(--_size) * 0.03);
+  }
+
+  .tess__mark :global(img) {
+    display: block;
+    width: calc(var(--_size) * var(--cube-logo, 0.34) * 0.52);
+    height: auto;
+  }
+
+  .tess__wordmark :global(img) {
+    display: block;
+    width: calc(var(--_size) * var(--cube-logo, 0.34));
+    height: auto;
+  }
+
+  /* Once the canvas draws the lockup between the far and the near edges, the
+     DOM copy steps aside (it stays the bitmap source and the no-JS fallback). */
+  .tess.has-logo .tess__logo {
+    visibility: hidden;
+  }
+
+  /* The shared pause control freezes the CSS loops; the script freezes the
+     canvas. Specificity matters: the .is-live rules above set the animation
+     shorthand, which resets play-state, so this must outrank them. */
+  :global(html[data-ambient-off]) .tess.is-live .tess__float,
+  :global(html[data-ambient-off]) .tess.is-live .tess__core {
+    animation-play-state: paused;
+  }
+
+  @keyframes tess-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+  }
+
+  @keyframes tess-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes tess-spin-rev {
+    to { transform: rotate(-360deg); }
+  }
+
+  @keyframes tess-breathe {
+    0%, 100% { scale: 0.94; }
+    50% { scale: 1.06; }
+  }
+</style>
