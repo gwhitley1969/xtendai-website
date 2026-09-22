@@ -42,6 +42,7 @@ npm install         # dependencies
 npm run dev         # dev server → http://localhost:4321
 npm run build       # production build → dist/
 npm run preview     # serve the built output locally
+AMBIENT_DELAY_MS=0 npm run build   # worst-case build: every ambient clip starts at load (the Lighthouse / LCP gate)
 ```
 
 There is **no linter, formatter, or type check in CI**. `npm run build` is the only gate — run it before every commit.
@@ -53,7 +54,9 @@ There is **no linter, formatter, or type check in CI**. `npm run build` is the o
 ```
 src/
   layouts/BaseLayout.astro      # <head>, SEO/OG meta, Organization JSON-LD, named head slot, font preloads
-  components/                   # Header.astro, Footer.astro, FeatureCard.astro, StoreLinks.astro, Icon.astro
+  components/                   # Header.astro, Footer.astro, FeatureCard.astro, StoreLinks.astro, Icon.astro,
+                                #   AmbientVideo.astro + AmbientToggle.astro (hero background clip + its pause control),
+                                #   HeroTesseract.astro (the hero's 4-D cube of light, drawn on a canvas)
   pages/                        # file-based routing
     index.astro                 # home (largest file — hero, credibility bar, services-first sections)
     services.astro  work.astro  about.astro  contact.astro
@@ -62,9 +65,10 @@ src/
     products/clique-pix.astro   # no products/index — /products 301s to /work in SWA config
   styles/global.css             # ALL design tokens live in :root here; @font-face at top
   assets/                       # images processed by <Image> at build time (app icons, reverse logo assets)
+    video/                      # ambient clips (.mp4, imported so Vite hashes them) + their first-frame stills
 public/                         # served verbatim — favicons, robots.txt, fonts/, og-card
 api/contact/                    # Azure Function (Node) → SendGrid; INTERESTS allow-list
-scripts/                        # one-off derived-asset generators (reverse logo, favicons, OG card) — run manually, outputs committed
+scripts/                        # one-off derived-asset generators (reverse logo, favicons, OG card, ambient video loops via ffmpeg) — run manually, outputs committed
 docs/                           # engineering documentation
 ```
 
@@ -78,7 +82,7 @@ Navigation is **data-driven**, not hardcoded in markup. Nav changes are edits to
 
 2. **Do not import `xtend-ai_brand_tokens.css`.** That root-level file defines *the same variable names with different values* (e.g. `--xt-navy-900: #022A56` vs. the site's `#12121a`). It is reference-only. Importing it would silently invert backgrounds and text colors site-wide.
 
-3. **Images the site renders go in `src/assets/`** and are rendered with `<Image>` from `astro:assets` — never a raw `<img>` pointed at `public/`. A 1.7 MB source PNG becomes a ~2–12 KB WebP variant. `public/` is only for fixed-URL files (favicons, `robots.txt`, domain validators) and already-optimized images.
+3. **Images the site renders go in `src/assets/`** and are rendered with `<Image>` from `astro:assets` — never a raw `<img>` pointed at `public/`. A 1.7 MB source PNG becomes a ~2–12 KB WebP variant. `public/` is only for fixed-URL files (favicons, `robots.txt`, domain validators) and already-optimized images. Video clips follow the same rule: imported from `src/assets/video/`, so Vite emits hashed `.mp4` URLs and a missing clip fails the build.
 
 4. **`<Image>` inside a scoped `<style>` block needs `:global(img)`.** Astro's style scoping doesn't reliably reach the `<img>` an Astro component emits. Raw inline `<svg>` in a template does *not* need `:global()`.
 
@@ -91,6 +95,10 @@ Navigation is **data-driven**, not hardcoded in markup. Nav changes are edits to
 8. **Watch line endings on Windows.** Git converts LF ↔ CRLF and nothing normalizes it in CI, so a careless edit can produce a whole-file diff.
 
 9. **The contact interest list lives in two files.** The `<select>` options in `src/pages/contact.astro` and the `INTERESTS` allow-list in `api/contact/index.js` must match — a value missing from the Function's list never reaches the email subject.
+
+10. **Decorative video is never first paint.** A `<video>` in markup carries no `autoplay`, `src` or `poster`; `AmbientVideo.astro`'s script loads it after `load` plus a delay and only where nothing says no. A full-bleed clip sits over its own first-frame still so the still, not the video, is the LCP element (measured: Chrome otherwise registers the faded-in video as a late LCP). Every placement renders `<AmbientToggle />` as a sibling after the content wrapper, and any other auto-playing motion registers with that control: `data-motion` on its root while it can animate, `data-motion-playing` while it does, an `xt-motion` event on `document` at each change (`HeroTesseract.astro` is the reference). Details and the worst-case measuring build in `docs/IMPLEMENTATION.md`, *Ambient video* and *Hero tesseract*.
+
+11. **Canvas animation rules.** Reduced motion and the constrained-device signals get one static frame, never a loop; nothing is allocated per frame; DPR is capped at 2 and the backing store at 1024 px; every loop that walks image sizes is bounded (an unbounded halving loop froze two browsers during development). See `docs/IMPLEMENTATION.md`, *Hero tesseract*.
 
 ---
 

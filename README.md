@@ -16,6 +16,7 @@ Corporate marketing website for Xtend-AI, built with Astro and deployed to Azure
 
 - Node.js 18+
 - npm or yarn
+- ffmpeg and ffprobe on PATH, **only** to regenerate the ambient video loops with `node scripts/make-ambient-video.mjs`. `npm run build` never needs them.
 
 ### Local Development
 
@@ -54,7 +55,7 @@ npm run preview
 │   └── assets/           # Images optimized by astro:assets at build time
 ├── public/               # Static assets served as-is
 ├── api/                  # Azure Functions
-├── scripts/              # Derived-asset generators (reverse logo, favicons, OG card) — run manually, outputs committed
+├── scripts/              # Derived-asset generators (reverse logo, favicons, OG card, ambient video loops) — run manually, outputs committed
 └── docs/                 # Documentation
 ```
 

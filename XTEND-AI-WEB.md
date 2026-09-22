@@ -9,6 +9,23 @@
 
 ---
 
+## Revision note — 2026-09-22 hero motion
+
+The owner asked for a site that feels dynamic and eye-catching, built with AI-generated motion. The home hero gained an ambient background clip (2026-09-21) and its phone mockup was replaced by a living four-dimensional cube of light carrying the logo (2026-09-22). Both override the July 2026 "entrance-only" restraint rule, by owner decision.
+
+What changed in this document:
+
+| Section | Change |
+|---|---|
+| §4.1 Hero | The backdrop clip and the tesseract replace the phone capture |
+| §12.1a Logo on dark surfaces | The lockup may stand at the core of the hero object |
+| §12.5 Visual restraint rules | Motion policy rewritten; the "hero phone shows the real product" rule retired |
+| §13 Assets | Video renditions and the energy-core stills listed; the screen capture retired |
+| §14.2 Performance gates | Byte and frame budgets, the LCP-element rule |
+| Open items | §4.1 closed |
+
+Decisions locked by the owner: the ambient backdrop stays and became a flight over a cloudless lattice that plays once per visit and then holds (the clouds read as distracting; the opening ride was the part the owners loved; a perpetual loop was tried the same day and replaced by the one-time flight); the lattice lights glow steadily (co-founder request); the phone becomes a tesseract with the mark + wordmark lockup at its core, reactive to the visitor; light pulses on the cube are off; the cube is a quarter larger than first built; every auto-playing motion carries the shared pause control.
+
 ## Revision note — 2026-07-24 services repositioning
 
 Xtend-AI was founded as a consumer mobile app company. It still is one, but it now also **designs and builds websites and web applications for client companies**, and that is currently the growing side of the business. This revision adds the services audience to a site that previously spoke only to app-store consumers.
@@ -141,10 +158,9 @@ Target shape, in order. Replaces the previous Hero → Features bar → What we 
 
 > The "starting with My AI Bartender" line is removed.
 
-**The hero visual (updated 2026-07-25).** The CSS phone mock of the My AI Bartender UI was replaced with a **real home-screen capture** from the app's own store listing, rendered inside the CSS phone frame (design audit; see `docs/IMPLEMENTATION.md`, *Hero phone screenshot*). The earlier open question about what the visual should signal remains live for later:
-> **(b)** Pair the phone with a browser frame so the visual says "both halves" — on-message, but real design work.
-> **(c)** Replace it with a client website screenshot once one exists.
-> Recommendation: keep the real capture now, revisit (b) or (c) when Needle Girlie launches.
+**The hero visual (replaced 2026-09-22, owner decision).** The phone capture is retired. In its place floats a transparent four-dimensional cube (a tesseract) drawn in the brand's electric blue as lines of light, with the logo lockup (mark over wordmark, reverse treatment) at its core on a soft dark pocket that keeps it legible, and nothing else inside it: no glow field around the logo (owner decision, 2026-09-22). It turns left to right, turns itself inside out, assembles out of light on load in step with the headline, and reacts to the visitor: tilts toward the cursor, surges when approached, turns a little on scroll, flashes on a click. It is decorative (hidden from assistive technology), carries no copy, obeys the same pause control as the backdrop, and under reduced motion or on constrained devices it is a single still frame. The product capture appears nowhere else on the site; it remains in git history and on the store listings and could return in a product context (the Work page) if wanted. The earlier ideas (b) browser frame and (c) client screenshot are closed by this decision. Engineering detail: `docs/IMPLEMENTATION.md`, *Hero tesseract*.
+
+**The hero backdrop (added 2026-09-21, reworked 2026-09-22, owner-approved).** Behind the whole hero runs a muted, decorative AI-generated flight over the world the tagline names: a blueprint lattice of blue light laid across a dark plain under a clear night sky, the infrastructure beneath everything (the first version's cloud layer was removed as distracting). The camera dives from a high view, races over the lattice and climbs back to where it started. It plays once per visit (about 28 s: the footage is motion-interpolated to half speed and played at 0.7×, because the rendered speed was dizzying) and then holds its first frame as a still, so the tesseract floats over a calm, held view; later pages in the same visit show only the still. The lattice glows steadily; nothing pulses. It is atmosphere, never evidence: no people, text, logos, products or client work appear in it, it carries no sound and no information, it is hidden from assistive technology, and visitors who ask for less (reduced motion, Save-Data, slow connections, low-memory devices, iOS Low Power Mode) see the clip's first frame as a still instead. A pause button in the hero stops it, and the tesseract, for the whole site. The clip's first frame is also what paints first, so the video never delays the page. Engineering detail: `docs/IMPLEMENTATION.md`, *Ambient video*.
 
 ### 4.2 Credibility bar
 
@@ -489,6 +505,8 @@ The logo inks (navy `#022A56` + blue `#188CFF`) were drawn for white surfaces. O
 
 Generated reverse assets live in `src/assets/` (`xtend-ai-mark-reverse.png`, `xtend-ai-wordmark-white.png`, `xtend-ai-mark-watermark.png`), regenerated from the transparent originals via `node scripts/make-reverse-logo.mjs`. The header and footer render the lockup as mark + wordmark + tagline. **Every page carries the letterhead watermark** (approved 2026-07-24): the X mark fixed and centered at ~90% of the viewport, 6% opacity, on all screen sizes — content scrolls over it.
 
+The lockup may also stand at the core of the home hero's tesseract (approved 2026-09-22): mark over wordmark, reverse treatment, drawn on the canvas between the far and the near edges of the cube on a soft dark pocket that keeps it legible over the energy glow. It is decorative there; the header carries the accessible name.
+
 The treatment extends to the two brand images that leave the site (both generated by `node scripts/make-favicon-og.mjs`):
 
 - **Favicons** render on light *and* dark tab bars, so the reverse mark carries its own dark surface: a solid navy `#022A56` tile (rounded; full-bleed for the apple-touch-icon, which iOS masks itself).
@@ -542,10 +560,10 @@ Approved by the owner with the Phase 1 audit fixes. Brand rules, not just implem
 - **No outer glows on interactive elements.** Buttons and badges carry no colored halo shadows; hover feedback is lift plus a plain dark depth shadow. Ambient radial glows are limited to the hero / page-header glow plus the closing CTA card.
 - **Icons are stroke SVGs, never emoji** — rendered via `src/components/Icon.astro` (glyphs vendored from Tabler Icons, MIT) so every icon shares one stroke language and takes brand color. Emoji can do neither.
 - **Eyebrow badges are retired as decoration.** Pill badges appear only when they carry real status ("In progress" on Work, "Available Now" on the product pages) — never as section labels.
-- **The hero phone shows the real product.** The home hero renders an actual My AI Bartender screen capture, not a rebuilt imitation.
+- **The hero visual is the tesseract** (2026-09-22; this retires the 2026-07-25 rule that the hero phone shows the real product). Product evidence lives on the Work and product pages, never in the hero.
 - **No em- or en-dashes in site copy** (adopted 2026-07-25, Phase 2). Headlines, body, labels, titles, and meta descriptions restructure with commas, periods, colons, or parentheses; ranges use a plain hyphen ("24-48 hours"). Mechanical gate: zero `—` or `–` characters in the built HTML.
 - **One intent, one CTA label.** Buttons sharing a destination and intent share a label site-wide ("See what we build" → `/services`, "Start a project" → `/contact`). Support's "Contact Us" is the deliberate exception: help-seeking is a different intent than starting a project.
-- **Motion is entrance-only** (adopted 2026-08-28). The home hero plays a one-time ~3.2s rise-and-fade stagger on load (elements stay visible through the tail of their travel so the motion reads as rolling up, not flashing in) (title, subtitle, CTAs, phone visual, with the background glow blooming underneath), and the credibility bar rises in once as it first scrolls into view. The phone float remains the only looping animation. Reduced-motion users get the finished layout instantly, and content is never hidden for visitors whose browsers skip animations. The letterhead watermark and header never animate. No other scroll-triggered or looping motion without owner approval.
+- **Motion policy** (rewritten 2026-09-22 by owner decision; replaces the 2026-08-28 "entrance-only" rule). The home hero is the site's one stage for continuous motion: the ambient backdrop clip (§4.1; a flight over a steadily glowing lattice that plays once per visit, then a still) and the tesseract with its pointer, scroll and click reactions. Everything else keeps entrance-only motion: the hero's one-time ~3.2s rise-and-fade stagger (elements stay visible through the tail of their travel so it reads as rolling up, not flashing in) and the credibility bar's rise on first scroll. Rules for any motion on the site: it is decorative and hidden from assistive technology; it never carries copy, claims or evidence; every auto-playing placement shows the shared pause control (WCAG 2.2.2), which stops all of it site-wide and is remembered; reduced motion, Save-Data, slow connections, low device memory and blocked autoplay get a still; nothing plays sound; reduced-motion users get the finished layout instantly and content is never hidden for visitors whose browsers skip animations; the letterhead watermark and header never animate; a new placement needs owner approval and a note here.
 - The letterhead watermark (§12.1a) is untouched by all of the above and remains on every page.
 
 ---
@@ -572,7 +590,18 @@ App icons live in `src/assets/` and render through `<Image>`:
 |---|---|---|
 | My AI Bartender | supplied | `src/assets/my-ai-bartender-icon.png` |
 | CLIQUE Pix | `CLIQUE_Pix/play_app_icon_512x512.png` | `src/assets/clique-pix-icon.png` |
-| My AI Bartender home screen | Play-listing screenshot, screen region cropped (see `docs/IMPLEMENTATION.md`) | `src/assets/my-ai-bartender-screen.png` |
+| My AI Bartender home screen | retired 2026-09-22 with the hero phone; recoverable from git history (`ecf2bc7`) | (none) |
+
+Ambient video (home hero) lives in `src/assets/video/` and is imported so the build emits hashed `.mp4` URLs. AI-generated via Higgsfield (a GPT Image 2.5 style frame animated by Seedance 2.5; prompts and settings in `docs/IMPLEMENTATION.md`, *Ambient video*). No people, text, logos, products or client work appear in it.
+
+| File | Role | Size |
+|---|---|---|
+| `beneath-flight-d.mp4` / `-m.mp4` | the flight, landscape / portrait; plays once per visit at half speed (cloudless, the lattice glows steadily) | 3.98 MB / 1.73 MB |
+| `beneath-flight-d.png` / `-m.png` | first frame of the flight, painted as the still under the clip and held after it (the LCP element) | served as WebP, largest variants 46 / 32 KB |
+
+Masters (1080p, 10 s) stay in the gitignored `video-masters/` folder; renditions are regenerated with `node scripts/make-ambient-video.mjs`.
+
+The hero tesseract is drawn live and ships no image of its own; the lockup at its core uses the reverse mark and wordmark of §12.1a. (Two AI-generated "energy core" glow stills shipped behind it for a day and were removed on 2026-09-22 at the owner's request: no energy field around the logo.)
 
 ---
 
@@ -597,6 +626,12 @@ App icons live in `src/assets/` and render through `<Image>`:
 * Optimize images (WebP/AVIF), lazy-load below fold
 
 * Checked at 375 px, 768 px, and 1280 px
+
+* Ambient video budgets, enforced by `scripts/make-ambient-video.mjs` (an over-budget rendition is deleted and the run fails): landscape loop ≤ 4.5 MB, portrait loop ≤ 2 MB (a 20 s flight needs more bits than a locked-off 10 s shot; raised 2026-09-22 when the flight was slowed to half speed). Video is never part of first paint: it loads after `load` plus a delay, and only where nothing says no.
+
+* The LCP element on the home page must remain the still image painted under the clip, never the video. Gate: a worst-case build (`AMBIENT_DELAY_MS=0 npm run build`, every clip starting at load) must keep mobile Performance ≥ 95 with that still as the LCP element (2026-09-21: 99 mobile, 100 desktop).
+
+* Hero tesseract: the canvas never allocates per frame, drops no frames at 120 Hz on a laptop, and falls back through adaptive tiers (fewer bloom passes, lower DPR, 30 fps) on weak devices; no images of its own. With the cube in place the worst-case build measured 98 mobile / 100 desktop (2026-09-22), CLS 0, the still as the LCP element.
 
 ### 14.3 SEO essentials
 
@@ -653,6 +688,6 @@ Deliverables:
 * ~~§8 — confirm the founder's name spelling~~ — Done (Gene Whitley)
 * **§6.1 — one or two sentences on the problem the Needle Girlie engagement solves**
 * **§9 — CLIQUE Pix FAQ entries**
-* §4.1 — hero visual: resolved 2026-07-25 with the real screen capture; the "browser frame" and "client site screenshot" upgrades stay open for when Needle Girlie launches
+* ~~§4.1 — hero visual~~ — Done (replaced 2026-09-22 by the tesseract, owner decision; the "browser frame" and "client site screenshot" ideas are closed; a product capture could return elsewhere, e.g. Work, if wanted)
 * Screenshots for My AI Bartender and CLIQUE Pix (optional but recommended)
 * `needlegirlie.com` link — add at launch, not before

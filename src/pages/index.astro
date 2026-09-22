@@ -4,8 +4,15 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import FeatureCard from '../components/FeatureCard.astro';
 import Icon from '../components/Icon.astro';
-import { Image } from 'astro:assets';
-import bartenderScreen from '../assets/my-ai-bartender-screen.png';
+import AmbientVideo from '../components/AmbientVideo.astro';
+import AmbientToggle from '../components/AmbientToggle.astro';
+import HeroTesseract from '../components/HeroTesseract.astro';
+/* Imported, not served from public/: Vite emits content-hashed
+   /assets/<name>.<hash>.mp4 URLs, and a missing clip fails the build. */
+import flightDesktop from '../assets/video/beneath-flight-d.mp4';
+import flightMobile from '../assets/video/beneath-flight-m.mp4';
+import flightStillDesktop from '../assets/video/beneath-flight-d.png';
+import flightStillMobile from '../assets/video/beneath-flight-m.png';
 
 const title = 'Xtend-AI | Web & Mobile App Development in Charlotte, NC';
 const description = 'Xtend-AI designs and builds websites, mobile apps, and the Azure cloud that runs them. Architected, not assembled. Charlotte & Harrisburg, NC, and remote.';
@@ -70,6 +77,19 @@ const differentiators = [
 
   <!-- Hero Section -->
   <section class="hero">
+    {/* The flight over the lattice, once per visit, then its first frame
+        holds as the still. BEFORE .hero__bg, not inside it: .hero__bg blooms
+        in from opacity 0, and the still must paint at full strength with the
+        page to be the honest LCP element (see AmbientVideo.astro). The glows
+        and grid still bloom in over it. */}
+    <AmbientVideo
+      intro={flightDesktop}
+      introMobile={flightMobile}
+      desktopStill={flightStillDesktop}
+      mobileStill={flightStillMobile}
+      desktopMedia="(min-width: 1024px)"
+      startDelay={600}
+    />
     <div class="hero__bg">
       <div class="hero__glow hero__glow--1"></div>
       <div class="hero__glow hero__glow--2"></div>
@@ -95,27 +115,15 @@ const differentiators = [
         </div>
       </div>
       <div class="hero__visual">
-        <div class="hero__phone">
-          <div class="hero__phone-fallback">
-            {/* Real My AI Bartender home screen, cropped from the app's
-                own store-listing screenshot (see scripts note in
-                docs/IMPLEMENTATION.md). The capture ends below the
-                Recipe Vault card; --xt-phone-screen-bg matches its page
-                background so the frame's lower area reads as the same
-                screen. */}
-            <span class="hero__phone-screen">
-              <Image
-                src={bartenderScreen}
-                alt="The My AI Bartender home screen"
-                width={250}
-                densities={[2]}
-                loading="eager"
-              />
-            </span>
-          </div>
-        </div>
+        {/* The tesseract: a 4-D cube of light with the lockup at its core,
+            drawn live (HeroTesseract.astro). .hero__visual carries the
+            entrance rise; the cube's own float lives inside the component. */}
+        <HeroTesseract />
       </div>
     </div>
+    {/* After .hero__container, not inside .hero__bg: the content grid
+        (z-index 1) would otherwise swallow its clicks. */}
+    <AmbientToggle />
   </section>
 
   <!-- Credibility Bar -->
@@ -379,39 +387,10 @@ const differentiators = [
     }
   }
 
-  /* Hero Visual / Phone */
+  /* Hero Visual: the tesseract column */
   .hero__visual {
     display: flex;
     justify-content: center;
-  }
-
-  .hero__phone {
-    position: relative;
-    width: 280px;
-    height: 560px;
-    background: var(--xt-bg-card);
-    border-radius: 40px;
-    border: 3px solid rgba(255, 255, 255, 0.1);
-    padding: 12px;
-    box-shadow:
-      0 50px 100px -20px rgba(0, 0, 0, 0.5),
-      0 0 0 1px rgba(24, 140, 255, 0.2),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    animation: float 6s ease-in-out infinite;
-  }
-
-  .hero__phone-fallback {
-    width: 100%;
-    height: 100%;
-    background: var(--xt-phone-screen-bg);
-    border-radius: 28px;
-    overflow: hidden;
-  }
-
-  .hero__phone-screen :global(img) {
-    display: block;
-    width: 100%;
-    height: auto;
   }
 
   /* Credibility Bar */
@@ -594,19 +573,14 @@ const differentiators = [
     color: var(--xt-accent-light);
   }
 
-  /* Float Animation */
-  @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-15px); }
-  }
-
   /* Entrance (Linear-style rise on load) + cred-bar scroll reveal.
      animation-fill-mode: both hides each element during its stagger
      delay via the `from` frame. There is deliberately NO static
      opacity: 0 in the load sequence, so if animations never run
      (old browser, reader mode) the content is simply visible.
-     .hero__visual carries the rise, NOT .hero__phone, whose
-     transform is owned by the float loop above. */
+     .hero__visual carries the rise, NOT the tesseract inside it, whose
+     transform is owned by its own float loop (two animations on one
+     element fight over transform). */
   .hero,
   .cred-bar {
     --rise-distance: 56px;
@@ -634,6 +608,123 @@ const differentiators = [
   .hero__subtitle { animation-delay: var(--rise-step); }
   .hero__actions  { animation-delay: calc(var(--rise-step) * 2); }
   .hero__visual   { animation-delay: calc(var(--rise-step) * 3); }
+
+  /* Ambient video knobs (consumed by AmbientVideo.astro, which inherits
+     them). Intensity is --ambient-video-opacity; the fades are what keep
+     text legible, and were set by measuring contrast against real frames:
+     the subtitle is #a1a1aa, so whatever sits behind it has to stay dark.
+
+     Single column (below 1024px): the clip is clamped to the first screen
+     and fades in from the top, so light rises behind the CTAs and the
+     top of the tesseract. svh, not dvh: the box must not resize when a mobile
+     URL bar collapses. A browser without svh drops the clamp and the clip
+     simply covers the whole hero. */
+  .hero {
+    --ambient-video-opacity: 0.92;
+    --ambient-video-fade: 600ms;
+    --ambient-video-rate: 0.7; /* full speed was dizzying (owner, 2026-09-22) */
+    --ambient-max-height: calc(100svh - var(--header-height));
+    --ambient-fade-top-start: 22%;
+    --ambient-fade-top: 72%;
+    --ambient-fade-bottom: 10%;
+    --ambient-plate-size: 120% 46%;
+    --ambient-plate-at: 50% 40%;
+    --ambient-plate-strength: 80%;
+  }
+
+  /* Two columns: content fills both from top to bottom (measured: text
+     11% to 92% of the hero height at 1280x800), so there is no free band.
+     The light lives on the right, around the tesseract, and a left-to-right
+     scrim keeps the text column on the page background. */
+  @media (min-width: 1024px) {
+    .hero {
+      --ambient-video-opacity: 1;
+      --ambient-max-height: none;
+      --ambient-fade-left-start: 0%;
+      --ambient-fade-left: 26%;
+      --ambient-fade-top-start: 0%;
+      --ambient-fade-top: 12%;
+      --ambient-fade-bottom: 6%;
+      --ambient-plate-size: 46% 64%;
+      --ambient-plate-at: 25% 60%;
+      --ambient-plate-strength: 76%;
+    }
+  }
+
+  /* Tesseract knobs (consumed by HeroTesseract.astro, which inherits them;
+     every knob is documented there). Measured columns: 448.5px at 1024,
+     544px from 1280; the box fills the column from 1280 up (25% larger than
+     the first cut, owner request, 2026-09-22). Below 1024 the cube sits under
+     the CTAs. */
+  .hero {
+    --cube-size: min(90vw, 400px);
+    --cube-logo: 0.34;
+    --cube-yaw-period: 14s;
+    --cube-4d-period: 22s;
+    --cube-tilt: 18deg;
+    --cube-glow: 1;
+    --cube-backing: 0.2;
+    --cube-pulses: 0;
+    --cube-embers: 24;
+    --cube-hover-boost: 1.6;
+    --cube-scroll-spin: 0.002;
+    --cube-entrance: 2000ms;
+  }
+
+  @media (min-width: 1024px) {
+    .hero {
+      --cube-size: clamp(375px, 42.5vw, 625px);
+    }
+  }
+
+  /* The light now runs under the text, so the text carries its own
+     separation instead of sitting on a wall of black: layered dark halos
+     hugging the glyphs, the way film subtitles stay legible over anything.
+     The subtitle also steps up from --xt-text-secondary, which was chosen
+     for flat dark surfaces, not for moving light. */
+  .hero__title,
+  .hero__subtitle {
+    text-shadow:
+      0 0 3px color-mix(in srgb, var(--xt-bg-primary) 95%, transparent),
+      0 0 10px color-mix(in srgb, var(--xt-bg-primary) 90%, transparent),
+      0 0 26px color-mix(in srgb, var(--xt-bg-primary) 85%, transparent);
+  }
+
+  .hero__subtitle {
+    color: color-mix(in srgb, var(--xt-text-primary) 80%, var(--xt-text-secondary));
+  }
+
+  /* The outline button is see-through everywhere else; over moving light
+     it gets a smoked-glass backing (measured 3.7:1 without it at the ride's
+     brightest frame). */
+  .hero__actions .btn--secondary {
+    background: color-mix(in srgb, var(--xt-bg-primary) 60%, transparent);
+  }
+
+  /* A text-shadow paints over a background-clip:text fill and muddies the
+     gradient phrase; a drop-shadow filter acts on the finished glyphs. */
+  .hero__title :global(.text-gradient) {
+    text-shadow: none;
+    filter: drop-shadow(0 0 18px color-mix(in srgb, var(--xt-bg-primary) 85%, transparent));
+  }
+
+  /* Pause control: top corner on the single-column layout (the 72px above
+     the headline is the one area no wrapping text or the cube can reach),
+     bottom corner below the cube column on desktop (measured: 59px clear of
+     a 435px box at 1280x800). */
+  .hero :global(.ambient-toggle) {
+    top: var(--space-3);
+    right: var(--space-3);
+    bottom: auto;
+  }
+
+  @media (min-width: 1024px) {
+    .hero :global(.ambient-toggle) {
+      top: auto;
+      right: var(--space-4);
+      bottom: var(--space-4);
+    }
+  }
 
   .hero__bg {
     animation: bloom 2600ms ease-out both;
