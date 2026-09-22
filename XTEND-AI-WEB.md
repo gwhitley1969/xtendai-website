@@ -597,8 +597,8 @@ Ambient video (home hero) lives in `src/assets/video/` and is imported so the bu
 | File | Role | Size |
 |---|---|---|
 | `beneath-ride-d.mp4` / `-m.mp4` | opening clip, landscape / portrait, plays once per session | 2.41 MB / 0.89 MB |
-| `beneath-hero-d.mp4` / `-m.mp4` | seamless loop, landscape / portrait | 1.25 MB / 0.71 MB |
-| `beneath-hero-d.png` / `-m.png` | first frame of each loop, painted as the still under the clip (the LCP element) | served as ~22 / 15 KB WebP |
+| `beneath-hero-d.mp4` / `-m.mp4` | seamless loop, landscape / portrait (the lattice glows steadily, only the clouds move) | 0.70 MB / 0.40 MB |
+| `beneath-hero-d.png` / `-m.png` | first frame of each loop, painted as the still under the clip (the LCP element) | served as WebP, largest variants 27 / 19 KB |
 
 Masters (1080p, 10 s) stay in the gitignored `video-masters/` folder; renditions are regenerated with `node scripts/make-ambient-video.mjs`.
 
