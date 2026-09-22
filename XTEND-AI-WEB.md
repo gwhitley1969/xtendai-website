@@ -91,13 +91,13 @@ The previous approved statement — *"Xtend-AI creates AI companion apps that ex
 
 ## 2) Tagline (APPROVED)
 
-Use this exact tagline (header / hero / footer as appropriate):
+Use this exact tagline where it fits (currently the footer; the header carries the mark and wordmark only):
 
 > Web, mobile, and the cloud beneath
 
-The previous tagline, *"Your next favorite app, made smarter,"* is product-only and is superseded. Replace it everywhere it appears — currently `Header.astro` (beside the logo) and `Footer.astro` (`.footer__tagline`).
+The previous tagline, *"Your next favorite app, made smarter,"* is product-only and is superseded. Replace it everywhere it appears — currently `Footer.astro` (`.footer__tagline`). The header stopped carrying it on 2026-09-22 (owner decision: mark + wordmark + tagline read as busy in the corner of every page); the header lockup is mark + wordmark.
 
-**Implementation constraint:** the header renders the tagline at `white-space: nowrap`, 0.75rem on mobile (raised from 0.65rem with the 2026-08-28 banner header). The superseded tagline was 36 characters and fit at 375 px; this one is 34. Treat ~36 characters as the hard ceiling for any future change, and re-check at 375 px whenever it changes.
+**Implementation constraint (historical):** while the header carried the tagline (2026-07-24 to 2026-09-22) it ran at `white-space: nowrap` with a ~36-character ceiling at 375 px. The footer renders it as ordinary wrapping text, so no ceiling applies there.
 
 ---
 
@@ -503,7 +503,7 @@ The logo inks (navy `#022A56` + blue `#188CFF`) were drawn for white surfaces. O
 - **Blue `#188CFF` stays constant** on both light and dark surfaces.
 - Never place the navy-ink originals on a dark background, and never fake it with an opaque white plate behind the logo (the pre-2026-07-24 header did exactly that — an illegible white chip).
 
-Generated reverse assets live in `src/assets/` (`xtend-ai-mark-reverse.png`, `xtend-ai-wordmark-white.png`, `xtend-ai-mark-watermark.png`), regenerated from the transparent originals via `node scripts/make-reverse-logo.mjs`. The header and footer render the lockup as mark + wordmark + tagline. **Every page carries the letterhead watermark** (approved 2026-07-24): the X mark fixed and centered at ~90% of the viewport, 6% opacity, on all screen sizes — content scrolls over it.
+Generated reverse assets live in `src/assets/` (`xtend-ai-mark-reverse.png`, `xtend-ai-wordmark-white.png`, `xtend-ai-mark-watermark.png`), regenerated from the transparent originals via `node scripts/make-reverse-logo.mjs`. The header renders the lockup as mark + wordmark (the tagline left the header on 2026-09-22 as too busy); the footer renders mark + wordmark with the tagline as a line beneath. **Every page carries the letterhead watermark** (approved 2026-07-24): the X mark fixed and centered at ~90% of the viewport, 6% opacity, on all screen sizes — content scrolls over it.
 
 The lockup may also stand at the core of the home hero's tesseract (approved 2026-09-22): mark over wordmark, reverse treatment, drawn on the canvas between the far and the near edges of the cube on a soft dark pocket that keeps it legible over the energy glow. It is decorative there; the header carries the accessible name.
 
@@ -528,7 +528,7 @@ Fallback (no external fonts):
 
 * Max content width: 1120–1200px
 
-* Header content is the one exception: it spreads to 1440px so the logo and nav reach past the content edges on large screens (approved 2026-08-28, co-founder request; bar height 96px mobile / 132px desktop, always full-size, never condensing on scroll)
+* Header content is the one exception: it spreads to 1440px so the logo and nav reach past the content edges on large screens (approved 2026-08-28, co-founder request; bar height 96px mobile / 132px desktop, always full-size, never condensing on scroll; the lockup is mark + wordmark, no tagline, since 2026-09-22)
 
 * 8px spacing grid
 

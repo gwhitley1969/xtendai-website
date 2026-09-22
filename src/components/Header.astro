@@ -38,15 +38,15 @@ function isActive(href: string): boolean {
   <div class="header__container container">
     <a href="/" class="header__logo" aria-label="Xtend-AI Home">
       {/* Reverse (dark-surface) assets from scripts/make-reverse-logo.mjs.
-          alt="" on both — the anchor's aria-label is the accessible name. */}
+          alt="" on both — the anchor's aria-label is the accessible name.
+          Mark beside wordmark only: the tagline left the header on
+          2026-09-22 (owner decision, three elements read as busy); the
+          footer still carries it. */}
       <span class="header__mark">
         <Image src={mark} alt="" width={78} densities={[2, 3]} loading="eager" />
       </span>
-      <span class="header__lockup">
-        <span class="header__wordmark">
-          <Image src={wordmark} alt="" width={176} densities={[2, 3]} loading="eager" />
-        </span>
-        <span class="header__tagline">Web, mobile, and the cloud beneath</span>
+      <span class="header__wordmark">
+        <Image src={wordmark} alt="" width={210} densities={[2, 3]} loading="eager" />
       </span>
     </a>
 
@@ -131,25 +131,13 @@ function isActive(href: string): boolean {
     width: auto;
   }
 
-  .header__lockup {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-  }
-
+  /* Without the tagline the wordmark stands alone beside the mark, so it
+     runs a little taller than it did as the top line of a two-line lockup
+     (27/32 px then): 30/38 px keeps the pair balanced. */
   .header__wordmark :global(img) {
     display: block;
-    height: 27px;
+    height: 30px;
     width: auto;
-  }
-
-  .header__tagline {
-    font-size: 0.75rem;
-    line-height: 1.2;
-    color: #ffffff;
-    font-weight: 700;
-    white-space: nowrap;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
   }
 
   @media (min-width: 768px) {
@@ -158,17 +146,7 @@ function isActive(href: string): boolean {
     }
 
     .header__wordmark :global(img) {
-      height: 32px;
-    }
-
-    .header__tagline {
-      font-size: 0.95rem;
-    }
-  }
-
-  @media (min-width: 1100px) {
-    .header__tagline {
-      font-size: 1.1rem;
+      height: 38px;
     }
   }
 
