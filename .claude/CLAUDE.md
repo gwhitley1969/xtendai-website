@@ -55,7 +55,8 @@ There is **no linter, formatter, or type check in CI**. `npm run build` is the o
 src/
   layouts/BaseLayout.astro      # <head>, SEO/OG meta, Organization JSON-LD, named head slot, font preloads
   components/                   # Header.astro, Footer.astro, FeatureCard.astro, StoreLinks.astro, Icon.astro,
-                                #   AmbientVideo.astro + AmbientToggle.astro (hero background clip + its pause control)
+                                #   AmbientVideo.astro + AmbientToggle.astro (hero background clip + its pause control),
+                                #   HeroTesseract.astro (the hero's 4-D cube of light, drawn on a canvas)
   pages/                        # file-based routing
     index.astro                 # home (largest file — hero, credibility bar, services-first sections)
     services.astro  work.astro  about.astro  contact.astro
@@ -65,9 +66,10 @@ src/
   styles/global.css             # ALL design tokens live in :root here; @font-face at top
   assets/                       # images processed by <Image> at build time (app icons, reverse logo assets)
     video/                      # ambient clips (.mp4, imported so Vite hashes them) + their first-frame stills
+    hero/                       # energy-core glow stills behind the tesseract (RGBA, from scripts/make-tesseract-core.mjs)
 public/                         # served verbatim — favicons, robots.txt, fonts/, og-card
 api/contact/                    # Azure Function (Node) → SendGrid; INTERESTS allow-list
-scripts/                        # one-off derived-asset generators (reverse logo, favicons, OG card, ambient video loops via ffmpeg) — run manually, outputs committed
+scripts/                        # one-off derived-asset generators (reverse logo, favicons, OG card, ambient video loops via ffmpeg, tesseract core glow) — run manually, outputs committed
 docs/                           # engineering documentation
 ```
 
@@ -95,7 +97,9 @@ Navigation is **data-driven**, not hardcoded in markup. Nav changes are edits to
 
 9. **The contact interest list lives in two files.** The `<select>` options in `src/pages/contact.astro` and the `INTERESTS` allow-list in `api/contact/index.js` must match — a value missing from the Function's list never reaches the email subject.
 
-10. **Decorative video is never first paint.** A `<video>` in markup carries no `autoplay`, `src` or `poster`; `AmbientVideo.astro`'s script loads it after `load` plus a delay and only where nothing says no. A full-bleed clip sits over its own first-frame still so the still, not the video, is the LCP element (measured: Chrome otherwise registers the faded-in video as a late LCP). Every placement renders `<AmbientToggle />` as a sibling after the content wrapper. Details and the worst-case measuring build in `docs/IMPLEMENTATION.md`, *Ambient video*.
+10. **Decorative video is never first paint.** A `<video>` in markup carries no `autoplay`, `src` or `poster`; `AmbientVideo.astro`'s script loads it after `load` plus a delay and only where nothing says no. A full-bleed clip sits over its own first-frame still so the still, not the video, is the LCP element (measured: Chrome otherwise registers the faded-in video as a late LCP). Every placement renders `<AmbientToggle />` as a sibling after the content wrapper, and any other auto-playing motion registers with that control: `data-motion` on its root while it can animate, `data-motion-playing` while it does, an `xt-motion` event on `document` at each change (`HeroTesseract.astro` is the reference). Details and the worst-case measuring build in `docs/IMPLEMENTATION.md`, *Ambient video* and *Hero tesseract*.
+
+11. **Canvas animation rules.** Reduced motion and the constrained-device signals get one static frame, never a loop; nothing is allocated per frame; DPR is capped at 2 and the backing store at 1024 px; every loop that walks image sizes is bounded (an unbounded halving loop froze two browsers during development). See `docs/IMPLEMENTATION.md`, *Hero tesseract*.
 
 ---
 
