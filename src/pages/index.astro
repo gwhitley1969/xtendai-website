@@ -74,6 +74,16 @@ const differentiators = [
 
 <BaseLayout title={title} description={description}>
   <Header slot="header" />
+  {/* Support diagnostics: with ?diag in the URL, script errors are captured
+      from the very start (this runs before the bundled scripts) and shown by
+      the panel at the end of this page's script. No effect otherwise. */}
+  <script slot="head" is:inline>
+    if (location.search.indexOf('diag') !== -1) {
+      window.__xtErrors = [];
+      addEventListener('error', function (e) { window.__xtErrors.push((e.message || 'error') + ' @' + String(e.filename || '').split('/').pop() + ':' + e.lineno); });
+      addEventListener('unhandledrejection', function (e) { window.__xtErrors.push('rejection: ' + ((e.reason && e.reason.message) || e.reason)); });
+    }
+  </script>
 
   <!-- Hero Section -->
   <section class="hero">
@@ -264,6 +274,38 @@ const differentiators = [
       }
     }, { threshold: 0.3 });
     io.observe(grid);
+  }
+
+  // Support diagnostics: append ?diag to the URL. Shows the device signals
+  // the hero's motion decisions depend on, the video and cube state, and any
+  // script errors (captured by the inline listener in the head). Nothing is
+  // rendered or run without the parameter.
+  if (location.search.includes('diag')) {
+    type Net = { saveData?: boolean; effectiveType?: string; rtt?: number; downlink?: number };
+    const nav = navigator as Navigator & { connection?: Net; deviceMemory?: number };
+    const panel = document.createElement('pre');
+    panel.style.cssText = 'position:fixed;left:8px;bottom:8px;z-index:1000;max-width:92vw;max-height:60vh;overflow:auto;margin:0;padding:8px 10px;font:11px/1.4 ui-monospace,Menlo,Consolas,monospace;color:#fff;background:rgba(10,10,15,.92);border:1px solid rgba(255,255,255,.25);border-radius:8px;white-space:pre-wrap;word-break:break-word';
+    document.body.appendChild(panel);
+    const render = () => {
+      const host = document.querySelector('[data-tess]') as (HTMLElement & { tess?: { state: Record<string, unknown> } }) | null;
+      const v = document.querySelector<HTMLVideoElement>('video[data-role="intro"], video[data-role="loop"]');
+      const box = document.querySelector('.ambient');
+      let stored = 'n/a';
+      try { stored = String(localStorage.getItem('xt-ambient')); } catch { /* storage blocked */ }
+      const errors = (window as Window & { __xtErrors?: string[] }).__xtErrors ?? [];
+      panel.textContent = [
+        `ua: ${navigator.userAgent}`,
+        `viewport: ${innerWidth}x${innerHeight} dpr ${devicePixelRatio} visibility ${document.visibilityState}`,
+        `connection: saveData=${nav.connection?.saveData} effectiveType=${nav.connection?.effectiveType} rtt=${nav.connection?.rtt} downlink=${nav.connection?.downlink}`,
+        `device: memory=${nav.deviceMemory} cores=${navigator.hardwareConcurrency} reducedMotion=${matchMedia('(prefers-reduced-motion: reduce)').matches} finePointer=${matchMedia('(pointer: fine)').matches}`,
+        `ambient: ${box?.className ?? 'none'} off=${document.documentElement.hasAttribute('data-ambient-off')} stored=${stored}`,
+        v ? `video: ${v.dataset.role} src=${v.getAttribute('src') ? 'yes' : 'no'} ready=${v.readyState} paused=${v.paused} t=${v.currentTime.toFixed(1)} rate=${v.playbackRate} error=${v.error?.code ?? '-'}` : 'video: none',
+        `cube: ${host?.tess ? JSON.stringify(host.tess.state) : 'no state (script did not boot)'}`,
+        `errors: ${errors.length ? errors.join(' | ') : 'none'}`,
+      ].join('\n');
+    };
+    render();
+    setInterval(render, 1000);
   }
 </script>
 

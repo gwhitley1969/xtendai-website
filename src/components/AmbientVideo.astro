@@ -213,11 +213,13 @@ const delay = Number(process.env.AMBIENT_DELAY_MS ?? startDelay);
   function paint() {
     root.toggleAttribute('data-ambient-off', userOff);
     const anyPlaying = states.some((s) => s.box.classList.contains('is-playing')) || motionPlaying();
-    const resumable = states.some((s) => s.armed && !s.blocked) || motionCapable();
+    // A clip can be resumed only where it may load at all; another motion
+    // source decides that for itself (it carries data-motion only when it can).
+    const resumable = (!constrained() && states.some((s) => s.armed && !s.blocked)) || motionCapable();
     for (const t of toggles) {
       // Shown while something plays, or when the visitor paused it (so it
       // can be resumed). Never shown where motion is unavailable anyway.
-      t.hidden = !(anyPlaying || (userOff && !constrained() && resumable));
+      t.hidden = !(anyPlaying || (userOff && resumable));
       t.setAttribute('aria-pressed', String(userOff));
       t.setAttribute('aria-label', userOff ? 'Play background motion' : 'Pause background motion');
     }

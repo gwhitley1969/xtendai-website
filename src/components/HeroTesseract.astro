@@ -36,8 +36,9 @@
  *
  * Every CSS loop is gated on .is-live, so without JavaScript the visitor gets
  * a static glowing core and the lockup, and nothing that would need a pause
- * control. With JavaScript, reduced motion and the constrained-device signals
- * draw ONE static frame; the pause control shared with the ambient video
+ * control. With JavaScript, reduced motion and a very low-memory device
+ * draw ONE static frame (Save-Data and slow networks only affect the video,
+ * which costs bytes; the cube costs none); the pause control shared with the ambient video
  * (data-ambient-off on <html>) freezes it; it stops off screen and in hidden
  * tabs. It registers with the shared toggle through the data-motion /
  * data-motion-playing attributes and the xt-motion event (AmbientVideo.astro).
@@ -128,13 +129,11 @@ const { coreA, coreB } = Astro.props;
     const finePointer = matchMedia('(pointer: fine)');
     const nav = navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string }; deviceMemory?: number };
 
-    /* Same predicate as AmbientVideo.astro: the toggle's resume path is gated
-       on it, so a cube that animated under it could never be resumed. */
-    const constrained = () =>
-      reduced.matches ||
-      nav.connection?.saveData === true ||
-      /^(slow-2g|2g|3g)$/.test(nav.connection?.effectiveType ?? '') ||
-      (nav.deviceMemory ?? 8) <= 2;
+    /* Only signals that speak to motion or to a weak device. Save-Data and
+       slow-network signals stop the VIDEO (bytes), never the cube (no bytes):
+       the first production build froze the cube under Android Data Saver and
+       the owners reported the page as "hanging" (2026-09-22). */
+    const constrained = () => reduced.matches || (nav.deviceMemory ?? 8) <= 2;
 
     const TAU = Math.PI * 2;
     const clamp = (v: number, lo: number, hi: number) => (v < lo ? lo : v > hi ? hi : v);
@@ -699,7 +698,7 @@ const { coreA, coreB } = Astro.props;
     (host as HTMLElement & { tess?: unknown }).tess = {
       get state() {
         let fi = 0; for (let i = 1; i < 16; i++) if (SZ[i] > SZ[fi]) fi = i;
-        return { yaw, xw, zw, tier, running, playing, entrance: eLast, size, dpr, frontVertexX: SX[fi], tiltTarget: [yawOffTarget, tiltXTarget], surge };
+        return { yaw, xw, zw, tier, running, playing, armed, inView, off, hidden: document.hidden, reduced: reduced.matches, constrained: constrained(), entrance: eLast, size, dpr, frontVertexX: SX[fi], tiltTarget: [yawOffTarget, tiltXTarget], surge };
       },
       project: (phi: number) => Math.sin(phi), // screen x of the front-face direction after a yaw of phi
     };
