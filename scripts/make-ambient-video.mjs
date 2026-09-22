@@ -15,8 +15,9 @@
  * What each step is for:
  * - Loop: the tail of the clip is crossfaded into its head, so the last
  *   frame flows into the first. Frame-exact trims, asserted afterwards.
- *   Masters are shot locked-off (only cloud and light move), which is what
- *   keeps the fixed lattice from ghosting during the fade.
+ *   Masters are generated to end on their own first frame (a locked-off
+ *   camera, or a flight that climbs back to its starting view), so the fade
+ *   only bridges a small residual and the lattice cannot ghost.
  * - Grade: done at 16-bit with BT.709 stated explicitly (swscale assumes
  *   BT.601 otherwise). The black floor is LIFTED to the page background
  *   #0a0a0f rather than crushed: the video sits on the page at partial
@@ -72,28 +73,20 @@ const DEFAULT_GRADE = {
  *   where the vanishing point is, in between.
  */
 const CLIPS = {
-  // The living loop under the home hero. Generated with the approved still
-  // as BOTH start and end frame, which brings the end back near the start
-  // (measured SSIM 0.93, clouds still differ), so a crossfade closes it.
-  // The lattice is fixed across the clip, so the fade cannot ghost it.
+  // The perpetual flight under the home hero (2026-09-22, owner request:
+  // the opening ride, on repeat): from the high wide view the camera dives,
+  // races over the lattice and climbs back to the same view, so the end
+  // lands near the start and a short crossfade closes the cycle. Generated
+  // with the cloudless frame as BOTH start and end image; the lattice glows
+  // steadily (co-founder request), so nothing pulses. The portrait crop
+  // travels with the camera: it starts and ends where the lattice sits
+  // (0.8) and swings to the centre, where the vanishing point is.
   'beneath-hero': {
-    master: 'beneath-hero-master.mp4',
-    fadeSeconds: 1.2,
+    master: 'beneath-flight-master.mp4',
+    fadeSeconds: 0.8,
     denoise: false,
     renditions: [
-      { suffix: 'd', width: 1600, height: 900, level: '4.0', crf: 23, budgetBytes: 2_500_000 },
-      { suffix: 'm', width: 540, height: 960, level: '3.1', crf: 24, budgetBytes: 1_200_000, cropX: 0.8 },
-    ],
-  },
-  // The opening ride: plays once per session, then hands off to the loop.
-  // Same start and end frame as the loop, so both handovers are seamless.
-  'beneath-ride': {
-    master: 'beneath-ride-master.mp4',
-    fadeSeconds: 0,
-    denoise: false,
-    still: false,
-    renditions: [
-      { suffix: 'd', width: 1600, height: 900, level: '4.0', crf: 26, budgetBytes: 3_500_000 },
+      { suffix: 'd', width: 1600, height: 900, level: '4.0', crf: 27, budgetBytes: 3_500_000 },
       { suffix: 'm', width: 540, height: 960, level: '3.1', crf: 27, budgetBytes: 1_500_000, cropX: '0.8-0.3*sin(PI*t/D)' },
     ],
   },

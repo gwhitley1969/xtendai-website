@@ -15,8 +15,6 @@ import heroLoopDesktop from '../assets/video/beneath-hero-d.mp4';
 import heroLoopMobile from '../assets/video/beneath-hero-m.mp4';
 import heroStillDesktop from '../assets/video/beneath-hero-d.png';
 import heroStillMobile from '../assets/video/beneath-hero-m.png';
-import heroRideDesktop from '../assets/video/beneath-ride-d.mp4';
-import heroRideMobile from '../assets/video/beneath-ride-m.mp4';
 
 const title = 'Xtend-AI | Web & Mobile App Development in Charlotte, NC';
 const description = 'Xtend-AI designs and builds websites, mobile apps, and the Azure cloud that runs them. Architected, not assembled. Charlotte & Harrisburg, NC, and remote.';
@@ -81,18 +79,16 @@ const differentiators = [
 
   <!-- Hero Section -->
   <section class="hero">
-    {/* "The cloud beneath". BEFORE .hero__bg, not inside it: .hero__bg
-        blooms in from opacity 0, and the still must paint at full strength
-        with the page to be the honest LCP element (see AmbientVideo.astro).
-        The glows and grid still bloom in over it. */}
+    {/* The flight over the lattice, on a loop. BEFORE .hero__bg, not inside
+        it: .hero__bg blooms in from opacity 0, and the still must paint at
+        full strength with the page to be the honest LCP element (see
+        AmbientVideo.astro). The glows and grid still bloom in over it. */}
     <AmbientVideo
       desktop={heroLoopDesktop}
       mobile={heroLoopMobile}
       desktopStill={heroStillDesktop}
       mobileStill={heroStillMobile}
       desktopMedia="(min-width: 1024px)"
-      intro={heroRideDesktop}
-      introMobile={heroRideMobile}
       startDelay={600}
     />
     <div class="hero__bg">
@@ -650,9 +646,9 @@ const differentiators = [
       --ambient-fade-top-start: 0%;
       --ambient-fade-top: 12%;
       --ambient-fade-bottom: 6%;
-      --ambient-plate-size: 44% 58%;
+      --ambient-plate-size: 46% 64%;
       --ambient-plate-at: 25% 60%;
-      --ambient-plate-strength: 64%;
+      --ambient-plate-strength: 76%;
     }
   }
 
