@@ -66,10 +66,9 @@ src/
   styles/global.css             # ALL design tokens live in :root here; @font-face at top
   assets/                       # images processed by <Image> at build time (app icons, reverse logo assets)
     video/                      # ambient clips (.mp4, imported so Vite hashes them) + their first-frame stills
-    hero/                       # energy-core glow stills behind the tesseract (RGBA, from scripts/make-tesseract-core.mjs)
 public/                         # served verbatim — favicons, robots.txt, fonts/, og-card
 api/contact/                    # Azure Function (Node) → SendGrid; INTERESTS allow-list
-scripts/                        # one-off derived-asset generators (reverse logo, favicons, OG card, ambient video loops via ffmpeg, tesseract core glow) — run manually, outputs committed
+scripts/                        # one-off derived-asset generators (reverse logo, favicons, OG card, ambient video loops via ffmpeg) — run manually, outputs committed
 docs/                           # engineering documentation
 ```
 

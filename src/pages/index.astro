@@ -7,8 +7,6 @@ import Icon from '../components/Icon.astro';
 import AmbientVideo from '../components/AmbientVideo.astro';
 import AmbientToggle from '../components/AmbientToggle.astro';
 import HeroTesseract from '../components/HeroTesseract.astro';
-import coreA from '../assets/hero/tesseract-core-a.png';
-import coreB from '../assets/hero/tesseract-core-b.png';
 /* Imported, not served from public/: Vite emits content-hashed
    /assets/<name>.<hash>.mp4 URLs, and a missing clip fails the build. */
 import heroLoopDesktop from '../assets/video/beneath-hero-d.mp4';
@@ -119,7 +117,7 @@ const differentiators = [
         {/* The tesseract: a 4-D cube of light with the lockup at its core,
             drawn live (HeroTesseract.astro). .hero__visual carries the
             entrance rise; the cube's own float lives inside the component. */}
-        <HeroTesseract coreA={coreA} coreB={coreB} />
+        <HeroTesseract />
       </div>
     </div>
     {/* After .hero__container, not inside .hero__bg: the content grid
@@ -623,7 +621,7 @@ const differentiators = [
   .hero {
     --ambient-video-opacity: 0.92;
     --ambient-video-fade: 600ms;
-    --ambient-video-rate: 1;
+    --ambient-video-rate: 0.7; /* full speed was dizzying (owner, 2026-09-22) */
     --ambient-max-height: calc(100svh - var(--header-height));
     --ambient-fade-top-start: 22%;
     --ambient-fade-top: 72%;
@@ -664,8 +662,7 @@ const differentiators = [
     --cube-4d-period: 22s;
     --cube-tilt: 18deg;
     --cube-glow: 1;
-    --cube-backing: 0.35;
-    --cube-core-opacity: 0.85;
+    --cube-backing: 0.2;
     --cube-pulses: 0;
     --cube-embers: 24;
     --cube-hover-boost: 1.6;
