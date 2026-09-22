@@ -59,13 +59,15 @@
  *   --cube-perspective     3D->2D perspective distance
  *   --cube-glow            bloom strength multiplier
  *   --cube-face-alpha      glass tint of the 24 faces
- *   --cube-pulses          light pulses travelling the edges (count)
+ *   --cube-pulses          light pulses travelling the edges (count; 0 = off,
+ *                          the shipped default: their heads read as fireballs)
  *   --cube-embers          drifting particles around the cube (count)
  *   --cube-hover-boost     inside-out speed multiplier at the cursor
  *   --cube-scroll-spin     radians of extra yaw per scrolled pixel
  *   --cube-entrance        assembly duration
  *
- * Calibration (2026-09-22, Higgsfield frame fe264493…, "Energy lattice"):
+ * Calibration (2026-09-22, Higgsfield style frame 5, "Energy lattice"; job
+ * ids in the gitignored video-masters/manifest.json):
  * crisp core about 1.2% of the cube's extent with a pale cyan-white peak,
  * half-max at a deep saturated blue, the visible halo about 6.5% of the
  * extent, bright nodes, a wide dark-blue haze around the object.
@@ -161,7 +163,7 @@ const { coreA, coreB } = Astro.props;
 
     const knobs = {
       yawPeriod: 14, xwPeriod: 22, zwPeriod: 37, zwAmp: 0.3, tilt: 18, d4: 2.4, d3: 14,
-      glow: 1, faceAlpha: 0.03, pulses: 5, embers: 24, hoverBoost: 1.6, scrollSpin: 0.002,
+      glow: 1, faceAlpha: 0.03, pulses: 0, embers: 24, hoverBoost: 1.6, scrollSpin: 0.002,
       entrance: 2000, logo: 0.34, logoPlate: 0.3,
     };
     function readKnobs() {
@@ -178,7 +180,7 @@ const { coreA, coreB } = Astro.props;
       knobs.d3 = num('--cube-perspective', 14);
       knobs.glow = num('--cube-glow', 1);
       knobs.faceAlpha = num('--cube-face-alpha', 0.03);
-      knobs.pulses = clamp(Math.round(num('--cube-pulses', 5)), 0, 12);
+      knobs.pulses = clamp(Math.round(num('--cube-pulses', 0)), 0, 12);
       knobs.embers = clamp(Math.round(num('--cube-embers', 24)), 0, 64);
       knobs.hoverBoost = num('--cube-hover-boost', 1.6);
       knobs.scrollSpin = num('--cube-scroll-spin', 0.002);
@@ -402,7 +404,7 @@ const { coreA, coreB } = Astro.props;
     /* The cage (edges, nodes, pulses, embers) in one style; used for the bloom
        octaves (low resolution, then upscaled) and, with finer widths, the crisp
        pass. `depthMin`/`depthMax` select the far or the near half. */
-    function drawCage(x: CanvasRenderingContext2D, unit: number, crisp: boolean, glowMul: number, depthMin: number, depthMax: number, ent: number) {
+    function drawCage(x: CanvasRenderingContext2D, unit: number, crisp: boolean, glowMul: number, depthMin: number, depthMax: number, ent: number, dots = true) {
       x.lineCap = 'round'; x.lineJoin = 'round';
       x.globalCompositeOperation = 'lighter';
       for (let i = 0; i < 32; i++) {
@@ -419,19 +421,21 @@ const { coreA, coreB } = Astro.props;
           x.globalAlpha = (0.45 + 0.55 * near) * glowMul;
         }
         strokeEdge(x, e, p);
-        if (p < 1) { // the bright tip of an edge still drawing in
+        if (p < 1 && dots) { // the bright tip of an edge still drawing in
           const a = EDGES[2 * e], b = EDGES[2 * e + 1]; const nv = NEARV[e] === 0 ? a : b, fv = NEARV[e] === 0 ? b : a;
-          x.fillStyle = C_WHITE; x.globalAlpha = crisp ? 0.9 : glowMul;
-          dot(x, SX[nv] + (SX[fv] - SX[nv]) * p, SY[nv] + (SY[fv] - SY[nv]) * p, crisp ? 2.2 * lw : unit * 1.6);
+          x.fillStyle = C_HOT; x.globalAlpha = crisp ? 0.9 : glowMul;
+          dot(x, SX[nv] + (SX[fv] - SX[nv]) * p, SY[nv] + (SY[fv] - SY[nv]) * p, crisp ? 1.6 * lw : unit * 1.2);
         }
       }
-      // nodes
+      // nodes: small bright points. Never in the coarse octaves, where a dot
+      // blooms into a ball (the fireballs the owner asked to remove).
+      if (!dots) return;
       for (let v = 0; v < 16; v++) {
         const d = SZ[v]; if (d < depthMin || d >= depthMax) continue;
         const np = ent >= 1 ? 1 : nodeProgress(v); if (np <= 0) continue;
         const near = clamp((d + rhoRest) / (2 * rhoRest), 0, 1);
-        if (crisp) { x.fillStyle = near > 0.6 ? C_WHITE : C_LIGHT; x.globalAlpha = (0.5 + 0.5 * near) * np; dot(x, SX[v], SY[v], (1.5 + 1.5 * near) * lw); }
-        else { x.fillStyle = C_LIGHT; x.globalAlpha = (0.5 + 0.5 * near) * glowMul * np; dot(x, SX[v], SY[v], unit * 1.5); }
+        if (crisp) { x.fillStyle = near > 0.75 ? C_HOT : C_LIGHT; x.globalAlpha = (0.45 + 0.45 * near) * np; dot(x, SX[v], SY[v], (0.9 + 1.1 * near) * lw); }
+        else { x.fillStyle = C_LIGHT; x.globalAlpha = (0.4 + 0.4 * near) * glowMul * np; dot(x, SX[v], SY[v], unit * 1.1); }
       }
     }
     function drawPulses(x: CanvasRenderingContext2D, unit: number, crisp: boolean, glowMul: number) {
@@ -448,8 +452,8 @@ const { coreA, coreB } = Astro.props;
           x.lineWidth = crisp ? (2.2 - s * 0.5) * lw : unit * 1.6;
           x.beginPath(); x.moveTo(SX[a] + (SX[b] - SX[a]) * t1, SY[a] + (SY[b] - SY[a]) * t1); x.lineTo(SX[a] + (SX[b] - SX[a]) * t2, SY[a] + (SY[b] - SY[a]) * t2); x.stroke();
         }
-        x.fillStyle = C_WHITE; x.globalAlpha = (crisp ? 0.95 : glowMul) * (0.7 + 0.3 * near) * Math.min(1, boost);
-        dot(x, hx, hy, crisp ? 2 * lw : unit * 1.8);
+        x.fillStyle = C_HOT; x.globalAlpha = (crisp ? 0.9 : glowMul) * (0.7 + 0.3 * near) * Math.min(1, boost);
+        dot(x, hx, hy, crisp ? 1.4 * lw : unit * 1.2);
       }
     }
     function drawEmbers(x: CanvasRenderingContext2D, unit: number, crisp: boolean, glowMul: number) {
@@ -494,8 +498,9 @@ const { coreA, coreB } = Astro.props;
         o.x.setTransform(sc, 0, 0, sc, 0, 0);
         o.x.clearRect(0, 0, size, size);
         const unit = 1 / sc; // one device pixel, in CSS px
-        drawCage(o.x, unit, false, o.alpha * glowMul, -Infinity, Infinity, ent);
-        drawPulses(o.x, unit, false, o.alpha * glowMul);
+        const dots = o.k <= 8; // points and pulses only in the fine octaves
+        drawCage(o.x, unit, false, o.alpha * glowMul, -Infinity, Infinity, ent, dots);
+        if (dots) drawPulses(o.x, unit, false, o.alpha * glowMul);
         if (tier === 2 && o.k === 8) drawEmbers(o.x, unit, false, o.alpha * glowMul);
         ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 1; ctx.imageSmoothingEnabled = true;
         ctx.drawImage(o.c, 0, 0, size, size);

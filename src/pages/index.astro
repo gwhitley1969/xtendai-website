@@ -658,11 +658,11 @@ const differentiators = [
 
   /* Tesseract knobs (consumed by HeroTesseract.astro, which inherits them;
      every knob is documented there). Measured columns: 448.5px at 1024,
-     544px from 1280, so the box tops out at 500px. Below 1024 the cube sits
-     under the CTAs; at 375x812 its top ~70px are on the first screen, the
-     same as the phone before it. */
+     544px from 1280; the box fills the column from 1280 up (25% larger than
+     the first cut, owner request, 2026-09-22). Below 1024 the cube sits under
+     the CTAs. */
   .hero {
-    --cube-size: min(72vw, 320px);
+    --cube-size: min(90vw, 400px);
     --cube-logo: 0.34;
     --cube-yaw-period: 14s;
     --cube-4d-period: 22s;
@@ -670,7 +670,7 @@ const differentiators = [
     --cube-glow: 1;
     --cube-backing: 0.35;
     --cube-core-opacity: 0.85;
-    --cube-pulses: 5;
+    --cube-pulses: 0;
     --cube-embers: 24;
     --cube-hover-boost: 1.6;
     --cube-scroll-spin: 0.002;
@@ -679,7 +679,7 @@ const differentiators = [
 
   @media (min-width: 1024px) {
     .hero {
-      --cube-size: clamp(300px, 34vw, 500px);
+      --cube-size: clamp(375px, 42.5vw, 625px);
     }
   }
 

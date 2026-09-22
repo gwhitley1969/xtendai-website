@@ -18,7 +18,11 @@
  * behaves like light without a runtime blend mode (which would cost the
  * compositor a read-back of the video layer under it). A radial vignette
  * guarantees zero alpha at the edge, so the CSS counter-rotation can never
- * show a square. 1024 px is plenty for a box that tops out at 500 px.
+ * show a square. Two guards keep the unpremultiply honest: colour is never
+ * amplified beyond about 3x (faint navy noise would otherwise come out as
+ * saturated green), coverage below 5% is dropped, and every pixel is forced
+ * blue-dominant (r <= 0.7 g <= b), which is the brand palette anyway. 1024 px
+ * is plenty for a box that tops out at 544 px.
  */
 import { mkdirSync } from 'node:fs';
 import sharp from 'sharp';
@@ -31,6 +35,8 @@ const OUT = 'src/assets/hero';
 const SIZE = 1024;
 const VIGNETTE_START = 0.72; // fraction of the radius where the fade to transparent begins
 const VIGNETTE_END = 0.9; // ... and where it reaches zero
+const MIN_K = 0.34; // colour amplification floor (1 / MIN_K = about 3x)
+const MIN_ALPHA = 0.05; // coverage below this is noise
 
 mkdirSync(OUT, { recursive: true });
 
@@ -47,12 +53,14 @@ for (const [name, src] of Object.entries(SOURCES)) {
       const d = Math.hypot(x - cx, y - cy) / R;
       const vig = d < VIGNETTE_START ? 1 : d > VIGNETTE_END ? 0 : 1 - (d - VIGNETTE_START) / (VIGNETTE_END - VIGNETTE_START);
       const a = (data[i + 3] / 255) * k * vig;
-      if (a <= 0.004) { data[i] = 0; data[i + 1] = 0; data[i + 2] = 0; data[i + 3] = 0; continue; }
-      // Unpremultiply: the colour a pixel of this coverage needs so that over
-      // black it reproduces the render exactly.
-      data[i] = Math.min(255, Math.round(r / k));
-      data[i + 1] = Math.min(255, Math.round(g / k));
-      data[i + 2] = Math.min(255, Math.round(b / k));
+      if (a < MIN_ALPHA) { data[i] = 0; data[i + 1] = 0; data[i + 2] = 0; data[i + 3] = 0; continue; }
+      // Unpremultiply (bounded): the colour a pixel of this coverage needs so
+      // that over black it reproduces the render, then keep it blue.
+      const kk = Math.max(k, MIN_K);
+      let cr = Math.min(255, Math.round(r / kk)), cg = Math.min(255, Math.round(g / kk)), cb = Math.min(255, Math.round(b / kk));
+      if (cg > cb) cg = cb;
+      if (cr > cg * 0.7) cr = Math.round(cg * 0.7);
+      data[i] = cr; data[i + 1] = cg; data[i + 2] = cb;
       data[i + 3] = Math.round(a * 255);
       kept++;
     }
