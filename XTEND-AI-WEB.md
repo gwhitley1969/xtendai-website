@@ -306,7 +306,7 @@ Proof, not a brag wall. One client engagement, its website live and its mobile a
 
 ### 6.1 Client work
 
-**Needle Girlie** — medical aesthetics practice of Amy Palacios, FNP, in Harrisburg, NC.
+**Needle Girlie** — the Mobile Aesthetics practice of Amy Palacios, FNP, in Harrisburg, NC. The card's sector label is "Mobile Aesthetics", the client's own term (owner request, 2026-10-06).
 
 | Field | Content |
 |---|---|
