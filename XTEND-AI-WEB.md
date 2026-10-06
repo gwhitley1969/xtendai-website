@@ -201,7 +201,7 @@ Three cards, each linking to `/services`.
 **Headline:** Work we're shipping
 
 **Body:**
-We are building a website and a Flutter mobile app for Needle Girlie, a medical aesthetics practice in Harrisburg, NC. We have also shipped two apps of our own, My AI Bartender and CLIQUE Pix, live on the App Store and Google Play, with CLIQUE Pix also running on the web.
+We built the website for Needle Girlie, a medical aesthetics practice in Harrisburg, NC, and we are building its Flutter mobile app. We have also shipped two apps of our own, My AI Bartender and CLIQUE Pix, live on the App Store and Google Play, with CLIQUE Pix also running on the web.
 
 **CTA:** See our work → `/work`
 
@@ -300,9 +300,9 @@ That background is the difference between a site that looks finished and a syste
 
 ## 6) Work Page — NEW (`/work`)
 
-Proof, not a brag wall. One client engagement in progress and two shipped apps of our own. Build it from data arrays so engagement #2 is an array entry, not a redesign.
+Proof, not a brag wall. One client engagement, its website live and its mobile app in progress, and two shipped apps of our own. Build it from data arrays so engagement #2 is an array entry, not a redesign.
 
-**Intro:** One client engagement in progress, and two apps of our own live in both stores. This page grows as the work does.
+**Intro:** One client site live, its mobile app underway, and two apps of our own live in both stores. This page grows as the work does.
 
 ### 6.1 Client work
 
@@ -312,11 +312,11 @@ Proof, not a brag wall. One client engagement in progress and two shipped apps o
 |---|---|
 | What we're building | A website and a Flutter mobile app with an AI assistant. |
 | Stack | Static site on Azure Static Web Apps; Flutter for iOS and Android; Azure backend; AI assistant. |
-| Status | **In progress.** The public site is currently an "under construction" placeholder while the full build is underway. |
+| Status | **Site live** (2026-10-06). The Flutter mobile app and its AI assistant are still in development. |
 
-**Naming:** the owner has confirmed the client may be named. **Do not link `needlegirlie.com` while it is a placeholder** — sending a referral to a holding page costs more trust than the outbound link gains. Add the link at launch.
+**Naming and link:** the owner has confirmed the client may be named. The card links to `https://needlegirlie.com`, added at launch (2026-10-06) with the label "Visit needlegirlie.com" (the template derives it from the URL's hostname), a plain same-tab link like every other external link on the site. The rule for the next engagement stands: **do not link a client site while it is a placeholder** — sending a referral to a holding page costs more trust than the outbound link gains. Add the link at launch.
 
-**Treatment:** a card with an honest "in progress" badge. No screenshot, no mockup, no fabricated preview.
+**Treatment:** a card with a badge that carries real status: green "Site live" now, gold "In progress" before launch. No screenshot, no mockup, no fabricated preview.
 
 > **OWNER TO PROVIDE:** one or two sentences on the problem this engagement solves — what the practice needed that it did not have. Everything above is fact; the "why" is not written down anywhere and must not be invented. Until it is supplied, ship the card without a problem statement.
 
@@ -559,7 +559,7 @@ Approved by the owner with the Phase 1 audit fixes. Brand rules, not just implem
 - **Gradient headline text is h1-only.** One gradient phrase per page, in the hero. Section h2s render solid white.
 - **No outer glows on interactive elements.** Buttons and badges carry no colored halo shadows; hover feedback is lift plus a plain dark depth shadow. Ambient radial glows are limited to the hero / page-header glow plus the closing CTA card.
 - **Icons are stroke SVGs, never emoji** — rendered via `src/components/Icon.astro` (glyphs vendored from Tabler Icons, MIT) so every icon shares one stroke language and takes brand color. Emoji can do neither.
-- **Eyebrow badges are retired as decoration.** Pill badges appear only when they carry real status ("In progress" on Work, "Available Now" on the product pages) — never as section labels.
+- **Eyebrow badges are retired as decoration.** Pill badges appear only when they carry real status ("Site live" on Work, "Available Now" on the product pages) — never as section labels.
 - **The hero visual is the tesseract** (2026-09-22; this retires the 2026-07-25 rule that the hero phone shows the real product). Product evidence lives on the Work and product pages, never in the hero.
 - **No em- or en-dashes in site copy** (adopted 2026-07-25, Phase 2). Headlines, body, labels, titles, and meta descriptions restructure with commas, periods, colons, or parentheses; ranges use a plain hyphen ("24-48 hours"). Mechanical gate: zero `—` or `–` characters in the built HTML.
 - **One intent, one CTA label.** Buttons sharing a destination and intent share a label site-wide ("See what we build" → `/services`, "Start a project" → `/contact`). Support's "Contact Us" is the deliberate exception: help-seeking is a different intent than starting a project.
@@ -690,4 +690,4 @@ Deliverables:
 * **§9 — CLIQUE Pix FAQ entries**
 * ~~§4.1 — hero visual~~ — Done (replaced 2026-09-22 by the tesseract, owner decision; the "browser frame" and "client site screenshot" ideas are closed; a product capture could return elsewhere, e.g. Work, if wanted)
 * Screenshots for My AI Bartender and CLIQUE Pix (optional but recommended)
-* `needlegirlie.com` link — add at launch, not before
+* ~~`needlegirlie.com` link — add at launch, not before~~ — Done (2026-10-06: the site is live and linked from `/work`; the mobile app is still in progress)

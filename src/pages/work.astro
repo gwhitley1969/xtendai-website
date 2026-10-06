@@ -17,7 +17,8 @@ const description = "Client engagements and the apps we've shipped ourselves: My
  *
  * `href` stays null until a client site is genuinely live. Sending a
  * referral to an "under construction" placeholder costs more trust
- * than the outbound link gains.
+ * than the outbound link gains. `live` picks the badge tone: green once
+ * the site is live, gold while the engagement is in progress.
  */
 const engagements = [
   {
@@ -25,11 +26,12 @@ const engagements = [
     client: 'Amy Palacios, FNP',
     sector: 'Medical aesthetics',
     location: 'Harrisburg, NC',
-    status: 'In progress',
+    status: 'Site live',
     summary: 'A website and a Flutter mobile app with an AI assistant.',
     stack: ['Azure Static Web Apps', 'Flutter (iOS & Android)', 'Azure backend', 'AI assistant'],
-    note: 'The public site is currently an "under construction" placeholder while the full build is underway.',
-    href: null
+    note: 'The website is live. The Flutter mobile app and its AI assistant are still in development.',
+    href: 'https://needlegirlie.com',
+    live: true
   }
 ];
 
@@ -70,7 +72,7 @@ const apps = [
     <div class="container">
       <h1>Work we're <span class="text-gradient">shipping</span></h1>
       <p class="page-header__subtitle">
-        One client engagement in progress, and two apps of our own live in both stores.
+        One client site live, its mobile app underway, and two apps of our own live in both stores.
         This page grows as the work does.
       </p>
     </div>
@@ -93,7 +95,7 @@ const apps = [
                   {item.client} · {item.sector}, {item.location}
                 </p>
               </div>
-              <span class="badge badge--gold engagement__status">{item.status}</span>
+              <span class:list={['badge', item.live ? 'badge--green' : 'badge--gold', 'engagement__status']}>{item.status}</span>
             </div>
 
             <p class="engagement__summary">{item.summary}</p>
@@ -107,7 +109,7 @@ const apps = [
             <p class="engagement__note">{item.note}</p>
 
             {item.href && (
-              <a href={item.href} class="engagement__link">Visit the site</a>
+              <a href={item.href} class="engagement__link">Visit {new URL(item.href).hostname}</a>
             )}
           </article>
         ))}

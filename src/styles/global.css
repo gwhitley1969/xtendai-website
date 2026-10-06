@@ -478,6 +478,12 @@ li {
   border-color: rgba(251, 191, 36, 0.3);
 }
 
+.badge--green {
+  background: rgba(52, 211, 153, 0.2);
+  color: var(--xt-green);
+  border-color: rgba(52, 211, 153, 0.3);
+}
+
 /* Skip Link */
 .skip-link {
   position: absolute;
