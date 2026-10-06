@@ -201,7 +201,7 @@ Three cards, each linking to `/services`.
 **Headline:** Work we're shipping
 
 **Body:**
-We built the website for Needle Girlie, a medical aesthetics practice in Harrisburg, NC, and we are building its Flutter mobile app. We have also shipped two apps of our own, My AI Bartender and CLIQUE Pix, live on the App Store and Google Play, with CLIQUE Pix also running on the web.
+We built the website for Needle Girlie, a mobile aesthetics practice in Harrisburg, NC, and we are building its Flutter mobile app. We have also shipped two apps of our own, My AI Bartender and CLIQUE Pix, live on the App Store and Google Play, with CLIQUE Pix also running on the web.
 
 **CTA:** See our work → `/work`
 
