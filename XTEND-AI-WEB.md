@@ -201,7 +201,7 @@ Three cards, each linking to `/services`.
 **Headline:** Work we're shipping
 
 **Body:**
-We built the website for Needle Girlie, a mobile aesthetics practice in Harrisburg, NC, and we are building its Flutter mobile app. We have also shipped two apps of our own, My AI Bartender and CLIQUE Pix, live on the App Store and Google Play, with CLIQUE Pix also running on the web.
+We built the website needlegirlie.com for Amy Palacios, FNP, owner of Mobile Aesthetics, in Harrisburg, NC, and we're building her a Flutter mobile app as well. We have also shipped two apps of our own, My AI Bartender and CLIQUE Pix, live on the App Store and Google Play, with CLIQUE Pix also running on the web.
 
 **CTA:** See our work → `/work`
 
@@ -306,7 +306,7 @@ Proof, not a brag wall. One client engagement, its website live and its mobile a
 
 ### 6.1 Client work
 
-**Needle Girlie** — the Mobile Aesthetics practice of Amy Palacios, FNP, in Harrisburg, NC. The card's sector label is "Mobile Aesthetics", the client's own term (owner request, 2026-10-06).
+**Needle Girlie** — the website (needlegirlie.com) of Amy Palacios, FNP, owner of Mobile Aesthetics, in Harrisburg, NC. On the card, "Mobile Aesthetics" is the business name, not a sector; the entry's `business` field holds it (owner correction, 2026-10-06).
 
 | Field | Content |
 |---|---|
