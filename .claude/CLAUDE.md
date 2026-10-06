@@ -33,6 +33,8 @@ Corporate marketing site for **Xtend-AI, LLC** (Charlotte / Harrisburg, NC).
 
 **`XTEND-AI-WEB.md` is authoritative for messaging and it says "don't invent new claims."** If a task requires new positioning or a new page, update that brief in the same change set. Never let the site and the brief drift apart.
 
+**§17 "Open Items" in `XTEND-AI-WEB.md` is the launch backlog.** "Add at launch" tasks wait there (the `needlegirlie.com` link did until 2026-10-06). Check it before any content change and strike the item through in the same commit that ships it.
+
 ---
 
 ## Commands
@@ -43,9 +45,12 @@ npm run dev         # dev server → http://localhost:4321
 npm run build       # production build → dist/
 npm run preview     # serve the built output locally
 AMBIENT_DELAY_MS=0 npm run build   # worst-case build: every ambient clip starts at load (the Lighthouse / LCP gate)
+grep -rl $'\xe2\x80\x94\|\xe2\x80\x93' dist --include='*.html'   # dash gate after every build: must print nothing (brief §12.5). grep -P '\x{2014}' errors in Git Bash.
 ```
 
 There is **no linter, formatter, or type check in CI**. `npm run build` is the only gate — run it before every commit.
+
+Browser preview: `preview_start` with name `dev` (or `preview` for the built output), both in `.claude/launch.json` on port 4321. When grepping `dist/` for copy, built tags carry `data-astro-cid-*` attributes and keep source line breaks, so match loosely.
 
 ---
 
@@ -92,13 +97,17 @@ Navigation is **data-driven**, not hardcoded in markup. Nav changes are edits to
 
 7. **Don't commit the reference PNGs in the repo root.** `color01.png`, `old01.png`, `icon01.png` and similar are planning screenshots the owner drops in, and `CLIQUE_Pix/` holds source brand assets. They are not site assets — anything the site renders gets copied into `src/assets/` first.
 
-8. **Watch line endings on Windows.** Git converts LF ↔ CRLF and nothing normalizes it in CI, so a careless edit can produce a whole-file diff.
+8. **Watch line endings on Windows.** Git converts LF ↔ CRLF and nothing normalizes it in CI, so a careless edit can produce a whole-file diff. `git ls-files --eol <file>` shows stored vs. working-tree endings (most files are `i/lf w/crlf`; `work.astro` is `w/lf`). Scripted edits must write back the file's existing ending; check `git diff --stat` before committing.
 
 9. **The contact interest list lives in two files.** The `<select>` options in `src/pages/contact.astro` and the `INTERESTS` allow-list in `api/contact/index.js` must match — a value missing from the Function's list never reaches the email subject.
 
 10. **Decorative video is never first paint.** A `<video>` in markup carries no `autoplay`, `src` or `poster`; `AmbientVideo.astro`'s script loads it after `load` plus a delay and only where nothing says no. A full-bleed clip sits over its own first-frame still so the still, not the video, is the LCP element (measured: Chrome otherwise registers the faded-in video as a late LCP). Every placement renders `<AmbientToggle />` as a sibling after the content wrapper, and any other auto-playing motion registers with that control: `data-motion` on its root while it can animate, `data-motion-playing` while it does, an `xt-motion` event on `document` at each change (`HeroTesseract.astro` is the reference). Details and the worst-case measuring build in `docs/IMPLEMENTATION.md`, *Ambient video* and *Hero tesseract*.
 
 11. **Canvas animation rules.** Reduced motion and the constrained-device signals get one static frame, never a loop; nothing is allocated per frame; DPR is capped at 2 and the backing store at 1024 px; every loop that walks image sizes is bounded (an unbounded halving loop froze two browsers during development). See `docs/IMPLEMENTATION.md`, *Hero tesseract*.
+
+12. **Client-work status lives in four places.** The `engagements` entry in `src/pages/work.astro` (`status`, `note`, `href`, `live`), the home Proof paragraph in `src/pages/index.astro`, the brief (§4.5, §6, §6.1, §12.5, §17), and a `docs/IMPLEMENTATION.md` history note. A launch or status change touches all four in one commit. The card's link label derives from the URL, so engagement #2 is a data edit only.
+
+13. **Long heredocs fail in the Claude Code Bash tool here** (`unexpected EOF while looking for matching '` even when single-quoted). Write multi-line scripts to a file with the Write tool, then run them from Bash.
 
 ---
 
@@ -107,6 +116,8 @@ Navigation is **data-driven**, not hardcoded in markup. Nav changes are edits to
 Push to `main` → GitHub Actions (`.github/workflows/azure-static-web-apps.yml`) → build → deploy. Every push triggers a full rebuild, including doc-only changes (~1 min). Both the custom domain and the SWA hostname update at once.
 
 **Push guard:** direct pushes to `main` from Claude Code may be blocked by the local permission guard even with prior authorization. When that happens, hand the push back to the user: `! git push origin main`.
+
+**Verifying a deploy:** `gh run list --commit $(git rev-parse HEAD)` finds the SWA run and `gh run watch <id> --exit-status` follows it (~1.5 min). Then fetch the changed page on **both** hostnames with `curl -H 'Cache-Control: no-cache'`; a look taken right after the push still shows the old build. GitHub has rejected a push with `remote: Internal Server Error` (objects uploaded, ref untouched); a plain retry succeeded with nothing to clean up.
 
 Secrets are set in Azure SWA configuration, not in the repo. Currently only `SENDGRID_API_KEY`.
 
