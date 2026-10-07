@@ -113,6 +113,8 @@ Navigation is **data-driven**, not hardcoded in markup. Nav changes are edits to
 
 14. **Internal links use the trailing-slash form** (`/services/`, `/products/clique-pix/`). Astro runs with `trailingSlash: 'always'`, so the dev server and `npm run preview` answer 404 for `localhost:4321/about`; that is the check working, not a bug. In production SWA 301s the slash-less form. The Header's `navSectionFor` map is compared with `===`, so its value must stay `/work/`. Unknown URLs must answer 404 (`src/pages/404.astro`, served by `responseOverrides`); never reintroduce `navigationFallback`.
 
+15. **Metadata and structured data have a spec.** Titles and descriptions live in brief §11's table; the JSON-LD graph (`BaseLayout.astro`, one `@graph` per page with `@id`s) and the page-level `Person` and `MobileApplication` entities are described there too. Change the brief in the same commit, put nothing in the data that is not on the site or owner-approved, and check `https://validator.schema.org/#url=<page>` (0 errors). Layout props: `pageType`, `breadcrumbs` (slash form), `ogImage` as an object with real dimensions, `noindex` (404 only).
+
 ---
 
 ## Deployment

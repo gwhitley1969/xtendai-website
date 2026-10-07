@@ -99,8 +99,19 @@ The contact form API is located at `api/contact/index.js` and sends emails using
 
 ## Domain
 
-- **Production**: https://www.xtend-ai.com
-- **Azure SWA**: https://gentle-sea-0d684ea10.2.azurestaticapps.net
+- **Production**: https://www.xtend-ai.com (the SWA default domain once the owner sets it in the portal under Custom domains; the apex `xtend-ai.com` and the SWA hostname then answer 301 to it)
+- **Azure SWA**: https://gentle-sea-0d684ea10.2.azurestaticapps.net (serves the same deployment until the default domain is set)
+
+URLs are the trailing-slash form (`/services/`); SWA 301s the slash-less form, unknown paths answer 404 with `src/pages/404.astro`, and `staticwebapp.config.json` changes go through a pull request so the staging environment can be checked first (`docs/IMPLEMENTATION.md`, *Redirects, trailing slashes and the 404 page*).
+
+## Search presence
+
+Set up per the SEO plan of 2026-10-07; these are owner tasks and `XTEND-AI-WEB.md` §17 records which are done:
+
+- **Google Search Console**: a Domain property for `xtend-ai.com`, verified with a TXT record in the Azure DNS zone (the zone's name servers are Azure DNS), with `https://www.xtend-ai.com/sitemap-index.xml` submitted. Measurement for the site comes from here; the site runs no analytics script.
+- **Bing Webmaster Tools**: imported from Search Console.
+- **Google Business Profile**: a service-area listing (address hidden) with the same name, phone number (704-957-7466) and website as the site; Bing Places and Apple Business Connect are imported from it.
+- **After every deploy**: an unknown path must return 404 and `/about` must 301 to `/about/` (commands in `.claude/CLAUDE.md`).
 
 ## Documentation
 
