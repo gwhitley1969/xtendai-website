@@ -121,13 +121,13 @@ Navigation is **data-driven**, not hardcoded in markup. Nav changes are edits to
 
 ## Deployment
 
-Push to `main` → GitHub Actions (`.github/workflows/azure-static-web-apps.yml`) → build → deploy. Every push triggers a full rebuild, including doc-only changes (~1 min). Both the custom domain and the SWA hostname update at once.
+Push to `main` → GitHub Actions (`.github/workflows/azure-static-web-apps.yml`) → build → deploy. Every push triggers a full rebuild, including doc-only changes (~1 min). The SWA hostname and the apex `xtend-ai.com` answer 301 to `www.xtend-ai.com`, the SWA default domain since 2026-10-07.
 
 **Push guard:** direct pushes to `main` from Claude Code may be blocked by the local permission guard even with prior authorization. When that happens, hand the push back to the user: `! git push origin main`.
 
 **SWA config changes go through a pull request.** `staticwebapp.config.json` is validated only at deploy, and the workflow builds a staging environment for every PR. Test there before merging: the redirect, 404 and cache matrix in `docs/IMPLEMENTATION.md` (*Redirects, trailing slashes and the 404 page*), and the contact API with an empty-body probe (`curl -si -X POST -H 'Content-Type: application/json' --data '{}' https://<staging-host>/api/contact` must return 400), never a real submission, because staging inherits `SENDGRID_API_KEY`.
 
-**Verifying a deploy:** `gh run list --commit $(git rev-parse HEAD)` finds the SWA run and `gh run watch <id> --exit-status` follows it (~1.5 min). Then fetch the changed page on `https://www.xtend-ai.com` with `curl -H 'Cache-Control: no-cache'`; a look taken right after the push still shows the old build. Once the owner has set `www` as the SWA default domain, the SWA hostname and the apex answer 301, so check `www` only. Two standing gates after every deploy: an unknown path must return 404, and `/about` must 301 to `/about/` (both in the Commands block). GitHub has rejected a push with `remote: Internal Server Error` (objects uploaded, ref untouched); a plain retry succeeded with nothing to clean up.
+**Verifying a deploy:** `gh run list --commit $(git rev-parse HEAD)` finds the SWA run and `gh run watch <id> --exit-status` follows it (~1.5 min). Then fetch the changed page on `https://www.xtend-ai.com` with `curl -H 'Cache-Control: no-cache'`; a look taken right after the push still shows the old build. The SWA hostname and the apex answer 301 to `www` (default domain set 2026-10-07), so check `www` only. Two standing gates after every deploy: an unknown path must return 404, and `/about` must 301 to `/about/` (both in the Commands block). GitHub has rejected a push with `remote: Internal Server Error` (objects uploaded, ref untouched); a plain retry succeeded with nothing to clean up.
 
 Secrets are set in Azure SWA configuration, not in the repo. Currently only `SENDGRID_API_KEY`.
 

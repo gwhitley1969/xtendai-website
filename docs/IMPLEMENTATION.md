@@ -369,7 +369,7 @@ Added 2026-10-07 after an audit; `XTEND-AI-WEB.md` §11 and §14.3 are the spec.
 - **Structured data**: *JSON-LD and the head slot* (the graph, the `@id` conventions, the page-level `Person` and `MobileApplication`).
 - **Copy that search engines weigh**: titles and descriptions in brief §11's table; the footer line and the Contact phone card (§4.8, §10); inline text links underlined by a `global.css` rule so they never rely on color alone.
 - **Checks after a change**: `npm run build`; the dash gate; `grep -rhoE 'href="/[^"#?]*"' dist --include=*.html | sort -u` (only `/`, slashed page paths and file paths); built HTML carries `data-astro-cid-*` attributes, so grep for copy loosely; `https://validator.schema.org/#url=<page>` with 0 errors per page type; `npx lighthouse@13.4.1` (SEO 100, accessibility 100, home performance 97 or better); after a deploy, the 404 and 301 gates in `CLAUDE.md`. Search Console and Bing Webmaster Tools hold the measurement (`README.md`, *Search presence*).
-- **Verified on production, 2026-10-07, after PRs #2 and #3 merged**: `/about` and `/about/index.html` 301 to `/about/`; `/products` and `/products/` 301 to `/work/` in one hop; `/products/my-ai-bartender` 301 to the slash form; unknown paths 404 with the branded page and a noindex meta; `robots.txt`, the sitemap and the favicon 200 without redirects; `/assets/*` immutable for a year, fonts 30 days, images 7 days; `POST /api/contact` with `{}` 400. The schema validator reported 0 errors on `/`, `/about/` and `/products/clique-pix/`. Lighthouse mobile against production: home 99 performance and 100 accessibility, best practices and SEO; CLIQUE Pix 100 across the board; `is-crawlable` passes (the staging score of 69 was Azure's pre-production `X-Robots-Tag: none`). The apex and the SWA hostname still answer 200 until the owner sets `www` as the default domain.
+- **Verified on production, 2026-10-07, after PRs #2 and #3 merged**: `/about` and `/about/index.html` 301 to `/about/`; `/products` and `/products/` 301 to `/work/` in one hop; `/products/my-ai-bartender` 301 to the slash form; unknown paths 404 with the branded page and a noindex meta; `robots.txt`, the sitemap and the favicon 200 without redirects; `/assets/*` immutable for a year, fonts 30 days, images 7 days; `POST /api/contact` with `{}` 400. The schema validator reported 0 errors on `/`, `/about/` and `/products/clique-pix/`. Lighthouse mobile against production: home 99 performance and 100 accessibility, best practices and SEO; CLIQUE Pix 100 across the board; `is-crawlable` passes (the staging score of 69 was Azure's pre-production `X-Robots-Tag: none`). The default-domain step followed the same day: the apex and the SWA hostname answer 301 to `www`, path preserved (verified 2026-10-07).
 
 ## Deployment Quirks
 
@@ -405,9 +405,9 @@ Two hard-won rules about that config:
 ### Domains
 
 - `https://www.xtend-ai.com` — custom domain (use for shares/links)
-- `https://gentle-sea-0d684ea10.2.azurestaticapps.net` — Azure SWA hostname (cache-bust diagnostics during deploys until the default domain is set)
+- `https://gentle-sea-0d684ea10.2.azurestaticapps.net` — Azure SWA hostname; answers 301 to `www` since 2026-10-07, so it is no longer a second place to read the deployment (pull-request staging environments keep their own `azurestaticapps.net` URLs)
 
-Both resolve to the same deployment; each deploy updates both simultaneously. `www.xtend-ai.com` is to be the SWA **default domain** (portal: Custom domains, select it, Set default; owner step from the 2026-10-07 SEO plan). Once set, the SWA hostname and the apex `xtend-ai.com` answer 301 to `www` and deploy checks use `www` only; until then all three hosts serve the pages and the canonical tag is what consolidates them.
+`www.xtend-ai.com` is the SWA **default domain** (portal: Custom domains, select it, Set default; done 2026-10-07). The SWA hostname and the apex `xtend-ai.com` answer 301 to `www` with the path preserved: `http://xtend-ai.com/about` reaches `https://www.xtend-ai.com/about/` in three hops (https, then www, then the trailing slash). Deploy checks use `www` only.
 
 ### Video assets
 

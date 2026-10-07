@@ -26,7 +26,7 @@ What changed in this document:
 
 Decisions locked by the owner (2026-10-07): the phone number 704-957-7466 on the site, in the data and on the Business Profile; a Business Profile as a service-area listing; no new pages (a Needle Girlie case study waits for its problem statement); measurement through Search Console only, no analytics script; all titles and descriptions as proposed; the About H1 and the role line "Gene Whitley, Co-founder and Chief Architect"; the full footer line; no hours line on the phone card; app pricing in the data as free install only.
 
-Still open after the merge: the SWA default-domain step, Search Console and Bing verification, the Business Profile, the store-listing URLs and the backlinks from the sister sites (§17; `README.md`, *Search presence*).
+The SWA default-domain step was completed and verified the same day. Still open: Search Console and Bing verification, the Business Profile, the store-listing URLs and the backlinks from the sister sites (§17; `README.md`, *Search presence*).
 
 ## Revision note — 2026-09-22 hero motion
 
@@ -647,7 +647,7 @@ The hero tesseract is drawn live and ships no image of its own; the lockup at it
 
 * Deploy to Azure Static Web Apps
 
-* `www.xtend-ai.com` is the default domain. Set it in the SWA portal (Custom domains, select it, **Set default**) so the apex `xtend-ai.com` and the generated hostname `gentle-sea-0d684ea10.2.azurestaticapps.net` answer 301 to it (owner step from the 2026-10-07 SEO plan). Until that step is done all three serve the same pages and only the canonical tag reconciles them.
+* `www.xtend-ai.com` is the SWA default domain (set in the portal, Custom domains, **Set default**, on 2026-10-07). The apex `xtend-ai.com` and the generated hostname `gentle-sea-0d684ea10.2.azurestaticapps.net` answer 301 to it with the path preserved, verified the same day.
 
 * `staticwebapp.config.json` (2026-10-07): `trailingSlash: auto`; `responseOverrides` 404 to `/404.html`; `Cache-Control` for `/assets/*` (one year, immutable: every file there is content-hashed), `/fonts/*` (30 days: the woff2 files are not hashed) and `/images/*` (7 days); no `navigationFallback`, because every route is a file. Config changes go through a pull request and its staging environment, because SWA validates the file only at deploy.
 
@@ -737,6 +737,6 @@ Deliverables:
 * Google Business Profile: create as a service-area listing (address hidden) with the same name, phone and website as the site, then verify; Bing Places and Apple Business Connect follow from it (owner; SEO plan 2026-10-07)
 * LinkedIn company page (optional): when it exists, add it to the Organization `sameAs` in `BaseLayout.astro`
 * ~~My AI Bartender pricing in the app structured data~~ — Decided 2026-10-07: free install only (price 0 USD) for both apps, no subscription offers
-* Set `www.xtend-ai.com` as the SWA default domain (portal: Custom domains, select it, Set default) so the apex and the SWA hostname 301 to it; then strike the "until that step is done" clauses in §14.1 and in `docs/IMPLEMENTATION.md` (owner)
+* ~~Set `www.xtend-ai.com` as the SWA default domain so the apex and the SWA hostname 301 to it~~ — Done (2026-10-07: set in the portal and verified; `https://xtend-ai.com/about/` and the SWA hostname answer 301 to the same path on `www`)
 * Google Search Console domain property for `xtend-ai.com` (Azure DNS TXT record) with the sitemap submitted, then Bing Webmaster Tools imported from it (owner; `README.md`, *Search presence*)
 * App store listing URLs to the `www` slash forms, and "Built by Xtend-AI" links from clique-pix.com and mybartenderai.com (owner)

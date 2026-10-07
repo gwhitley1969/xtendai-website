@@ -101,8 +101,8 @@ The contact form API is located at `api/contact/index.js` and sends emails using
 
 ## Domain
 
-- **Production**: https://www.xtend-ai.com (the SWA default domain once the owner sets it in the portal under Custom domains; the apex `xtend-ai.com` and the SWA hostname then answer 301 to it)
-- **Azure SWA**: https://gentle-sea-0d684ea10.2.azurestaticapps.net (serves the same deployment until the default domain is set)
+- **Production**: https://www.xtend-ai.com (the SWA default domain since 2026-10-07; the apex `xtend-ai.com` and the SWA hostname answer 301 to it)
+- **Azure SWA**: https://gentle-sea-0d684ea10.2.azurestaticapps.net (redirects to production; pull-request staging environments keep their own `azurestaticapps.net` URLs)
 
 URLs are the trailing-slash form (`/services/`); SWA 301s the slash-less form, unknown paths answer 404 with `src/pages/404.astro`, and `staticwebapp.config.json` changes go through a pull request so the staging environment can be checked first (`docs/IMPLEMENTATION.md`, *Redirects, trailing slashes and the 404 page*).
 
