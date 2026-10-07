@@ -28,9 +28,36 @@ const values = [
   { icon: 'target', text: 'AI should be helpful, not hype' },
   { icon: 'heart-handshake', text: 'Ship it, then stand behind it' }
 ];
+
+/**
+ * Person entity (brief §11). The job title is the owner's wording
+ * (2026-10-07). The other co-founder is not named anywhere, by standing
+ * decision (§8), so the organization carries no founder list and this
+ * entity links to it through worksFor. Credentials are the four current
+ * Microsoft certifications listed on this page, under their official names.
+ */
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  '@id': new URL('/about/#gene-whitley', Astro.site).toString(),
+  name: 'Gene Whitley',
+  jobTitle: 'Co-founder and Chief Architect',
+  url: new URL('/about/', Astro.site).toString(),
+  worksFor: { '@id': new URL('/#organization', Astro.site).toString() },
+  sameAs: ['https://www.linkedin.com/in/genewhitleymba'],
+  hasCredential: credentials
+    .filter((credential) => credential.name.startsWith('AZ-'))
+    .map((credential) => ({
+      '@type': 'EducationalOccupationalCredential',
+      name: `Microsoft Certified: ${credential.detail} (${credential.name})`,
+      credentialCategory: 'certification',
+      recognizedBy: { '@type': 'Organization', name: 'Microsoft' }
+    }))
+};
 ---
 
 <BaseLayout title={title} description={description} pageType="AboutPage" breadcrumbs={[{ name: 'About', href: '/about/' }]}>
+  <script slot="head" is:inline type="application/ld+json" set:html={JSON.stringify(personSchema).replace(/</g, '\\u003c')} />
   <Header slot="header" />
 
   <section class="page-header">
