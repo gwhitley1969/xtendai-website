@@ -46,6 +46,8 @@ npm run build       # production build → dist/
 npm run preview     # serve the built output locally
 AMBIENT_DELAY_MS=0 npm run build   # worst-case build: every ambient clip starts at load (the Lighthouse / LCP gate)
 grep -rl $'\xe2\x80\x94\|\xe2\x80\x93' dist --include='*.html'   # dash gate after every build: must print nothing (brief §12.5). grep -P '\x{2014}' errors in Git Bash.
+curl -s -o /dev/null -w '%{http_code}\n' https://www.xtend-ai.com/no-such-page   # 404 gate after every deploy (a 200 means navigationFallback came back)
+curl -s -o /dev/null -w '%{http_code} %{redirect_url}\n' https://www.xtend-ai.com/about   # must be 301 to /about/ (SWA trailingSlash)
 ```
 
 There is **no linter, formatter, or type check in CI**. `npm run build` is the only gate — run it before every commit.
@@ -67,7 +69,7 @@ src/
     services.astro  work.astro  about.astro  contact.astro
     support.astro  privacy.astro  terms.astro
     products/my-ai-bartender.astro
-    products/clique-pix.astro   # no products/index — /products 301s to /work in SWA config
+    products/clique-pix.astro   # no products/index — /products 301s to /work/ in SWA config (dev and preview answer 404 for it)
   styles/global.css             # ALL design tokens live in :root here; @font-face at top
   assets/                       # images processed by <Image> at build time (app icons, reverse logo assets)
     video/                      # ambient clips (.mp4, imported so Vite hashes them) + their first-frame stills
@@ -109,6 +111,8 @@ Navigation is **data-driven**, not hardcoded in markup. Nav changes are edits to
 
 13. **Long heredocs fail in the Claude Code Bash tool here** (`unexpected EOF while looking for matching '` even when single-quoted). Write multi-line scripts to a file with the Write tool, then run them from Bash.
 
+14. **Internal links use the trailing-slash form** (`/services/`, `/products/clique-pix/`). Astro runs with `trailingSlash: 'always'`, so the dev server and `npm run preview` answer 404 for `localhost:4321/about`; that is the check working, not a bug. In production SWA 301s the slash-less form. The Header's `navSectionFor` map is compared with `===`, so its value must stay `/work/`. Unknown URLs must answer 404 (`src/pages/404.astro`, served by `responseOverrides`); never reintroduce `navigationFallback`.
+
 ---
 
 ## Deployment
@@ -117,7 +121,9 @@ Push to `main` → GitHub Actions (`.github/workflows/azure-static-web-apps.yml`
 
 **Push guard:** direct pushes to `main` from Claude Code may be blocked by the local permission guard even with prior authorization. When that happens, hand the push back to the user: `! git push origin main`.
 
-**Verifying a deploy:** `gh run list --commit $(git rev-parse HEAD)` finds the SWA run and `gh run watch <id> --exit-status` follows it (~1.5 min). Then fetch the changed page on **both** hostnames with `curl -H 'Cache-Control: no-cache'`; a look taken right after the push still shows the old build. GitHub has rejected a push with `remote: Internal Server Error` (objects uploaded, ref untouched); a plain retry succeeded with nothing to clean up.
+**SWA config changes go through a pull request.** `staticwebapp.config.json` is validated only at deploy, and the workflow builds a staging environment for every PR. Test there before merging: the redirect, 404 and cache matrix in `docs/IMPLEMENTATION.md` (*Redirects, trailing slashes and the 404 page*), and the contact API with an empty-body probe (`curl -si -X POST -H 'Content-Type: application/json' --data '{}' https://<staging-host>/api/contact` must return 400), never a real submission, because staging inherits `SENDGRID_API_KEY`.
+
+**Verifying a deploy:** `gh run list --commit $(git rev-parse HEAD)` finds the SWA run and `gh run watch <id> --exit-status` follows it (~1.5 min). Then fetch the changed page on `https://www.xtend-ai.com` with `curl -H 'Cache-Control: no-cache'`; a look taken right after the push still shows the old build. Once the owner has set `www` as the SWA default domain, the SWA hostname and the apex answer 301, so check `www` only. Two standing gates after every deploy: an unknown path must return 404, and `/about` must 301 to `/about/` (both in the Commands block). GitHub has rejected a push with `remote: Internal Server Error` (objects uploaded, ref untouched); a plain retry succeeded with nothing to clean up.
 
 Secrets are set in Azure SWA configuration, not in the repo. Currently only `SENDGRID_API_KEY`.
 

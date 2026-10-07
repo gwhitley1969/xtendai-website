@@ -106,12 +106,14 @@ The previous tagline, *"Your next favorite app, made smarter,"* is product-only 
 ### Top navigation
 
 1. Home — `/`
-2. Services — `/services`
-3. Work — `/work`
-4. About — `/about`
-5. Contact — `/contact`
+2. Services — `/services/`
+3. Work — `/work/`
+4. About — `/about/`
+5. Contact — `/contact/`
 
 Five items, no dropdown. The Products dropdown is removed: with a services-first home page, product detail pages are proof and belong under Work, not in the primary nav.
+
+**URL form (2026-10-07):** every page's canonical URL is the directory form with a trailing slash (`/services/`), and every internal link uses it. SWA (`trailingSlash: auto` in `staticwebapp.config.json`) 301s the slash-less form and `/about/index.html` to `/about/`; files such as `/robots.txt` are never redirected. Astro runs with `trailingSlash: 'always'`, so the dev server and `npm run preview` answer 404 for a slash-less page URL by design.
 
 ### Footer navigation
 
@@ -125,18 +127,19 @@ Legal row: Privacy • Terms
 
 | URL | Status | Reason |
 |---|---|---|
-| `/products/my-ai-bartender` | Keep, unchanged | Linked from the live App Store and Google Play listings. Reached from `/work`. |
-| `/products/clique-pix` | **New** | CLIQUE Pix has shipped; parity with My AI Bartender. |
-| `/support` | Keep, footer-only | App support. |
-| `/privacy`, `/terms` | Keep, footer-only | Legal. |
+| `/products/my-ai-bartender/` | Keep, unchanged | Linked from the live App Store and Google Play listings (in the slash-less form, which 301s). Reached from `/work/`. |
+| `/products/clique-pix/` | **New** | CLIQUE Pix has shipped; parity with My AI Bartender. |
+| `/support/` | Keep, footer-only | App support. |
+| `/privacy/`, `/terms/` | Keep, footer-only | Legal. |
+| `/404.html` | **New** (2026-10-07) | Served by SWA for any path that matches no file (`responseOverrides`; the status stays 404). `noindex`, no canonical, never linked. Replaced the `navigationFallback` rewrite, which returned the home page with a 200 for every unknown URL. Copy: H1 "That page isn't here"; body "The address may be mistyped or out of date. Start from the home page, or tell us what you were looking for."; buttons Home, Services, Work, Contact. |
 
 ### Redirect
 
 | From | To | Type |
 |---|---|---|
-| `/products` | `/work` | 301 |
+| `/products` (and `/products/`) | `/work/` | 301 |
 
-Rationale: the `/products` index and the "our own apps" half of `/work` would say the same thing about the same two apps. Two pages with duplicate content is both an SEO liability and exactly the kind of drift this brief exists to prevent. The detail pages keep their existing URLs, so nothing already shared in the wild breaks. Implemented in `staticwebapp.config.json`, which already has a `routes` array.
+Rationale: the `/products` index and the "our own apps" half of `/work` would say the same thing about the same two apps. Two pages with duplicate content is both an SEO liability and exactly the kind of drift this brief exists to prevent. The detail pages keep their existing URLs, so nothing already shared in the wild breaks. Implemented in `staticwebapp.config.json` as a single `/products` rule: SWA treats `/products` and `/products/` as one route, and listing both is a duplicate-rule error that fails the deploy (2026-07-24). The target became the canonical slash form `/work/` on 2026-10-07.
 
 ---
 
@@ -611,9 +614,9 @@ The hero tesseract is drawn live and ships no image of its own; the lockup at it
 
 * Deploy to Azure Static Web Apps
 
-* Use SWA hostname: `gentle-sea-0d684ea10.2.azurestaticapps.net`
+* `www.xtend-ai.com` is the default domain. Set it in the SWA portal (Custom domains, select it, **Set default**) so the apex `xtend-ai.com` and the generated hostname `gentle-sea-0d684ea10.2.azurestaticapps.net` answer 301 to it (owner step from the 2026-10-07 SEO plan). Until that step is done all three serve the same pages and only the canonical tag reconciles them.
 
-* Ensure custom domain mapping for `www.xtend-ai.com`
+* `staticwebapp.config.json` (2026-10-07): `trailingSlash: auto`; `responseOverrides` 404 to `/404.html`; `Cache-Control` for `/assets/*` (one year, immutable: every file there is content-hashed), `/fonts/*` (30 days: the woff2 files are not hashed) and `/images/*` (7 days); no `navigationFallback`, because every route is a file. Config changes go through a pull request and its staging environment, because SWA validates the file only at deploy.
 
 ### 14.2 Performance & quality gates
 

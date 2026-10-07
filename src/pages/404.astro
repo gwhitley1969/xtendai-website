@@ -1,0 +1,95 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+/**
+ * Served by Azure Static Web Apps for every path that matches no file
+ * (staticwebapp.config.json: responseOverrides 404 -> /404.html; the
+ * status stays 404). Astro builds this route as dist/404.html but renders
+ * it at /404/, so the layout gets `noindex`: no canonical, no og:url, and
+ * a robots noindex, otherwise the page would advertise a URL of its own.
+ * Never link to it. Copy approved by the owner 2026-10-07 (brief §3).
+ */
+const title = 'Page Not Found | Xtend-AI';
+const description = 'That page is not here. Start at the Xtend-AI home page or tell us what you were looking for.';
+
+const links = [
+  { label: 'Home', href: '/' },
+  { label: 'Services', href: '/services/' },
+  { label: 'Work', href: '/work/' },
+  { label: 'Contact', href: '/contact/' }
+];
+---
+
+<BaseLayout title={title} description={description} noindex>
+  <Header slot="header" />
+
+  <section class="page-header">
+    <div class="page-header__glow"></div>
+    <div class="container">
+      <h1>That page <span class="text-gradient">isn't here</span></h1>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container text-center">
+      <p class="not-found__text">
+        The address may be mistyped or out of date. Start from the home page, or tell us
+        what you were looking for.
+      </p>
+      <nav class="not-found__links" aria-label="Where to go next">
+        {links.map((link, i) => (
+          <a href={link.href} class:list={['btn', i === 0 ? 'btn--primary' : 'btn--secondary', 'btn--large']}>
+            {link.label}
+          </a>
+        ))}
+      </nav>
+    </div>
+  </section>
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  .page-header {
+    position: relative;
+    padding: var(--space-20) 0;
+    overflow: hidden;
+  }
+
+  .page-header__glow {
+    position: absolute;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 400px;
+    background: radial-gradient(ellipse at center, rgba(24, 140, 255, 0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .page-header .container {
+    position: relative;
+    z-index: 1;
+  }
+
+  .page-header h1 {
+    margin-top: var(--space-4);
+    font-size: clamp(2rem, 5vw, 3rem);
+  }
+
+  .not-found__text {
+    max-width: 60ch;
+    margin: 0 auto var(--space-8);
+    font-size: 1.125rem;
+    line-height: 1.7;
+  }
+
+  .not-found__links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-4);
+  }
+</style>

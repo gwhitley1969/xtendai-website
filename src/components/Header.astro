@@ -7,10 +7,10 @@ const currentPath = Astro.url.pathname;
 
 const navItems = [
   { label: 'Home', href: '/' },
-  { label: 'Services', href: '/services' },
-  { label: 'Work', href: '/work' },
-  { label: 'About', href: '/about' },
-  { label: 'Contact', href: '/contact' }
+  { label: 'Services', href: '/services/' },
+  { label: 'Work', href: '/work/' },
+  { label: 'About', href: '/about/' },
+  { label: 'Contact', href: '/contact/' }
 ];
 
 /**
@@ -20,7 +20,7 @@ const navItems = [
  * shows no active item at all on those pages.
  */
 const navSectionFor: Record<string, string> = {
-  '/products': '/work'
+  '/products/': '/work/'
 };
 
 function isActive(href: string): boolean {

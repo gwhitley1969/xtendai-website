@@ -6,6 +6,7 @@ interface Props {
   title: string;
   description: string;
   ogImage?: string;
+  noindex?: boolean;
 }
 
 /**
@@ -15,7 +16,7 @@ interface Props {
  * Organization JSON-LD logo below deliberately keeps the transparent
  * original — Google's surfaces are light, where navy ink is correct.
  */
-const { title, description, ogImage = '/images/og-card.png' } = Astro.props;
+const { title, description, ogImage = '/images/og-card.png', noindex = false } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
 /**
@@ -39,7 +40,7 @@ const organizationSchema = {
   <meta name="description" content={description}>
 
   <!-- Canonical -->
-  <link rel="canonical" href={canonicalURL}>
+  {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonicalURL} />}
 
   <!-- Favicon -->
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -49,7 +50,7 @@ const organizationSchema = {
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
-  <meta property="og:url" content={canonicalURL}>
+  {!noindex && <meta property="og:url" content={canonicalURL} />}
   <meta property="og:title" content={title}>
   <meta property="og:description" content={description}>
   <meta property="og:image" content={new URL(ogImage, Astro.site)}>
