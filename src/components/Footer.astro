@@ -44,6 +44,11 @@ const legalLinks = [
       </nav>
     </div>
 
+    <p class="footer__line">
+      Xtend-AI, LLC. Websites, mobile apps, and the cloud infrastructure underneath.
+      Charlotte / Harrisburg, NC. <a href="tel:+17049577466" class="footer__tel">704-957-7466</a>
+    </p>
+
     <div class="footer__bottom">
       <p class="footer__copy">
         &copy; {currentYear} Xtend-AI. All rights reserved.
@@ -139,6 +144,23 @@ const legalLinks = [
   }
 
   .footer__link:hover {
+    color: var(--xt-accent-light);
+  }
+
+  /* Brief §4.8: the one line of microcopy, with the area and the phone (2026-10-07). */
+  .footer__line {
+    font-size: 0.875rem;
+    color: var(--xt-text-muted);
+    margin: var(--space-6) 0 0;
+  }
+
+  .footer__tel {
+    color: var(--xt-text-secondary);
+    white-space: nowrap;
+    transition: color var(--transition-fast);
+  }
+
+  .footer__tel:hover {
     color: var(--xt-accent-light);
   }
 

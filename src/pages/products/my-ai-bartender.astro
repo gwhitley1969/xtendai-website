@@ -4,11 +4,14 @@ import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import StoreLinks from '../../components/StoreLinks.astro';
 import Icon from '../../components/Icon.astro';
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import bartenderIcon from '../../assets/my-ai-bartender-icon.png';
 
-const title = 'My AI Bartender | Xtend-AI';
+const title = 'My AI Bartender: AI Cocktail App for iOS & Android | Xtend-AI';
 const description = 'Your personal AI bartender. Discover cocktails, make smarter substitutions, chat hands-free, and create your own recipes with AI assistance.';
+
+const appStore = 'https://apps.apple.com/us/app/my-ai-bartender-scan-create/id6758023541';
+const googlePlay = 'https://play.google.com/store/apps/details?id=ai.mybartender.mybartenderai';
 
 const steps = [
   {
@@ -45,9 +48,34 @@ const features = [
   { icon: 'palette', title: 'Create Studio', description: 'Build custom recipes with AI-powered suggestions.', color: 'accent' },
   { icon: 'link', title: 'Friends via Code', description: 'Share recipes instantly with simple codes or links.', color: 'green' }
 ];
+
+/**
+ * MobileApplication entity (brief §11). The category and the free-install
+ * price come from the store listings (checked 2026-10-07); no subscription
+ * offers and no ratings in the data, by owner decision. getImage() gives
+ * the icon's built URL, forced to PNG because the default output is WebP.
+ * The organization is referenced by @id; BaseLayout emits it on every page.
+ */
+const iconImage = await getImage({ src: bartenderIcon, width: 512, height: 512, format: 'png' });
+const appSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'MobileApplication',
+  '@id': new URL('/products/my-ai-bartender/#app', Astro.site).toString(),
+  name: 'My AI Bartender',
+  url: new URL('/products/my-ai-bartender/', Astro.site).toString(),
+  description,
+  applicationCategory: 'LifestyleApplication',
+  operatingSystem: 'iOS, Android',
+  image: new URL(iconImage.src, Astro.site).toString(),
+  installUrl: [appStore, googlePlay],
+  offers: { '@type': 'Offer', price: 0, priceCurrency: 'USD' },
+  author: { '@id': new URL('/#organization', Astro.site).toString() },
+  publisher: { '@id': new URL('/#organization', Astro.site).toString() }
+};
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout title={title} description={description} pageType="ItemPage" breadcrumbs={[{ name: 'Work', href: '/work/' }, { name: 'My AI Bartender', href: '/products/my-ai-bartender/' }]}>
+  <script slot="head" is:inline type="application/ld+json" set:html={JSON.stringify(appSchema).replace(/</g, '\\u003c')} />
   <Header slot="header" />
 
   <!-- Hero Section -->
@@ -73,8 +101,8 @@ const features = [
       </p>
       <div class="hero__actions">
         <StoreLinks
-          appStore="https://apps.apple.com/us/app/my-ai-bartender-scan-create/id6758023541"
-          googlePlay="https://play.google.com/store/apps/details?id=ai.mybartender.mybartenderai"
+          appStore={appStore}
+          googlePlay={googlePlay}
           appName="My AI Bartender"
           size="large"
         />

@@ -4,7 +4,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import Icon from '../components/Icon.astro';
 
-const title = 'Contact | Xtend-AI';
+const title = 'Contact Xtend-AI | Start a Website, App or Cloud Project';
 const description = 'Start a project with Xtend-AI. Tell us whether you need a website, a mobile app, cloud and hosting, or product support. We respond within 24-48 hours.';
 
 /**
@@ -25,7 +25,7 @@ const interests = [
 ];
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout title={title} description={description} pageType="ContactPage" breadcrumbs={[{ name: 'Contact', href: '/contact/' }]}>
   <Header slot="header" />
 
   <section class="page-header">
@@ -88,6 +88,14 @@ const interests = [
               <div>
                 <h3>Email</h3>
                 <a href="mailto:xtendai@xtend-ai.com">xtendai@xtend-ai.com</a>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <div class="icon-circle icon-circle--green"><Icon name="phone" /></div>
+              <div>
+                <h3>Phone</h3>
+                <a href="tel:+17049577466">704-957-7466</a>
               </div>
             </div>
 

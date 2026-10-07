@@ -4,7 +4,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import Icon from '../components/Icon.astro';
 
-const title = 'App Support | Xtend-AI';
+const title = 'App Support for My AI Bartender and CLIQUE Pix | Xtend-AI';
 const description = 'Help with My AI Bartender and CLIQUE Pix. FAQs, bug reports, and support contact. For new project inquiries, see Services.';
 
 const faqs = [
@@ -16,7 +16,7 @@ const faqs = [
 ];
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout title={title} description={description} breadcrumbs={[{ name: 'Support', href: '/support/' }]}>
   <Header slot="header" />
 
   <section class="page-header">

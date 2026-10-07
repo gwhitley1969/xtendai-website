@@ -4,7 +4,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import FeatureCard from '../components/FeatureCard.astro';
 
-const title = 'Web, Mobile & Cloud Services | Xtend-AI';
+const title = 'Web, Mobile & Cloud Services in Charlotte, NC | Xtend-AI';
 const description = 'Website design and development, iOS and Android apps from one Flutter codebase, and Azure architecture, deployment, and hosting. Charlotte, NC and remote.';
 
 const services = [
@@ -48,41 +48,7 @@ const process = [
   }
 ];
 
-/**
- * ProfessionalService structured data (brief §11): the service area is
- * the Charlotte metro plus Harrisburg, NC, and the catalog mirrors the
- * three service cards. City and region only — no street address is
- * published. No priceRange: the site deliberately carries no pricing.
- */
-const professionalServiceSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'ProfessionalService',
-  name: 'Xtend-AI',
-  url: new URL('/services/', Astro.site).toString(),
-  image: new URL('/images/xtend-ai_logo_transparent_cropped.png', Astro.site).toString(),
-  description: 'Website design and development, mobile apps for iOS and Android from one Flutter codebase, and Azure cloud architecture, deployment, and hosting.',
-  address: {
-    '@type': 'PostalAddress',
-    addressLocality: 'Harrisburg',
-    addressRegion: 'NC',
-    addressCountry: 'US'
-  },
-  areaServed: [
-    { '@type': 'AdministrativeArea', name: 'Charlotte metropolitan area' },
-    { '@type': 'City', name: 'Harrisburg, NC' }
-  ],
-  hasOfferCatalog: {
-    '@type': 'OfferCatalog',
-    name: 'Services',
-    itemListElement: [
-      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Website design and development' } },
-      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Mobile app development for iOS and Android' } },
-      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Azure cloud architecture and hosting' } }
-    ]
-  }
-};
-
-const differentiators = [
+const differentiators: { title: string; description: string; html?: string }[] = [
   {
     title: 'Architected, not assembled',
     description: 'Static-first for speed, deployed to Azure with infrastructure as code, real DNS delegation, security headers, CI/CD on every push, and per-client tenant isolation. Not a page builder with a subscription attached.'
@@ -93,7 +59,9 @@ const differentiators = [
   },
   {
     title: 'We build our own products',
-    description: 'My AI Bartender and CLIQUE Pix are live in both app stores, and CLIQUE Pix also runs in the browser, with one Azure backend serving an iOS app, an Android app, and a web client on Azure Static Web Apps. That is the same architecture, on the same services, we would put you on.'
+    description: 'My AI Bartender and CLIQUE Pix are live in both app stores, and CLIQUE Pix also runs in the browser at clique-pix.com, with one Azure backend serving an iOS app, an Android app, and a web client on Azure Static Web Apps. That is the same architecture, on the same services, we would put you on.',
+    /* Brief §5.4: the app names link to their product pages and the web app to clique-pix.com (2026-10-07). */
+    html: '<a href="/products/my-ai-bartender/">My AI Bartender</a> and <a href="/products/clique-pix/">CLIQUE Pix</a> are live in both app stores, and CLIQUE Pix also runs in the browser at <a href="https://clique-pix.com">clique-pix.com</a>, with one Azure backend serving an iOS app, an Android app, and a web client on Azure Static Web Apps. That is the same architecture, on the same services, we would put you on.'
   },
   {
     title: 'Small, senior, direct',
@@ -106,8 +74,7 @@ const differentiators = [
 ];
 ---
 
-<BaseLayout title={title} description={description}>
-  <script slot="head" is:inline type="application/ld+json" set:html={JSON.stringify(professionalServiceSchema)} />
+<BaseLayout title={title} description={description} breadcrumbs={[{ name: 'Services', href: '/services/' }]}>
   <Header slot="header" />
 
   <!-- Hero -->
@@ -187,10 +154,13 @@ const differentiators = [
             {differentiators.map((item) => (
               <li class="why-item">
                 <strong class="why-item__title">{item.title}</strong>
-                <span class="why-item__desc">{item.description}</span>
+                {item.html
+                  ? <span class="why-item__desc" set:html={item.html} />
+                  : <span class="why-item__desc">{item.description}</span>}
               </li>
             ))}
           </ul>
+          <a href="/work/" class="btn btn--secondary why-card__cta">See our work</a>
         </div>
       </div>
     </div>
@@ -395,5 +365,8 @@ const differentiators = [
     line-height: 1.8;
     max-width: 620px;
     margin: var(--space-4) auto var(--space-8);
+  }
+  .why-card__cta {
+    margin-top: var(--space-6);
   }
 </style>

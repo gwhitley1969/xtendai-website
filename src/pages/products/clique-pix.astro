@@ -4,11 +4,11 @@ import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import StoreLinks from '../../components/StoreLinks.astro';
 import Icon from '../../components/Icon.astro';
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import cliquePixIcon from '../../assets/clique-pix-icon.png';
 
-const title = 'CLIQUE Pix | Xtend-AI';
-const description = 'Private, event-based group photo sharing on iOS, Android, and the web. Share photos and videos in real time, then let everything disappear when the moment is over.';
+const title = 'CLIQUE Pix: Private Group Photo Sharing App | Xtend-AI';
+const description = 'Private, event-based group photo sharing on iOS, Android, and the web. Share photos and videos in real time, then let everything disappear when it is over.';
 
 const appStore = 'https://apps.apple.com/us/app/clique-pix-group-pic-sharing/id6766294274';
 const googlePlay = 'https://play.google.com/store/apps/details?id=com.cliquepix.clique_pix';
@@ -39,9 +39,36 @@ const features = [
     description: "Everything goes when the moment's over. Nothing lingers."
   }
 ];
+
+/**
+ * MobileApplication entity (brief §11). The category and the free-install
+ * price come from the store listings (checked 2026-10-07); no subscription
+ * offers and no ratings in the data, by owner decision. url is the web
+ * client, the product itself; mainEntityOfPage is this page. getImage()
+ * gives the icon's built URL, forced to PNG because the default output is
+ * WebP. The organization is referenced by @id; BaseLayout emits it.
+ */
+const iconImage = await getImage({ src: cliquePixIcon, width: 512, height: 512, format: 'png' });
+const appSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'MobileApplication',
+  '@id': new URL('/products/clique-pix/#app', Astro.site).toString(),
+  name: 'CLIQUE Pix',
+  url: 'https://clique-pix.com',
+  mainEntityOfPage: new URL('/products/clique-pix/', Astro.site).toString(),
+  description,
+  applicationCategory: 'MultimediaApplication',
+  operatingSystem: 'iOS, Android, Web',
+  image: new URL(iconImage.src, Astro.site).toString(),
+  installUrl: [appStore, googlePlay],
+  offers: { '@type': 'Offer', price: 0, priceCurrency: 'USD' },
+  author: { '@id': new URL('/#organization', Astro.site).toString() },
+  publisher: { '@id': new URL('/#organization', Astro.site).toString() }
+};
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout title={title} description={description} pageType="ItemPage" breadcrumbs={[{ name: 'Work', href: '/work/' }, { name: 'CLIQUE Pix', href: '/products/clique-pix/' }]}>
+  <script slot="head" is:inline type="application/ld+json" set:html={JSON.stringify(appSchema).replace(/</g, '\\u003c')} />
   <Header slot="header" />
 
   <!-- Hero -->

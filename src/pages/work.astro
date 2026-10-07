@@ -7,8 +7,8 @@ import { Image } from 'astro:assets';
 import bartenderIcon from '../assets/my-ai-bartender-icon.png';
 import cliquePixIcon from '../assets/clique-pix-icon.png';
 
-const title = 'Our Work | Xtend-AI';
-const description = "Client engagements and the apps we've shipped ourselves: My AI Bartender and CLIQUE Pix, live on the App Store and Google Play.";
+const title = 'Our Work: Client Sites and Our Own Apps | Xtend-AI';
+const description = 'Needle Girlie, the website of Mobile Aesthetics in Harrisburg, NC, plus My AI Bartender and CLIQUE Pix, our own apps live on the App Store and Google Play.';
 
 /**
  * Client engagements. Adding the next one is an entry in this array —
@@ -64,7 +64,7 @@ const apps = [
 ];
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout title={title} description={description} pageType="CollectionPage" breadcrumbs={[{ name: 'Work', href: '/work/' }]}>
   <Header slot="header" />
 
   <section class="page-header">

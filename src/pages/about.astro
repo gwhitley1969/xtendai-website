@@ -4,7 +4,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import Icon from '../components/Icon.astro';
 
-const title = 'About | Xtend-AI';
+const title = 'About Xtend-AI: A Charlotte-Area Studio Led by an Architect';
 const description = 'Xtend-AI is a Charlotte-area studio led by a solutions architect with 30 years in enterprise infrastructure and cloud. Azure certified, published author.';
 
 /**
@@ -28,15 +28,43 @@ const values = [
   { icon: 'target', text: 'AI should be helpful, not hype' },
   { icon: 'heart-handshake', text: 'Ship it, then stand behind it' }
 ];
+
+/**
+ * Person entity (brief §11). The job title is the owner's wording
+ * (2026-10-07). The other co-founder is not named anywhere, by standing
+ * decision (§8), so the organization carries no founder list and this
+ * entity links to it through worksFor. Credentials are the four current
+ * Microsoft certifications listed on this page, under their official names.
+ */
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  '@id': new URL('/about/#gene-whitley', Astro.site).toString(),
+  name: 'Gene Whitley',
+  jobTitle: 'Co-founder and Chief Architect',
+  url: new URL('/about/', Astro.site).toString(),
+  worksFor: { '@id': new URL('/#organization', Astro.site).toString() },
+  sameAs: ['https://www.linkedin.com/in/genewhitleymba'],
+  hasCredential: credentials
+    .filter((credential) => credential.name.startsWith('AZ-'))
+    .map((credential) => ({
+      '@type': 'EducationalOccupationalCredential',
+      name: `Microsoft Certified: ${credential.detail} (${credential.name})`,
+      credentialCategory: 'certification',
+      recognizedBy: { '@type': 'Organization', name: 'Microsoft' }
+    }))
+};
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout title={title} description={description} pageType="AboutPage" breadcrumbs={[{ name: 'About', href: '/about/' }]}>
+  <script slot="head" is:inline type="application/ld+json" set:html={JSON.stringify(personSchema).replace(/</g, '\\u003c')} />
   <Header slot="header" />
 
   <section class="page-header">
     <div class="page-header__glow"></div>
     <div class="container">
-      <h1>Built by the person who <span class="text-gradient">builds it</span></h1>
+      <h1>About <span class="text-gradient">Xtend-AI</span></h1>
+      <p class="page-header__subtitle">Built by the person who builds it.</p>
     </div>
   </section>
 
@@ -59,6 +87,9 @@ const values = [
           </p>
 
           <h2 class="about-heading">The architect</h2>
+
+          {/* Role line (owner approved 2026-10-07): the title the Person structured data carries must be visible on the page. */}
+          <p class="about-role"><strong>Gene Whitley</strong>, Co-founder and Chief Architect</p>
 
           <p>
             {/* Anchor inside <strong>, not around it: .about-content strong
@@ -156,6 +187,14 @@ const values = [
     font-size: clamp(2rem, 5vw, 3rem);
   }
 
+  .page-header__subtitle {
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--xt-text-secondary);
+    max-width: 640px;
+    margin: var(--space-4) 0 0;
+  }
+
   .about-grid {
     display: grid;
     gap: var(--space-12);
@@ -183,6 +222,11 @@ const values = [
   .about-heading {
     font-size: 1.5rem;
     margin: var(--space-12) 0 var(--space-4);
+  }
+
+  .about-role {
+    color: var(--xt-text-secondary);
+    margin: 0 0 var(--space-4);
   }
 
   .about-content strong {

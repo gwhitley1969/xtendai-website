@@ -2,10 +2,29 @@
 import { Image } from 'astro:assets';
 import xtendWatermark from '../assets/xtend-ai-mark-watermark.png';
 
+/** schema.org WebPage subtype emitted for the page (brief §11). */
+type PageType = 'WebPage' | 'AboutPage' | 'ContactPage' | 'CollectionPage' | 'ItemPage';
+
+/** One trail entry; href in the site's trailing-slash form, e.g. '/work/'. Home is prepended by the layout. */
+interface Breadcrumb {
+  name: string;
+  href: string;
+}
+
+/** Link-preview image: root-relative path under public/ plus its real pixel size and an alt text. */
+interface OgImage {
+  src: string;
+  width: number;
+  height: number;
+  alt: string;
+}
+
 interface Props {
   title: string;
   description: string;
-  ogImage?: string;
+  ogImage?: OgImage;
+  pageType?: PageType;
+  breadcrumbs?: Breadcrumb[];
   noindex?: boolean;
 }
 
@@ -16,20 +35,144 @@ interface Props {
  * Organization JSON-LD logo below deliberately keeps the transparent
  * original — Google's surfaces are light, where navy ink is correct.
  */
-const { title, description, ogImage = '/images/og-card.png', noindex = false } = Astro.props;
+const DEFAULT_OG_IMAGE: OgImage = {
+  src: '/images/og-card.png',
+  width: 1200,
+  height: 630,
+  alt: 'Xtend-AI mark and wordmark on a dark navy card'
+};
+
+const {
+  title,
+  description,
+  ogImage = DEFAULT_OG_IMAGE,
+  pageType = 'WebPage',
+  breadcrumbs = [],
+  noindex = false
+} = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const ogImageURL = new URL(ogImage.src, Astro.site).toString();
+const ogImageType = ogImage.src.endsWith('.png') ? 'image/png'
+  : /\.jpe?g$/.test(ogImage.src) ? 'image/jpeg'
+  : ogImage.src.endsWith('.webp') ? 'image/webp'
+  : null;
 
 /**
- * Organization identity, emitted on every page (brief §11: name, URL,
- * logo — nothing invented beyond those).
+ * Structured data (brief §11): one @graph per page, entities joined by
+ * @id so search engines read a single organization rather than one per
+ * page. Every fact here is on the site or approved by the owner; the
+ * brief forbids anything else (no founding date, head count, ratings or
+ * price range, and no founder list: the site says "co-founded" and the
+ * other co-founder is not named by standing decision).
  */
-const organizationSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'Organization',
+const SITE_URL = Astro.site!.toString();
+const ORGANIZATION_ID = `${SITE_URL}#organization`;
+const WEBSITE_ID = `${SITE_URL}#website`;
+const absolute = (path: string) => new URL(path, Astro.site).toString();
+
+const organization = {
+  '@type': ['Organization', 'ProfessionalService'],
+  '@id': ORGANIZATION_ID,
   name: 'Xtend-AI',
-  url: Astro.site?.toString(),
-  logo: new URL('/images/xtend-ai_logo_transparent_cropped.png', Astro.site).toString()
+  legalName: 'Xtend-AI, LLC',
+  url: SITE_URL,
+  logo: {
+    '@type': 'ImageObject',
+    url: absolute('/images/xtend-ai_logo_transparent_cropped.png'),
+    width: 744,
+    height: 598
+  },
+  image: absolute(DEFAULT_OG_IMAGE.src),
+  description: 'Xtend-AI designs and builds websites, mobile apps, and the Azure cloud that runs them. Architected, not assembled. Charlotte & Harrisburg, NC, and remote.',
+  email: 'xtendai@xtend-ai.com',
+  telephone: '+1-704-957-7466',
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Harrisburg',
+    addressRegion: 'NC',
+    addressCountry: 'US'
+  },
+  areaServed: [
+    { '@type': 'AdministrativeArea', name: 'Charlotte metropolitan area' },
+    { '@type': 'City', name: 'Harrisburg, NC' }
+  ],
+  sameAs: [
+    'https://apps.apple.com/us/developer/xtend-ai/id1870378321',
+    'https://play.google.com/store/apps/developer?id=Xtend-AI,+LLC'
+  ],
+  contactPoint: [
+    {
+      '@type': 'ContactPoint',
+      contactType: 'sales',
+      email: 'xtendai@xtend-ai.com',
+      telephone: '+1-704-957-7466',
+      url: absolute('/contact/'),
+      availableLanguage: 'en'
+    },
+    {
+      '@type': 'ContactPoint',
+      contactType: 'customer support',
+      email: 'support@xtend-ai.com',
+      url: absolute('/support/'),
+      availableLanguage: 'en'
+    }
+  ],
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Services',
+    itemListElement: [
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Website design and development' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Mobile app development for iOS and Android' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Azure cloud architecture and hosting' } }
+    ]
+  }
 };
+
+const website = {
+  '@type': 'WebSite',
+  '@id': WEBSITE_ID,
+  url: SITE_URL,
+  name: 'Xtend-AI',
+  publisher: { '@id': ORGANIZATION_ID },
+  inLanguage: 'en-US'
+};
+
+/* Home is prepended; the home page passes no breadcrumbs and gets no list. */
+const trail = [{ name: 'Home', href: '/' }, ...breadcrumbs];
+const breadcrumbList = trail.length > 1 ? {
+  '@type': 'BreadcrumbList',
+  '@id': `${canonicalURL}#breadcrumb`,
+  itemListElement: trail.map((crumb, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    name: crumb.name,
+    item: absolute(crumb.href)
+  }))
+} : null;
+
+const webPage = {
+  '@type': pageType,
+  '@id': `${canonicalURL}#webpage`,
+  url: canonicalURL.toString(),
+  name: title,
+  description,
+  isPartOf: { '@id': WEBSITE_ID },
+  about: { '@id': ORGANIZATION_ID },
+  inLanguage: 'en-US',
+  ...(breadcrumbList ? { breadcrumb: { '@id': breadcrumbList['@id'] } } : {})
+};
+
+/* A noindex page (the 404) describes the organization and site, never itself. */
+const graph = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    organization,
+    website,
+    ...(noindex ? [] : [webPage, ...(breadcrumbList ? [breadcrumbList] : [])])
+  ]
+};
+/* `<` is escaped so no string can close the script element early. */
+const graphJson = JSON.stringify(graph).replace(/</g, '\\u003c');
 ---
 
 <!DOCTYPE html>
@@ -37,9 +180,11 @@ const organizationSchema = {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{title}</title>
   <meta name="description" content={description}>
 
-  <!-- Canonical -->
+  <!-- Canonical. The 404 page passes `noindex`: Astro renders it at /404/,
+       and it must not advertise that URL. -->
   {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonicalURL} />}
 
   <!-- Favicon -->
@@ -48,18 +193,27 @@ const organizationSchema = {
   <link rel="icon" type="image/png" sizes="16x16" href="/xtend-ai_favicon_16.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/xtend-ai_favicon_180.png">
 
-  <!-- Open Graph -->
+  <!-- Open Graph. og:site_name is one of the signals behind Google's
+       site-name display; the image dimensions let chat apps lay the card
+       out before the image loads. -->
   <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Xtend-AI">
+  <meta property="og:locale" content="en_US">
   {!noindex && <meta property="og:url" content={canonicalURL} />}
   <meta property="og:title" content={title}>
   <meta property="og:description" content={description}>
-  <meta property="og:image" content={new URL(ogImage, Astro.site)}>
+  <meta property="og:image" content={ogImageURL}>
+  <meta property="og:image:width" content={String(ogImage.width)}>
+  <meta property="og:image:height" content={String(ogImage.height)}>
+  {ogImageType && <meta property="og:image:type" content={ogImageType} />}
+  <meta property="og:image:alt" content={ogImage.alt}>
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content={title}>
   <meta name="twitter:description" content={description}>
-  <meta name="twitter:image" content={new URL(ogImage, Astro.site)}>
+  <meta name="twitter:image" content={ogImageURL}>
+  <meta name="twitter:image:alt" content={ogImage.alt}>
 
   <!-- Fonts: self-hosted variable woff2 (see global.css @font-face).
        Preloaded so the fetch starts at HTML parse time instead of after
@@ -70,12 +224,10 @@ const organizationSchema = {
 
   <!-- Structured data. is:inline + set:html: Astro must not bundle this,
        and the JSON must land unescaped. -->
-  <script is:inline type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
+  <script is:inline type="application/ld+json" set:html={graphJson} />
 
   <!-- Pages can contribute page-specific head markup (e.g. extra JSON-LD) -->
   <slot name="head" />
-
-  <title>{title}</title>
 </head>
 <body>
   <a href="#main" class="skip-link">Skip to main content</a>

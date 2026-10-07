@@ -228,7 +228,7 @@ We built the website needlegirlie.com for Amy Palacios, FNP, owner of Mobile Aes
 
 ### 4.8 Footer microcopy
 
-**Xtend-AI** — Websites, mobile apps, and the cloud infrastructure underneath.
+**Rendered line (2026-10-07, owner approved), above the copyright on every page:** "Xtend-AI, LLC. Websites, mobile apps, and the cloud infrastructure underneath. Charlotte / Harrisburg, NC. 704-957-7466", the number as a tap-to-call link (`tel:+17049577466`). The earlier form of this line, with a dash, was never rendered.
 Links: Services • Work • About • Support • Contact • Privacy • Terms
 
 ---
@@ -281,7 +281,7 @@ That background is the difference between a site that looks finished and a syste
 
 - **Architected, not assembled.** Static-first for speed, deployed to Azure with infrastructure as code, real DNS delegation, security headers, CI/CD on every push, and per-client tenant isolation. Not a page builder with a subscription attached.
 - **We ship both halves.** The website and the mobile app, on the same design system, with AI features when they actually earn their place.
-- **We build our own products.** My AI Bartender and CLIQUE Pix are live in both app stores, and CLIQUE Pix also runs in the browser at clique-pix.com, with one Azure backend serving an iOS app, an Android app, and a web client on Azure Static Web Apps. That is the same architecture, on the same services, that we would put you on.
+- **We build our own products.** My AI Bartender and CLIQUE Pix are live in both app stores, and CLIQUE Pix also runs in the browser at clique-pix.com, with one Azure backend serving an iOS app, an Android app, and a web client on Azure Static Web Apps. That is the same architecture, on the same services, that we would put you on. On the page the two app names link to their product pages and clique-pix.com to the web app, and a "See our work" button follows the list (2026-10-07).
 - **Small, senior, direct.** You talk to the architect who builds it, not an account manager.
 - **Local, and remote-friendly.** Based between Charlotte and Harrisburg, NC. Happy to meet in person; equally happy to work entirely remotely.
 
@@ -375,7 +375,9 @@ Parity with My AI Bartender.
 
 Rewritten. For a services buyer the founder's credentials **are** the credibility, so the page is built around them.
 
-- **H1:** About Xtend-AI
+- **H1:** About Xtend-AI (restored 2026-10-07 after a drift to "Built by the person who builds it"; "Xtend-AI" carries the gradient)
+- **Subheadline:** Built by the person who builds it.
+- **Role line (2026-10-07, owner approved):** under the "The architect" heading the page shows "Gene Whitley, Co-founder and Chief Architect", the title the Person structured data carries (§11), so the data states nothing the page does not show.
 - **Lead paragraph:** the approved positioning statement, once §1 is decided.
 - **Company paragraph:** Xtend-AI, LLC is a small studio based between Charlotte and Harrisburg, North Carolina. We design and build websites, mobile apps, and the Azure infrastructure that runs them, for client companies, and we build and ship our own consumer apps on the same stack.
 - **Founder paragraph:** Xtend-AI was **co-founded** by **Gene Whitley** (spelling confirmed by the owner), a solutions architect with roughly thirty years in enterprise infrastructure and cloud architecture. "Co-founded," not "founded" — there is another founder, per the owner (2026-07-24). The name links to the owner-supplied LinkedIn profile, `https://www.linkedin.com/in/genewhitleymba` (2026-07-25).
@@ -418,6 +420,8 @@ Rationale: a prospective client who lands here by accident must not conclude tha
 
 **Page header (adopted 2026-07-25):** H1 "Let's *connect*" (gradient on "connect"), subtitle: *"Tell us what you're trying to build. You'll get a straight answer, and if we're the right fit, an architecture, a timeline, and a number."* — the same promise the closing CTAs make on the pages that link here. Replaced "We'd love to hear from you", which predated this brief and was the last generic filler line on the site.
 
+**Other ways to reach us (2026-10-07):** three cards beside the form: Email (xtendai@xtend-ai.com), Phone (704-957-7466 as a tap-to-call link; the owner-supplied number, no hours line, by owner decision), Response Time (within 24-48 hours).
+
 Contact form fields:
 
 | Field | Required | Notes |
@@ -451,18 +455,28 @@ Submitted fields are HTML-escaped before being interpolated into the email's HTM
 | Page | Title | Description |
 |---|---|---|
 | `/` | Xtend-AI \| Web & Mobile App Development in Charlotte, NC | Xtend-AI designs and builds websites, mobile apps, and the Azure cloud that runs them. Architected, not assembled. Charlotte & Harrisburg, NC, and remote. |
-| `/services` | Web, Mobile & Cloud Services \| Xtend-AI | Website design and development, iOS and Android apps from one Flutter codebase, and Azure architecture, deployment, and hosting. Charlotte, NC and remote. |
-| `/work` | Our Work \| Xtend-AI | Client engagements and the apps we've shipped ourselves: My AI Bartender and CLIQUE Pix, live on the App Store and Google Play. |
-| `/about` | About \| Xtend-AI | Xtend-AI is a Charlotte-area studio led by a solutions architect with 30 years in enterprise infrastructure and cloud. Azure certified, published author. |
-| `/contact` | Contact \| Xtend-AI | Start a project with Xtend-AI. Tell us whether you need a website, a mobile app, cloud and hosting, or product support. We respond within 24-48 hours. |
-| `/support` | App Support \| Xtend-AI | Help with My AI Bartender and CLIQUE Pix. FAQs, bug reports, and support contact. For new project inquiries, see Services. |
+| `/services/` | Web, Mobile & Cloud Services in Charlotte, NC \| Xtend-AI | Website design and development, iOS and Android apps from one Flutter codebase, and Azure architecture, deployment, and hosting. Charlotte, NC and remote. |
+| `/work/` | Our Work: Client Sites and Our Own Apps \| Xtend-AI | Needle Girlie, the website of Mobile Aesthetics in Harrisburg, NC, plus My AI Bartender and CLIQUE Pix, our own apps live on the App Store and Google Play. |
+| `/about/` | About Xtend-AI: A Charlotte-Area Studio Led by an Architect | Xtend-AI is a Charlotte-area studio led by a solutions architect with 30 years in enterprise infrastructure and cloud. Azure certified, published author. |
+| `/contact/` | Contact Xtend-AI \| Start a Website, App or Cloud Project | Start a project with Xtend-AI. Tell us whether you need a website, a mobile app, cloud and hosting, or product support. We respond within 24-48 hours. |
+| `/support/` | App Support for My AI Bartender and CLIQUE Pix \| Xtend-AI | Help with My AI Bartender and CLIQUE Pix. FAQs, bug reports, and support contact. For new project inquiries, see Services. |
+| `/products/my-ai-bartender/` | My AI Bartender: AI Cocktail App for iOS & Android \| Xtend-AI | Your personal AI bartender. Discover cocktails, make smarter substitutions, chat hands-free, and create your own recipes with AI assistance. |
+| `/products/clique-pix/` | CLIQUE Pix: Private Group Photo Sharing App \| Xtend-AI | Private, event-based group photo sharing on iOS, Android, and the web. Share photos and videos in real time, then let everything disappear when it is over. |
+| `/privacy/` | Privacy Policy \| Xtend-AI | How Xtend-AI collects, uses, and protects personal data on this website and in My AI Bartender, and how to reach us with a privacy question. |
+| `/terms/` | Terms of Service \| Xtend-AI | The terms that govern use of the Xtend-AI website and the My AI Bartender app, including acceptable use, AI-generated content, and responsible alcohol use. |
 
-Product detail page titles keep their app focus.
+Titles rewritten 2026-10-07 (owner approved): the brand leads only on the home page; inner pages lead with what the page is and carry the brand as a suffix; product titles keep their app focus and add the category words a searcher types. Keep titles near 60 characters (the longest today is 61) and descriptions at 155 or fewer; no em or en dashes (§12.5).
 
-### Structured data
+### Structured data (rewritten 2026-10-07)
 
-- **`Organization`** in `BaseLayout.astro` — name, URL, logo. Applies site-wide.
-- **`ProfessionalService`** on `/services` — service area covering the Charlotte metro and Harrisburg, NC, plus the services offered. City and region only; **no street address is published** unless the owner asks for one.
+One JSON-LD `@graph` from `BaseLayout.astro` on every page, entities joined by `@id` so search engines read one organization, not one per page:
+
+- **`Organization`**, also typed **`ProfessionalService`**, `@id` `https://www.xtend-ai.com/#organization`: name "Xtend-AI", legal name "Xtend-AI, LLC", URL, logo (the transparent original, 744 by 598), the OG card as `image`, the home description, email `xtendai@xtend-ai.com`, telephone `+1-704-957-7466` (owner, 2026-10-07; the visible form on the site is 704-957-7466), address with city and region only (**no street address is published** unless the owner asks for one), service area (Charlotte metropolitan area; Harrisburg, NC), `sameAs` (the App Store developer page `https://apps.apple.com/us/developer/xtend-ai/id1870378321` and the Google Play developer page `https://play.google.com/store/apps/developer?id=Xtend-AI,+LLC`; a LinkedIn company page is added when one exists), two contact points (sales: xtendai@ and `/contact/`; customer support: support@ and `/support/`), and the three-service offer catalog that used to live only on `/services/`. Deliberately absent: `founder` (the site says co-founded and the other co-founder is not named, §8), `foundingDate`, `numberOfEmployees`, `aggregateRating`, `priceRange` (§5.6, §16).
+- **`WebSite`**, `@id` `https://www.xtend-ai.com/#website`: name "Xtend-AI", publisher the organization. Together with `og:site_name`, this is what lets Google show the site name instead of the bare domain.
+- **`WebPage`** on every indexable page, subtype from the page (`AboutPage` on `/about/`, `ContactPage` on `/contact/`, `CollectionPage` on `/work/`, `ItemPage` on the product pages, `WebPage` elsewhere), carrying the page title and description, `isPartOf` the website and `about` the organization, plus a **`BreadcrumbList`** on every page but the home page (Home, then the page; the product pages go Home, Work, app). The 404 page emits the organization and website only.
+- Page-level entities through the layout's head slot: a **`Person`** on `/about/` (Gene Whitley; job title "Co-founder and Chief Architect", the owner's wording, 2026-10-07; `worksFor` the organization; the LinkedIn profile as `sameAs`; the four current Microsoft certifications as `hasCredential` under their official names) and a **`MobileApplication`** on each product page (name, the page description, `applicationCategory` from the App Store's own listing data: LifestyleApplication for My AI Bartender, MultimediaApplication for CLIQUE Pix; `operatingSystem`; the app icon as `image`; both store URLs as `installUrl`; `offers` with price 0 USD because both listings mark the apps free to install, and no subscription offers in the data by owner decision; the organization as `author` and `publisher`; CLIQUE Pix's `url` is the web app `https://clique-pix.com` with the product page as `mainEntityOfPage`). No `aggregateRating`; `screenshot` waits for the §17 screenshots.
+
+Validate with `https://validator.schema.org/#url=<page>`: 0 errors on every page type. Google's tools may warn about the missing street address and price range on a LocalBusiness subtype; that is this brief's choice.
 
 Location terms go into the Services and About prose naturally. Do not keyword-stuff, and do not add a city list.
 
@@ -638,15 +652,21 @@ The hero tesseract is drawn live and ships no image of its own; the lockup at it
 
 ### 14.3 SEO essentials
 
-* Unique title + meta description per page
+* Unique title + meta description per page (§11)
 
-* OpenGraph tags for share previews
+* OpenGraph and Twitter card tags for share previews, with `og:site_name`, `og:locale`, the image's dimensions and an alt text
 
-* `sitemap.xml` + `robots.txt`
+* `sitemap-index.xml` + `robots.txt`
 
-* Canonical URLs
+* Canonical URLs, one URL per page: the trailing-slash form, with SWA 301s for the other forms (§3)
 
-* `Organization` and `ProfessionalService` JSON-LD (§11)
+* Real 404 responses (`/404.html` through `responseOverrides`, noindex), never a fallback to the home page
+
+* One JSON-LD `@graph` per page: `Organization` + `ProfessionalService`, `WebSite`, `WebPage` with `BreadcrumbList`, plus page-level entities where a page is about one thing (§11)
+
+* Cache rules for hashed assets, fonts and images (§14.1)
+
+* Google Search Console and Bing Webmaster Tools verified for the domain, sitemap submitted (owner, 2026-10-07 plan)
 
 ---
 
@@ -694,3 +714,7 @@ Deliverables:
 * ~~§4.1 — hero visual~~ — Done (replaced 2026-09-22 by the tesseract, owner decision; the "browser frame" and "client site screenshot" ideas are closed; a product capture could return elsewhere, e.g. Work, if wanted)
 * Screenshots for My AI Bartender and CLIQUE Pix (optional but recommended)
 * ~~`needlegirlie.com` link — add at launch, not before~~ — Done (2026-10-06: the site is live and linked from `/work`; the mobile app is still in progress)
+* ~~Business phone number~~ — Done (2026-10-07: 704-957-7466 on Contact, in the footer line and in the structured data)
+* Google Business Profile: create as a service-area listing (address hidden) with the same name, phone and website as the site, then verify; Bing Places and Apple Business Connect follow from it (owner; SEO plan 2026-10-07)
+* LinkedIn company page (optional): when it exists, add it to the Organization `sameAs` in `BaseLayout.astro`
+* ~~My AI Bartender pricing in the app structured data~~ — Decided 2026-10-07: free install only (price 0 USD) for both apps, no subscription offers

@@ -38,7 +38,9 @@ function isActive(href: string): boolean {
   <div class="header__container container">
     <a href="/" class="header__logo" aria-label="Xtend-AI Home">
       {/* Reverse (dark-surface) assets from scripts/make-reverse-logo.mjs.
-          alt="" on both — the anchor's aria-label is the accessible name.
+          alt="" on the mark; the wordmark carries alt="Xtend-AI" so the
+          link has readable text for crawlers (the anchor's aria-label stays
+          the accessible name).
           Mark beside wordmark only: the tagline left the header on
           2026-09-22 (owner decision, three elements read as busy); the
           footer still carries it. */}
@@ -46,7 +48,7 @@ function isActive(href: string): boolean {
         <Image src={mark} alt="" width={78} densities={[2, 3]} loading="eager" />
       </span>
       <span class="header__wordmark">
-        <Image src={wordmark} alt="" width={210} densities={[2, 3]} loading="eager" />
+        <Image src={wordmark} alt="Xtend-AI" width={210} densities={[2, 3]} loading="eager" />
       </span>
     </a>
 
