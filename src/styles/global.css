@@ -171,7 +171,7 @@ a:hover {
 /* Inline text links are underlined so they never rely on color alone
    (Lighthouse link-in-text-block, 2026-10-07). Buttons and nav links
    keep their own classes and are not affected. */
-main p a:not(.btn),
+p a:not(.btn),
 .why-item__desc a {
   text-decoration: underline;
   text-underline-offset: 0.15em;
