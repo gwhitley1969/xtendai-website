@@ -451,13 +451,17 @@ Submitted fields are HTML-escaped before being interpolated into the email's HTM
 | Page | Title | Description |
 |---|---|---|
 | `/` | Xtend-AI \| Web & Mobile App Development in Charlotte, NC | Xtend-AI designs and builds websites, mobile apps, and the Azure cloud that runs them. Architected, not assembled. Charlotte & Harrisburg, NC, and remote. |
-| `/services` | Web, Mobile & Cloud Services \| Xtend-AI | Website design and development, iOS and Android apps from one Flutter codebase, and Azure architecture, deployment, and hosting. Charlotte, NC and remote. |
-| `/work` | Our Work \| Xtend-AI | Client engagements and the apps we've shipped ourselves: My AI Bartender and CLIQUE Pix, live on the App Store and Google Play. |
-| `/about` | About \| Xtend-AI | Xtend-AI is a Charlotte-area studio led by a solutions architect with 30 years in enterprise infrastructure and cloud. Azure certified, published author. |
-| `/contact` | Contact \| Xtend-AI | Start a project with Xtend-AI. Tell us whether you need a website, a mobile app, cloud and hosting, or product support. We respond within 24-48 hours. |
-| `/support` | App Support \| Xtend-AI | Help with My AI Bartender and CLIQUE Pix. FAQs, bug reports, and support contact. For new project inquiries, see Services. |
+| `/services/` | Web, Mobile & Cloud Services in Charlotte, NC \| Xtend-AI | Website design and development, iOS and Android apps from one Flutter codebase, and Azure architecture, deployment, and hosting. Charlotte, NC and remote. |
+| `/work/` | Our Work: Client Sites and Our Own Apps \| Xtend-AI | Needle Girlie, the website of Mobile Aesthetics in Harrisburg, NC, plus My AI Bartender and CLIQUE Pix, our own apps live on the App Store and Google Play. |
+| `/about/` | About Xtend-AI: A Charlotte-Area Studio Led by an Architect | Xtend-AI is a Charlotte-area studio led by a solutions architect with 30 years in enterprise infrastructure and cloud. Azure certified, published author. |
+| `/contact/` | Contact Xtend-AI \| Start a Website, App or Cloud Project | Start a project with Xtend-AI. Tell us whether you need a website, a mobile app, cloud and hosting, or product support. We respond within 24-48 hours. |
+| `/support/` | App Support for My AI Bartender and CLIQUE Pix \| Xtend-AI | Help with My AI Bartender and CLIQUE Pix. FAQs, bug reports, and support contact. For new project inquiries, see Services. |
+| `/products/my-ai-bartender/` | My AI Bartender: AI Cocktail App for iOS & Android \| Xtend-AI | Your personal AI bartender. Discover cocktails, make smarter substitutions, chat hands-free, and create your own recipes with AI assistance. |
+| `/products/clique-pix/` | CLIQUE Pix: Private Group Photo Sharing App \| Xtend-AI | Private, event-based group photo sharing on iOS, Android, and the web. Share photos and videos in real time, then let everything disappear when it is over. |
+| `/privacy/` | Privacy Policy \| Xtend-AI | How Xtend-AI collects, uses, and protects personal data on this website and in My AI Bartender, and how to reach us with a privacy question. |
+| `/terms/` | Terms of Service \| Xtend-AI | The terms that govern use of the Xtend-AI website and the My AI Bartender app, including acceptable use, AI-generated content, and responsible alcohol use. |
 
-Product detail page titles keep their app focus.
+Titles rewritten 2026-10-07 (owner approved): the brand leads only on the home page; inner pages lead with what the page is and carry the brand as a suffix; product titles keep their app focus and add the category words a searcher types. Keep titles near 60 characters (the longest today is 61) and descriptions at 155 or fewer; no em or en dashes (§12.5).
 
 ### Structured data (rewritten 2026-10-07)
 
