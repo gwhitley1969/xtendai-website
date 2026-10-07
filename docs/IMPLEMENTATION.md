@@ -188,14 +188,16 @@ Tokens defined in `src/styles/global.css`'s `:root` block are accessible to ever
 
 ### JSON-LD and the head slot
 
-`BaseLayout.astro` exposes `<slot name="head" />` inside `<head>` and emits an `Organization` JSON-LD block on every page. Page-specific structured data slots in from the page — `/services` contributes `ProfessionalService` this way:
+`BaseLayout.astro` emits one JSON-LD `@graph` on every page (rewritten 2026-10-07): the `Organization`, also typed `ProfessionalService`, with `@id` `https://www.xtend-ai.com/#organization`; the `WebSite` with `@id` `https://www.xtend-ai.com/#website`; and, unless the page passes `noindex`, a `WebPage` whose type comes from the `pageType` prop (`WebPage`, `AboutPage`, `ContactPage`, `CollectionPage`, `ItemPage`) with `@id` `<canonical>#webpage`, plus a `BreadcrumbList` with `@id` `<canonical>#breadcrumb` built from the `breadcrumbs` prop (Home is prepended; the home page passes none and gets no list). Entities point at each other by `@id`, so a page-level entity links to the organization with `{ '@id': 'https://www.xtend-ai.com/#organization' }` instead of repeating it. The layout serializes with `JSON.stringify` and then replaces every `<` with its `\u003c` escape, so no string in the data can close the script element early. The facts in the graph are the brief's (§11); the former standalone `ProfessionalService` block on `/services/` was folded into the organization entity.
+
+`BaseLayout.astro` still exposes `<slot name="head" />` inside `<head>` for page-specific structured data. A page passes its type and trail and slots in its own entity:
 
 ```astro
-<BaseLayout title={title} description={description}>
+<BaseLayout title={title} description={description} pageType="AboutPage" breadcrumbs={[{ name: 'About', href: '/about/' }]}>
   <script slot="head" is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
 ```
 
-Both `is:inline` and `set:html` matter: without `is:inline` Astro processes the script; without `set:html` the JSON is HTML-escaped (`&` → `&amp;`), which breaks parsing.
+Both `is:inline` and `set:html` matter: without `is:inline` Astro processes the script; without `set:html` the JSON is HTML-escaped (`&` → `&amp;`), which breaks parsing. Check every page type at `https://validator.schema.org/#url=<page>` after a change: 0 errors is the bar.
 
 ### Active-nav section map
 

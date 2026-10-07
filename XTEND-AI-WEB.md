@@ -459,10 +459,15 @@ Submitted fields are HTML-escaped before being interpolated into the email's HTM
 
 Product detail page titles keep their app focus.
 
-### Structured data
+### Structured data (rewritten 2026-10-07)
 
-- **`Organization`** in `BaseLayout.astro` — name, URL, logo. Applies site-wide.
-- **`ProfessionalService`** on `/services` — service area covering the Charlotte metro and Harrisburg, NC, plus the services offered. City and region only; **no street address is published** unless the owner asks for one.
+One JSON-LD `@graph` from `BaseLayout.astro` on every page, entities joined by `@id` so search engines read one organization, not one per page:
+
+- **`Organization`**, also typed **`ProfessionalService`**, `@id` `https://www.xtend-ai.com/#organization`: name "Xtend-AI", legal name "Xtend-AI, LLC", URL, logo (the transparent original, 744 by 598), the OG card as `image`, the home description, email `xtendai@xtend-ai.com`, telephone `+1-704-957-7466` (owner, 2026-10-07; the visible form on the site is 704-957-7466), address with city and region only (**no street address is published** unless the owner asks for one), service area (Charlotte metropolitan area; Harrisburg, NC), `sameAs` (the App Store developer page `https://apps.apple.com/us/developer/xtend-ai/id1870378321` and the Google Play developer page `https://play.google.com/store/apps/developer?id=Xtend-AI,+LLC`; a LinkedIn company page is added when one exists), two contact points (sales: xtendai@ and `/contact/`; customer support: support@ and `/support/`), and the three-service offer catalog that used to live only on `/services/`. Deliberately absent: `founder` (the site says co-founded and the other co-founder is not named, §8), `foundingDate`, `numberOfEmployees`, `aggregateRating`, `priceRange` (§5.6, §16).
+- **`WebSite`**, `@id` `https://www.xtend-ai.com/#website`: name "Xtend-AI", publisher the organization. Together with `og:site_name`, this is what lets Google show the site name instead of the bare domain.
+- **`WebPage`** on every indexable page, subtype from the page (`AboutPage` on `/about/`, `ContactPage` on `/contact/`, `CollectionPage` on `/work/`, `ItemPage` on the product pages, `WebPage` elsewhere), carrying the page title and description, `isPartOf` the website and `about` the organization, plus a **`BreadcrumbList`** on every page but the home page (Home, then the page; the product pages go Home, Work, app). The 404 page emits the organization and website only.
+
+Validate with `https://validator.schema.org/#url=<page>`: 0 errors on every page type. Google's tools may warn about the missing street address and price range on a LocalBusiness subtype; that is this brief's choice.
 
 Location terms go into the Services and About prose naturally. Do not keyword-stuff, and do not add a city list.
 
@@ -638,15 +643,21 @@ The hero tesseract is drawn live and ships no image of its own; the lockup at it
 
 ### 14.3 SEO essentials
 
-* Unique title + meta description per page
+* Unique title + meta description per page (§11)
 
-* OpenGraph tags for share previews
+* OpenGraph and Twitter card tags for share previews, with `og:site_name`, `og:locale`, the image's dimensions and an alt text
 
-* `sitemap.xml` + `robots.txt`
+* `sitemap-index.xml` + `robots.txt`
 
-* Canonical URLs
+* Canonical URLs, one URL per page: the trailing-slash form, with SWA 301s for the other forms (§3)
 
-* `Organization` and `ProfessionalService` JSON-LD (§11)
+* Real 404 responses (`/404.html` through `responseOverrides`, noindex), never a fallback to the home page
+
+* One JSON-LD `@graph` per page: `Organization` + `ProfessionalService`, `WebSite`, `WebPage` with `BreadcrumbList`, plus page-level entities where a page is about one thing (§11)
+
+* Cache rules for hashed assets, fonts and images (§14.1)
+
+* Google Search Console and Bing Webmaster Tools verified for the domain, sitemap submitted (owner, 2026-10-07 plan)
 
 ---
 
