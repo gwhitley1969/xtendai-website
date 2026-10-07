@@ -228,7 +228,7 @@ We built the website needlegirlie.com for Amy Palacios, FNP, owner of Mobile Aes
 
 ### 4.8 Footer microcopy
 
-**Xtend-AI** — Websites, mobile apps, and the cloud infrastructure underneath.
+**Rendered line (2026-10-07, owner approved), above the copyright on every page:** "Xtend-AI, LLC. Websites, mobile apps, and the cloud infrastructure underneath. Charlotte / Harrisburg, NC. 704-957-7466", the number as a tap-to-call link (`tel:+17049577466`). The earlier form of this line, with a dash, was never rendered.
 Links: Services • Work • About • Support • Contact • Privacy • Terms
 
 ---
@@ -281,7 +281,7 @@ That background is the difference between a site that looks finished and a syste
 
 - **Architected, not assembled.** Static-first for speed, deployed to Azure with infrastructure as code, real DNS delegation, security headers, CI/CD on every push, and per-client tenant isolation. Not a page builder with a subscription attached.
 - **We ship both halves.** The website and the mobile app, on the same design system, with AI features when they actually earn their place.
-- **We build our own products.** My AI Bartender and CLIQUE Pix are live in both app stores, and CLIQUE Pix also runs in the browser at clique-pix.com, with one Azure backend serving an iOS app, an Android app, and a web client on Azure Static Web Apps. That is the same architecture, on the same services, that we would put you on.
+- **We build our own products.** My AI Bartender and CLIQUE Pix are live in both app stores, and CLIQUE Pix also runs in the browser at clique-pix.com, with one Azure backend serving an iOS app, an Android app, and a web client on Azure Static Web Apps. That is the same architecture, on the same services, that we would put you on. On the page the two app names link to their product pages and clique-pix.com to the web app, and a "See our work" button follows the list (2026-10-07).
 - **Small, senior, direct.** You talk to the architect who builds it, not an account manager.
 - **Local, and remote-friendly.** Based between Charlotte and Harrisburg, NC. Happy to meet in person; equally happy to work entirely remotely.
 
@@ -375,7 +375,8 @@ Parity with My AI Bartender.
 
 Rewritten. For a services buyer the founder's credentials **are** the credibility, so the page is built around them.
 
-- **H1:** About Xtend-AI
+- **H1:** About Xtend-AI (restored 2026-10-07 after a drift to "Built by the person who builds it"; "Xtend-AI" carries the gradient)
+- **Subheadline:** Built by the person who builds it.
 - **Lead paragraph:** the approved positioning statement, once §1 is decided.
 - **Company paragraph:** Xtend-AI, LLC is a small studio based between Charlotte and Harrisburg, North Carolina. We design and build websites, mobile apps, and the Azure infrastructure that runs them, for client companies, and we build and ship our own consumer apps on the same stack.
 - **Founder paragraph:** Xtend-AI was **co-founded** by **Gene Whitley** (spelling confirmed by the owner), a solutions architect with roughly thirty years in enterprise infrastructure and cloud architecture. "Co-founded," not "founded" — there is another founder, per the owner (2026-07-24). The name links to the owner-supplied LinkedIn profile, `https://www.linkedin.com/in/genewhitleymba` (2026-07-25).
@@ -417,6 +418,8 @@ Rationale: a prospective client who lands here by accident must not conclude tha
 ## 10) Contact Page
 
 **Page header (adopted 2026-07-25):** H1 "Let's *connect*" (gradient on "connect"), subtitle: *"Tell us what you're trying to build. You'll get a straight answer, and if we're the right fit, an architecture, a timeline, and a number."* — the same promise the closing CTAs make on the pages that link here. Replaced "We'd love to hear from you", which predated this brief and was the last generic filler line on the site.
+
+**Other ways to reach us (2026-10-07):** three cards beside the form: Email (xtendai@xtend-ai.com), Phone (704-957-7466 as a tap-to-call link; the owner-supplied number, no hours line, by owner decision), Response Time (within 24-48 hours).
 
 Contact form fields:
 
@@ -710,3 +713,7 @@ Deliverables:
 * ~~§4.1 — hero visual~~ — Done (replaced 2026-09-22 by the tesseract, owner decision; the "browser frame" and "client site screenshot" ideas are closed; a product capture could return elsewhere, e.g. Work, if wanted)
 * Screenshots for My AI Bartender and CLIQUE Pix (optional but recommended)
 * ~~`needlegirlie.com` link — add at launch, not before~~ — Done (2026-10-06: the site is live and linked from `/work`; the mobile app is still in progress)
+* ~~Business phone number~~ — Done (2026-10-07: 704-957-7466 on Contact, in the footer line and in the structured data)
+* Google Business Profile: create as a service-area listing (address hidden) with the same name, phone and website as the site, then verify; Bing Places and Apple Business Connect follow from it (owner; SEO plan 2026-10-07)
+* LinkedIn company page (optional): when it exists, add it to the Organization `sameAs` in `BaseLayout.astro`
+* ~~My AI Bartender pricing in the app structured data~~ — Decided 2026-10-07: free install only (price 0 USD) for both apps, no subscription offers

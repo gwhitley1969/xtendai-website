@@ -48,7 +48,7 @@ const process = [
   }
 ];
 
-const differentiators = [
+const differentiators: { title: string; description: string; html?: string }[] = [
   {
     title: 'Architected, not assembled',
     description: 'Static-first for speed, deployed to Azure with infrastructure as code, real DNS delegation, security headers, CI/CD on every push, and per-client tenant isolation. Not a page builder with a subscription attached.'
@@ -59,7 +59,9 @@ const differentiators = [
   },
   {
     title: 'We build our own products',
-    description: 'My AI Bartender and CLIQUE Pix are live in both app stores, and CLIQUE Pix also runs in the browser, with one Azure backend serving an iOS app, an Android app, and a web client on Azure Static Web Apps. That is the same architecture, on the same services, we would put you on.'
+    description: 'My AI Bartender and CLIQUE Pix are live in both app stores, and CLIQUE Pix also runs in the browser at clique-pix.com, with one Azure backend serving an iOS app, an Android app, and a web client on Azure Static Web Apps. That is the same architecture, on the same services, we would put you on.',
+    /* Brief §5.4: the app names link to their product pages and the web app to clique-pix.com (2026-10-07). */
+    html: '<a href="/products/my-ai-bartender/">My AI Bartender</a> and <a href="/products/clique-pix/">CLIQUE Pix</a> are live in both app stores, and CLIQUE Pix also runs in the browser at <a href="https://clique-pix.com">clique-pix.com</a>, with one Azure backend serving an iOS app, an Android app, and a web client on Azure Static Web Apps. That is the same architecture, on the same services, we would put you on.'
   },
   {
     title: 'Small, senior, direct',
@@ -152,10 +154,13 @@ const differentiators = [
             {differentiators.map((item) => (
               <li class="why-item">
                 <strong class="why-item__title">{item.title}</strong>
-                <span class="why-item__desc">{item.description}</span>
+                {item.html
+                  ? <span class="why-item__desc" set:html={item.html} />
+                  : <span class="why-item__desc">{item.description}</span>}
               </li>
             ))}
           </ul>
+          <a href="/work/" class="btn btn--secondary why-card__cta">See our work</a>
         </div>
       </div>
     </div>
@@ -360,5 +365,8 @@ const differentiators = [
     line-height: 1.8;
     max-width: 620px;
     margin: var(--space-4) auto var(--space-8);
+  }
+  .why-card__cta {
+    margin-top: var(--space-6);
   }
 </style>
