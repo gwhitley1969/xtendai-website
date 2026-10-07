@@ -60,7 +60,8 @@ Browser preview: `preview_start` with name `dev` (or `preview` for the built out
 
 ```
 src/
-  layouts/BaseLayout.astro      # <head>, SEO/OG meta, Organization JSON-LD, named head slot, font preloads
+  layouts/BaseLayout.astro      # <head> (title first, canonical, OG/Twitter), the JSON-LD @graph (Organization + ProfessionalService,
+                                #   WebSite, WebPage, breadcrumbs), named head slot, font preloads; props pageType, breadcrumbs, ogImage, noindex
   components/                   # Header.astro, Footer.astro, FeatureCard.astro, StoreLinks.astro, Icon.astro,
                                 #   AmbientVideo.astro + AmbientToggle.astro (hero background clip + its pause control),
                                 #   HeroTesseract.astro (the hero's 4-D cube of light, drawn on a canvas)
@@ -68,6 +69,7 @@ src/
     index.astro                 # home (largest file — hero, credibility bar, services-first sections)
     services.astro  work.astro  about.astro  contact.astro
     support.astro  privacy.astro  terms.astro
+    404.astro                   # served by SWA responseOverrides with status 404; noindex, no canonical; never linked
     products/my-ai-bartender.astro
     products/clique-pix.astro   # no products/index — /products 301s to /work/ in SWA config (dev and preview answer 404 for it)
   styles/global.css             # ALL design tokens live in :root here; @font-face at top

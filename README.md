@@ -30,6 +30,8 @@ npm run dev
 
 The site will be available at `http://localhost:4321`
 
+Page URLs use the trailing-slash form (`/services/`). Astro runs with `trailingSlash: 'always'`, so `http://localhost:4321/services` answers 404 in dev and in `npm run preview`; that is the convention being enforced, not a broken page. Unknown paths render `src/pages/404.astro` (preview serves it with a real 404 status).
+
 ### Build
 
 ```bash

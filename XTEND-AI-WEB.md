@@ -9,6 +9,25 @@
 
 ---
 
+## Revision note — 2026-10-07 SEO
+
+An SEO audit of the live site found the page-level basics in place (titles, descriptions, canonicals, sitemap, robots, Lighthouse 97 to 100) and the layer above them missing: every page answered at three URL forms, every unknown URL returned the home page with a 200, three hostnames served the same pages, the structured data named the company in three fields, and nothing measured results. Two pull requests (#2 foundations; #3 head markup, structured data, titles and copy) merged on 2026-10-07 and were verified on production the same day.
+
+What changed in this document:
+- §3: canonical URLs are the trailing-slash form and SWA 301s the rest; the `/404.html` page; the `/products` redirect targets `/work/`.
+- §4.8: the footer line is rendered, with the area and the phone.
+- §5.4: the app names link to their product pages and a "See our work" button follows the list.
+- §8: the H1 "About Xtend-AI" is restored, with "Built by the person who builds it." as its subheadline and a visible role line.
+- §10: a Phone card beside the form.
+- §11: new titles and descriptions for every page, the JSON-LD graph, the page-level Person and MobileApplication entities.
+- §14.1: `www` as the default domain (owner step) and the `staticwebapp.config.json` rules.
+- §14.3: the expanded SEO essentials.
+- §17: new items (phone, Business Profile, LinkedIn page, app pricing in the data, default domain, Search Console, store URLs and backlinks).
+
+Decisions locked by the owner (2026-10-07): the phone number 704-957-7466 on the site, in the data and on the Business Profile; a Business Profile as a service-area listing; no new pages (a Needle Girlie case study waits for its problem statement); measurement through Search Console only, no analytics script; all titles and descriptions as proposed; the About H1 and the role line "Gene Whitley, Co-founder and Chief Architect"; the full footer line; no hours line on the phone card; app pricing in the data as free install only.
+
+Still open after the merge: the SWA default-domain step, Search Console and Bing verification, the Business Profile, the store-listing URLs and the backlinks from the sister sites (§17; `README.md`, *Search presence*).
+
 ## Revision note — 2026-09-22 hero motion
 
 The owner asked for a site that feels dynamic and eye-catching, built with AI-generated motion. The home hero gained an ambient background clip (2026-09-21) and its phone mockup was replaced by a living four-dimensional cube of light carrying the logo (2026-09-22). Both override the July 2026 "entrance-only" restraint rule, by owner decision.
@@ -131,7 +150,7 @@ Legal row: Privacy • Terms
 | `/products/clique-pix/` | **New** | CLIQUE Pix has shipped; parity with My AI Bartender. |
 | `/support/` | Keep, footer-only | App support. |
 | `/privacy/`, `/terms/` | Keep, footer-only | Legal. |
-| `/404.html` | **New** (2026-10-07) | Served by SWA for any path that matches no file (`responseOverrides`; the status stays 404). `noindex`, no canonical, never linked. Replaced the `navigationFallback` rewrite, which returned the home page with a 200 for every unknown URL. Copy: H1 "That page isn't here"; body "The address may be mistyped or out of date. Start from the home page, or tell us what you were looking for."; buttons Home, Services, Work, Contact. |
+| `/404.html` | **New** (2026-10-07) | Served by SWA for any path that matches no file (`responseOverrides`; the status stays 404). `noindex`, no canonical, never linked. Replaced the `navigationFallback` rewrite, which returned the home page with a 200 for every unknown URL. Copy: H1 "That page isn't here"; body "The address may be mistyped or out of date. Start from the home page, or tell us what you were looking for."; buttons Home, Services, Work, Contact. Meta description: "That page is not here. Start at the Xtend-AI home page or tell us what you were looking for." |
 
 ### Redirect
 
@@ -718,3 +737,6 @@ Deliverables:
 * Google Business Profile: create as a service-area listing (address hidden) with the same name, phone and website as the site, then verify; Bing Places and Apple Business Connect follow from it (owner; SEO plan 2026-10-07)
 * LinkedIn company page (optional): when it exists, add it to the Organization `sameAs` in `BaseLayout.astro`
 * ~~My AI Bartender pricing in the app structured data~~ — Decided 2026-10-07: free install only (price 0 USD) for both apps, no subscription offers
+* Set `www.xtend-ai.com` as the SWA default domain (portal: Custom domains, select it, Set default) so the apex and the SWA hostname 301 to it; then strike the "until that step is done" clauses in §14.1 and in `docs/IMPLEMENTATION.md` (owner)
+* Google Search Console domain property for `xtend-ai.com` (Azure DNS TXT record) with the sitemap submitted, then Bing Webmaster Tools imported from it (owner; `README.md`, *Search presence*)
+* App store listing URLs to the `www` slash forms, and "Built by Xtend-AI" links from clique-pix.com and mybartenderai.com (owner)
