@@ -2,10 +2,29 @@
 import { Image } from 'astro:assets';
 import xtendWatermark from '../assets/xtend-ai-mark-watermark.png';
 
+/** schema.org WebPage subtype emitted for the page (brief §11). */
+type PageType = 'WebPage' | 'AboutPage' | 'ContactPage' | 'CollectionPage' | 'ItemPage';
+
+/** One trail entry; href in the site's trailing-slash form, e.g. '/work/'. Home is prepended by the layout. */
+interface Breadcrumb {
+  name: string;
+  href: string;
+}
+
+/** Link-preview image: root-relative path under public/ plus its real pixel size and an alt text. */
+interface OgImage {
+  src: string;
+  width: number;
+  height: number;
+  alt: string;
+}
+
 interface Props {
   title: string;
   description: string;
-  ogImage?: string;
+  ogImage?: OgImage;
+  pageType?: PageType;
+  breadcrumbs?: Breadcrumb[];
   noindex?: boolean;
 }
 
@@ -16,8 +35,27 @@ interface Props {
  * Organization JSON-LD logo below deliberately keeps the transparent
  * original — Google's surfaces are light, where navy ink is correct.
  */
-const { title, description, ogImage = '/images/og-card.png', noindex = false } = Astro.props;
+const DEFAULT_OG_IMAGE: OgImage = {
+  src: '/images/og-card.png',
+  width: 1200,
+  height: 630,
+  alt: 'Xtend-AI mark and wordmark on a dark navy card'
+};
+
+const {
+  title,
+  description,
+  ogImage = DEFAULT_OG_IMAGE,
+  pageType = 'WebPage',
+  breadcrumbs = [],
+  noindex = false
+} = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const ogImageURL = new URL(ogImage.src, Astro.site).toString();
+const ogImageType = ogImage.src.endsWith('.png') ? 'image/png'
+  : /\.jpe?g$/.test(ogImage.src) ? 'image/jpeg'
+  : ogImage.src.endsWith('.webp') ? 'image/webp'
+  : null;
 
 /**
  * Organization identity, emitted on every page (brief §11: name, URL,
@@ -37,9 +75,11 @@ const organizationSchema = {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{title}</title>
   <meta name="description" content={description}>
 
-  <!-- Canonical -->
+  <!-- Canonical. The 404 page passes `noindex`: Astro renders it at /404/,
+       and it must not advertise that URL. -->
   {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonicalURL} />}
 
   <!-- Favicon -->
@@ -48,18 +88,27 @@ const organizationSchema = {
   <link rel="icon" type="image/png" sizes="16x16" href="/xtend-ai_favicon_16.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/xtend-ai_favicon_180.png">
 
-  <!-- Open Graph -->
+  <!-- Open Graph. og:site_name is one of the signals behind Google's
+       site-name display; the image dimensions let chat apps lay the card
+       out before the image loads. -->
   <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Xtend-AI">
+  <meta property="og:locale" content="en_US">
   {!noindex && <meta property="og:url" content={canonicalURL} />}
   <meta property="og:title" content={title}>
   <meta property="og:description" content={description}>
-  <meta property="og:image" content={new URL(ogImage, Astro.site)}>
+  <meta property="og:image" content={ogImageURL}>
+  <meta property="og:image:width" content={String(ogImage.width)}>
+  <meta property="og:image:height" content={String(ogImage.height)}>
+  {ogImageType && <meta property="og:image:type" content={ogImageType} />}
+  <meta property="og:image:alt" content={ogImage.alt}>
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content={title}>
   <meta name="twitter:description" content={description}>
-  <meta name="twitter:image" content={new URL(ogImage, Astro.site)}>
+  <meta name="twitter:image" content={ogImageURL}>
+  <meta name="twitter:image:alt" content={ogImage.alt}>
 
   <!-- Fonts: self-hosted variable woff2 (see global.css @font-face).
        Preloaded so the fetch starts at HTML parse time instead of after
@@ -74,8 +123,6 @@ const organizationSchema = {
 
   <!-- Pages can contribute page-specific head markup (e.g. extra JSON-LD) -->
   <slot name="head" />
-
-  <title>{title}</title>
 </head>
 <body>
   <a href="#main" class="skip-link">Skip to main content</a>
