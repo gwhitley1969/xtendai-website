@@ -88,6 +88,9 @@ const personSchema = {
 
           <h2 class="about-heading">The architect</h2>
 
+          {/* Role line (owner approved 2026-10-07): the title the Person structured data carries must be visible on the page. */}
+          <p class="about-role"><strong>Gene Whitley</strong>, Co-founder and Chief Architect</p>
+
           <p>
             {/* Anchor inside <strong>, not around it: .about-content strong
                 forces primary-text white, which would swallow the link color
@@ -219,6 +222,11 @@ const personSchema = {
   .about-heading {
     font-size: 1.5rem;
     margin: var(--space-12) 0 var(--space-4);
+  }
+
+  .about-role {
+    color: var(--xt-text-secondary);
+    margin: 0 0 var(--space-4);
   }
 
   .about-content strong {
