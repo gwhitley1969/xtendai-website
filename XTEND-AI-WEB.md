@@ -9,6 +9,18 @@
 
 ---
 
+## Revision note — 2026-10-16 Google Ads measurement
+
+The owner is running Google Ads for the services business (account 543-637-2044). A week of a Performance Max campaign spent about $130 with no way to see a lead, because the site sent nothing back to Google. That campaign is paused and replaced by a Charlotte-area Search campaign, and the site now measures what the ads produce.
+
+This reverses one 2026-10-07 decision ("measurement through Search Console only, no analytics script"), for advertising only, by owner decision: every page loads the Google tag for Google Ads (`AW-18499881216`) in production builds, fetched after the `load` event so it never competes with first paint. Two conversions are reported: a successful contact-form send (`lead`) and a click on any `tel:` link (`call`). No Google Analytics tag is added; Search Console stays the organic measurement.
+
+What changed in this document:
+- §14.2: the third-party script rule.
+- §15: the form's success path reports the lead conversion.
+
+What changed on the site: `BaseLayout.astro` (the tag and the `window.xtConversion` helper), `contact.astro` (the lead call), `/privacy/` (an "Advertising and Measurement" section; last updated October 2026).
+
 ## Revision note — 2026-10-07 SEO
 
 An SEO audit of the live site found the page-level basics in place (titles, descriptions, canonicals, sitemap, robots, Lighthouse 97 to 100) and the layer above them missing: every page answered at three URL forms, every unknown URL returned the home page with a 200, three hostnames served the same pages, the structured data named the company in three fields, and nothing measured results. Two pull requests (#2 foundations; #3 head markup, structured data, titles and copy) merged on 2026-10-07 and were verified on production the same day.
@@ -657,7 +669,7 @@ The hero tesseract is drawn live and ships no image of its own; the lockup at it
 
 * Lighthouse targets: Performance ≥ 90, Accessibility ≥ 90, Best Practices ≥ 90, SEO ≥ 90 — verified on Home and Services
 
-* Minimal client JS (keep it fast)
+* Minimal client JS (keep it fast). The one third-party script is the Google Ads tag (2026-10-16), loaded after `load`; nothing else from a third-party origin runs on the page.
 
 * Optimize images (WebP/AVIF), lazy-load below fold
 
@@ -694,6 +706,8 @@ The hero tesseract is drawn live and ships no image of its own; the lockup at it
 **Implemented: Option A (Azure-native).** SWA + Azure Function (`api/contact`) forwarding to SendGrid, with a honeypot field for anti-spam. Destination `xtendai@xtend-ai.com`.
 
 Extended in this revision to carry the interest selector through to the email subject and body (§10).
+
+A successful send reports the Google Ads `lead` conversion through `window.xtConversion('lead')` (2026-10-16). The message itself never leaves our Function; only the fact of the conversion goes to Google.
 
 ---
 

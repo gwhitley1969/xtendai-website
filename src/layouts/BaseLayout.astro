@@ -222,6 +222,44 @@ const graphJson = JSON.stringify(graph).replace(/</g, '\\u003c');
   <link rel="preload" href="/fonts/sora-var.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin>
 
+  {/* Google tag for Google Ads conversion measurement (owner decision
+      2026-10-16, brief revision note). Production builds only. gtag() and
+      the queue exist from parse time; gtag.js itself is fetched after the
+      load event so it never competes with first paint (calls made before
+      then wait in dataLayer). window.xtConversion('lead' | 'call') is the
+      one place conversion labels live: the contact form calls 'lead' on a
+      successful send, and any tel: link click anywhere fires 'call'. */}
+  {import.meta.env.PROD && (
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'AW-18499881216');
+      (function () {
+        var conversions = {
+          lead: 'AW-18499881216/MuwICMCqz54dEICSt_VE',
+          call: 'AW-18499881216/7y_aCMaqz54dEICSt_VE'
+        };
+        window.xtConversion = function (name) {
+          if (conversions[name]) {
+            gtag('event', 'conversion', { send_to: conversions[name], value: 1.0, currency: 'USD' });
+          }
+        };
+        document.addEventListener('click', function (event) {
+          var target = event.target;
+          var link = target && target.closest ? target.closest('a[href^="tel:"]') : null;
+          if (link) window.xtConversion('call');
+        });
+        window.addEventListener('load', function () {
+          var tag = document.createElement('script');
+          tag.async = true;
+          tag.src = 'https://www.googletagmanager.com/gtag/js?id=AW-18499881216';
+          document.head.appendChild(tag);
+        });
+      })();
+    </script>
+  )}
+
   <!-- Structured data. is:inline + set:html: Astro must not bundle this,
        and the JSON must land unescaped. -->
   <script is:inline type="application/ld+json" set:html={graphJson} />

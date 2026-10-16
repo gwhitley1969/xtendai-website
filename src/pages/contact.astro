@@ -270,6 +270,8 @@ const interests = [
       });
 
       if (response.ok) {
+        // Google Ads lead conversion (helper defined in BaseLayout; absent in dev builds).
+        (window as any).xtConversion?.('lead');
         status.className = 'form-status form-status--success';
         status.textContent = 'Thanks for your message! We\'ll get back to you soon.';
         form.reset();

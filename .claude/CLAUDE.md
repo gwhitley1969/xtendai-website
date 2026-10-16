@@ -61,7 +61,8 @@ Browser preview: `preview_start` with name `dev` (or `preview` for the built out
 ```
 src/
   layouts/BaseLayout.astro      # <head> (title first, canonical, OG/Twitter), the JSON-LD @graph (Organization + ProfessionalService,
-                                #   WebSite, WebPage, breadcrumbs), named head slot, font preloads; props pageType, breadcrumbs, ogImage, noindex
+                                #   WebSite, WebPage, breadcrumbs), named head slot, font preloads, Google Ads tag + window.xtConversion (prod only);
+                                #   props pageType, breadcrumbs, ogImage, noindex
   components/                   # Header.astro, Footer.astro, FeatureCard.astro, StoreLinks.astro, Icon.astro,
                                 #   AmbientVideo.astro + AmbientToggle.astro (hero background clip + its pause control),
                                 #   HeroTesseract.astro (the hero's 4-D cube of light, drawn on a canvas)

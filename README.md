@@ -110,7 +110,7 @@ URLs are the trailing-slash form (`/services/`); SWA 301s the slash-less form, u
 
 Set up per the SEO plan of 2026-10-07; these are owner tasks and `XTEND-AI-WEB.md` §17 records which are done:
 
-- **Google Search Console**: a Domain property for `xtend-ai.com`, verified with a TXT record in the Azure DNS zone (the zone's name servers are Azure DNS), with `https://www.xtend-ai.com/sitemap-index.xml` submitted. Measurement for the site comes from here; the site runs no analytics script.
+- **Google Search Console**: a Domain property for `xtend-ai.com`, verified with a TXT record in the Azure DNS zone (the zone's name servers are Azure DNS), with `https://www.xtend-ai.com/sitemap-index.xml` submitted. Organic measurement for the site comes from here. The only tracking script is the Google Ads tag (`AW-18499881216`, added 2026-10-16), which reports contact-form sends and phone-link clicks as conversions; there is no Google Analytics tag.
 - **Bing Webmaster Tools**: imported from Search Console.
 - **Google Business Profile**: a service-area listing (address hidden) with the same name, phone number (704-957-7466) and website as the site; Bing Places and Apple Business Connect are imported from it.
 - **After every deploy**: an unknown path must return 404 and `/about` must 301 to `/about/` (commands in `.claude/CLAUDE.md`).
