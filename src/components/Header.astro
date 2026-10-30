@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import mark from '../assets/xtend-ai-mark-reverse.png';
 import wordmark from '../assets/xtend-ai-wordmark-white.png';
+import Icon from './Icon.astro';
 
 const currentPath = Astro.url.pathname;
 
@@ -67,6 +68,15 @@ function isActive(href: string): boolean {
         ))}
       </ul>
     </nav>
+
+    {/* Tap-to-call, phones and tablets only (below the 900px nav
+        breakpoint). Ad visitors on a phone otherwise had to scroll to the
+        footer to call. The 'call' conversion needs nothing here: the
+        delegated tel: click listener in BaseLayout.astro covers any tel:
+        link on the page. */}
+    <a href="tel:+17049577466" class="header__call" aria-label="Call Xtend-AI at 704-957-7466">
+      <Icon name="phone" />
+    </a>
 
     <button class="header__toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu">
       <span class="header__toggle-bar"></span>
@@ -204,6 +214,54 @@ function isActive(href: string): boolean {
     .nav__link {
       font-size: 1.25rem;
       padding: var(--space-2) var(--space-4);
+    }
+  }
+
+  /* Tap-to-call. margin-left: auto pairs it with the toggle at the right
+     edge. 44px square is the touch-target size; at 360px the lockup, the
+     call button and the toggle leave ~6px of slack, so the two sit flush
+     (the toggle's own padding spaces the glyphs). */
+  .header__call {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    margin-left: auto;
+    color: var(--xt-accent-light);
+    border-radius: var(--radius);
+    transition: all var(--transition-fast);
+  }
+
+  .header__call:hover {
+    color: var(--xt-text-primary);
+    background: rgba(24, 140, 255, 0.1);
+  }
+
+  /* Icon.astro renders via set:html, so its svg carries no scope
+     attribute. */
+  .header__call :global(svg) {
+    width: 24px;
+    height: 24px;
+  }
+
+  @media (min-width: 900px) {
+    .header__call {
+      display: none;
+    }
+  }
+
+  /* Below 360px the full-size lockup plus both buttons would overflow
+     (~321px of content in a 288px row at 320px), so the lockup steps
+     down only there. */
+  @media (max-width: 359.98px) {
+    .header__mark :global(img) {
+      height: 46px;
+    }
+
+    .header__wordmark :global(img) {
+      height: 25px;
     }
   }
 
