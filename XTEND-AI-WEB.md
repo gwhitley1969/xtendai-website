@@ -21,6 +21,8 @@ What changed in this document:
 
 What changed on the site: `BaseLayout.astro` (the tag and the `window.xtConversion` helper), `contact.astro` (the lead call), `/privacy/` (an "Advertising and Measurement" section; last updated October 2026).
 
+Addendum 2026-10-30: the lead conversion now sends enhanced-conversion data. On a successful form send, the email the visitor typed is passed to the Google tag as `user_data`; gtag.js hashes it (SHA-256) in the browser before sending. No other form field is sent. The `/privacy/` "Advertising and Measurement" paragraph says so. Phone calls from ads are measured in Google Ads with call assets and a Google forwarding number (no site change).
+
 ## Revision note — 2026-10-07 SEO
 
 An SEO audit of the live site found the page-level basics in place (titles, descriptions, canonicals, sitemap, robots, Lighthouse 97 to 100) and the layer above them missing: every page answered at three URL forms, every unknown URL returned the home page with a 200, three hostnames served the same pages, the structured data named the company in three fields, and nothing measured results. Two pull requests (#2 foundations; #3 head markup, structured data, titles and copy) merged on 2026-10-07 and were verified on production the same day.

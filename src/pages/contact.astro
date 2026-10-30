@@ -271,7 +271,8 @@ const interests = [
 
       if (response.ok) {
         // Google Ads lead conversion (helper defined in BaseLayout; absent in dev builds).
-        (window as any).xtConversion?.('lead');
+        // The email feeds enhanced conversions; gtag.js hashes it before it leaves the browser.
+        (window as any).xtConversion?.('lead', { email: String(formData.get('email') || '').trim() });
         status.className = 'form-status form-status--success';
         status.textContent = 'Thanks for your message! We\'ll get back to you soon.';
         form.reset();
