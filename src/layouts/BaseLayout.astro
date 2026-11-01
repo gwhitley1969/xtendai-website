@@ -226,9 +226,11 @@ const graphJson = JSON.stringify(graph).replace(/</g, '\\u003c');
       2026-10-16, brief revision note). Production builds only. gtag() and
       the queue exist from parse time; gtag.js itself is fetched after the
       load event so it never competes with first paint (calls made before
-      then wait in dataLayer). window.xtConversion('lead' | 'call') is the
-      one place conversion labels live: the contact form calls 'lead' on a
-      successful send, and any tel: link click anywhere fires 'call'. */}
+      then wait in dataLayer). window.xtConversion('lead' | 'call', userData?)
+      is the one place conversion labels live: the contact form calls 'lead'
+      on a successful send, and any tel: link click anywhere fires 'call'.
+      userData.email, when given, is set as user_data for enhanced
+      conversions; gtag.js normalizes and SHA-256 hashes it before sending. */}
   {import.meta.env.PROD && (
     <script is:inline>
       window.dataLayer = window.dataLayer || [];
@@ -240,8 +242,9 @@ const graphJson = JSON.stringify(graph).replace(/</g, '\\u003c');
           lead: 'AW-18499881216/MuwICMCqz54dEICSt_VE',
           call: 'AW-18499881216/7y_aCMaqz54dEICSt_VE'
         };
-        window.xtConversion = function (name) {
+        window.xtConversion = function (name, userData) {
           if (conversions[name]) {
+            if (userData && userData.email) gtag('set', 'user_data', { email: userData.email });
             gtag('event', 'conversion', { send_to: conversions[name], value: 1.0, currency: 'USD' });
           }
         };
