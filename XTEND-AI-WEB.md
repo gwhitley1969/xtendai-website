@@ -709,7 +709,7 @@ The hero tesseract is drawn live and ships no image of its own; the lockup at it
 
 Extended in this revision to carry the interest selector through to the email subject and body (§10).
 
-A successful send reports the Google Ads `lead` conversion through `window.xtConversion('lead')` (2026-10-16). The message itself never leaves our Function; only the fact of the conversion goes to Google.
+A successful send reports the Google Ads `lead` conversion through `window.xtConversion('lead')` (2026-10-16), except when the interest is "Support": those come from My AI Bartender and CLIQUE Pix users, not prospects, so they are not counted as leads (2026-10-30). The message itself never leaves our Function; only the fact of the conversion goes to Google.
 
 ---
 
