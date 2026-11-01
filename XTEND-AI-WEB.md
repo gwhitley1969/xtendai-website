@@ -578,6 +578,8 @@ Fallback (no external fonts):
 
 * Header content is the one exception: it spreads to 1440px so the logo and nav reach past the content edges on large screens (approved 2026-08-28, co-founder request; bar height 96px mobile / 132px desktop, always full-size, never condensing on scroll; the lockup is mark + wordmark, no tagline, since 2026-09-22)
 
+* Below the 900px nav breakpoint the header carries a tap-to-call button (phone icon, `tel:+17049577466`, accessible name "Call Xtend-AI at 704-957-7466") between the lockup and the menu toggle (2026-10-30, Google Ads readiness review: ad visitors on a phone otherwise had to scroll to the footer to call). It is the already-approved number, so no new claim; it counts as a phone-click conversion like every `tel:` link. Below 360px the lockup steps down (mark 46px, wordmark 25px) so the row fits at 320px
+
 * 8px spacing grid
 
 * Section padding: 72–96px desktop, 48–64px mobile
