@@ -9,6 +9,18 @@
 
 ---
 
+## Revision note — 2026-11-01 contact email and Google Ads cleanup
+
+The contact form had failed for every visitor since about March 2026: SendGrid retired its free plan and the account's sending allowance was zero. It now sends through Resend (§15). Nothing reported a lead to Google Ads until this fix, because the `lead` conversion fires only on a successful send.
+
+The Google Ads Search campaign "Search - Charlotte - Web & Apps" was cleaned up the same day after a review of the searches that had cost money. They were mostly people shopping for do-it-yourself website builders, not people hiring.
+- **Keywords:** generic phrase keywords are paused in favor of exact local terms (Charlotte, Concord, Harrisburg, "near me"), and the negative list covers builder and DIY searches.
+- **Landing page:** both ads land on `/services/`, not the home page.
+- **Sitelinks:** the My AI Bartender sitelink is removed. A cocktail app is off-message for a services ad, and the remaining four point at site pages.
+- **Ad copy follows this brief's claim rules.** The headline "30 Years of Enterprise IT" read as the company's age, which §4.2 and §16 forbid, and is replaced by the owner-chosen **"Led by a 30-Year Architect"**. New ad text is approved by the owner like site copy, and the architect-never-engineer rule (§1) applies to it too.
+
+What changed in this document: §15 (Resend). No page copy changed.
+
 ## Revision note — 2026-10-16 Google Ads measurement
 
 The owner is running Google Ads for the services business (account 543-637-2044). A week of a Performance Max campaign spent about $130 with no way to see a lead, because the site sent nothing back to Google. That campaign is paused and replaced by a Charlotte-area Search campaign, and the site now measures what the ads produce.
