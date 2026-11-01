@@ -15,7 +15,7 @@ Corporate marketing site for **Xtend-AI, LLC** (Charlotte / Harrisburg, NC).
 | Framework | Astro 5.x, `output: 'static'`, `@astrojs/sitemap` |
 | Styling | Vanilla CSS + custom properties (no Tailwind, no CSS framework) |
 | Fonts | Sora (headings) / Inter (body) — self-hosted woff2 in `public/fonts/`, `@font-face` in `global.css`, preloaded in `BaseLayout.astro`. No Google Fonts request. |
-| Backend | One Azure Function: `api/contact` → SendGrid |
+| Backend | One Azure Function: `api/contact` → Resend (SendGrid until 2026-11-01) |
 | Hosting | Azure Static Web Apps |
 | Production | https://www.xtend-ai.com |
 | SWA hostname | https://gentle-sea-0d684ea10.2.azurestaticapps.net |
@@ -28,7 +28,7 @@ Corporate marketing site for **Xtend-AI, LLC** (Charlotte / Harrisburg, NC).
 |---|---|---|
 | `XTEND-AI-WEB.md` | **Product brief / source of truth for messaging.** Positioning, tagline, sitemap, approved page copy, brand spec. | Any change to copy, navigation, or page structure |
 | `docs/IMPLEMENTATION.md` | Engineering reference. Design tokens, asset pipeline, Astro patterns, deployment quirks, known gotchas. | Any change to CSS, images, layout, or components |
-| `README.md` | Setup, build, deploy, SendGrid config, email routing table. | Environment or deployment work |
+| `README.md` | Setup, build, deploy, Resend (contact email) config, email routing table. | Environment or deployment work |
 | `XTEND-AI_WEB_BRIEF.md` | Original brand-asset handoff notes. | Rarely — historical reference |
 
 **`XTEND-AI-WEB.md` is authoritative for messaging and it says "don't invent new claims."** If a task requires new positioning or a new page, update that brief in the same change set. Never let the site and the brief drift apart.
@@ -77,7 +77,7 @@ src/
   assets/                       # images processed by <Image> at build time (app icons, reverse logo assets)
     video/                      # ambient clips (.mp4, imported so Vite hashes them) + their first-frame stills
 public/                         # served verbatim — favicons, robots.txt, fonts/, og-card
-api/contact/                    # Azure Function (Node) → SendGrid; INTERESTS allow-list
+api/contact/                    # Azure Function (Node) → Resend REST API via built-in https; INTERESTS allow-list
 scripts/                        # one-off derived-asset generators (reverse logo, favicons, OG card, ambient video loops via ffmpeg) — run manually, outputs committed
 docs/                           # engineering documentation
 ```
@@ -126,11 +126,13 @@ Push to `main` → GitHub Actions (`.github/workflows/azure-static-web-apps.yml`
 
 **Push guard:** direct pushes to `main` from Claude Code may be blocked by the local permission guard even with prior authorization. When that happens, hand the push back to the user: `! git push origin main`.
 
-**SWA config changes go through a pull request.** `staticwebapp.config.json` is validated only at deploy, and the workflow builds a staging environment for every PR. Test there before merging: the redirect, 404 and cache matrix in `docs/IMPLEMENTATION.md` (*Redirects, trailing slashes and the 404 page*), and the contact API with an empty-body probe (`curl -si -X POST -H 'Content-Type: application/json' --data '{}' https://<staging-host>/api/contact` must return 400), never a real submission, because staging inherits `SENDGRID_API_KEY`.
+**SWA config changes go through a pull request.** `staticwebapp.config.json` is validated only at deploy, and the workflow builds a staging environment for every PR. Test there before merging: the redirect, 404 and cache matrix in `docs/IMPLEMENTATION.md` (*Redirects, trailing slashes and the 404 page*), and the contact API with an empty-body probe (`curl -si -X POST -H 'Content-Type: application/json' --data '{}' https://<staging-host>/api/contact` must return 400), never a real submission, because staging inherits `RESEND_API_KEY`.
 
 **Verifying a deploy:** `gh run list --commit $(git rev-parse HEAD)` finds the SWA run and `gh run watch <id> --exit-status` follows it (~1.5 min). Then fetch the changed page on `https://www.xtend-ai.com` with `curl -H 'Cache-Control: no-cache'`; a look taken right after the push still shows the old build. The SWA hostname and the apex answer 301 to `www` (default domain set 2026-10-07), so check `www` only. Two standing gates after every deploy: an unknown path must return 404, and `/about` must 301 to `/about/` (both in the Commands block). GitHub has rejected a push with `remote: Internal Server Error` (objects uploaded, ref untouched); a plain retry succeeded with nothing to clean up.
 
-Secrets are set in Azure SWA configuration, not in the repo. Currently only `SENDGRID_API_KEY`.
+Secrets are set in Azure SWA configuration, not in the repo. Currently only `RESEND_API_KEY` (the old `SENDGRID_API_KEY` is unused and can be deleted). Managed functions cannot read Key Vault references (Microsoft: only "bring your own Functions" can), so a Key Vault move means a separate Functions app.
+
+**The contact form fails silently.** A failed send shows the visitor an error and nothing else: there is no Application Insights on the site, and the message is not stored. The SendGrid free plan ran dry in March 2026 and nobody knew until 2026-10-30. After any change to `api/contact` or the email provider, send one real test through the live form and confirm it arrives.
 
 ---
 

@@ -703,7 +703,9 @@ The hero tesseract is drawn live and ships no image of its own; the lockup at it
 
 ## 15) Contact Form Implementation
 
-**Implemented: Option A (Azure-native).** SWA + Azure Function (`api/contact`) forwarding to SendGrid, with a honeypot field for anti-spam. Destination `xtendai@xtend-ai.com`.
+**Implemented: Option A (Azure-native).** SWA + Azure Function (`api/contact`) forwarding to Resend, with a honeypot field for anti-spam. Destination `xtendai@xtend-ai.com`.
+
+**Email provider changed from SendGrid to Resend (2026-11-01, owner decision).** SendGrid retired its free plan, and the account's sending allowance had been zero since March 2026, so every form send failed with "Something went wrong" until this change. Resend's free plan (3,000 emails a month, 100 a day) covers the form; `xtend-ai.com` is a verified sending domain there, with its DNS records in the Azure zone.
 
 Extended in this revision to carry the interest selector through to the email subject and body (§10).
 

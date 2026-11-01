@@ -1,4 +1,4 @@
-const sgMail = require('@sendgrid/mail');
+const https = require('https');
 
 /**
  * Allow-list for the contact form's interest selector. Must stay in step
@@ -23,6 +23,44 @@ function escapeHtml(value) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
+}
+
+/**
+ * Send one message through the Resend API (https://resend.com/docs/api-reference/emails/send-email).
+ * Plain https so the Function has no npm dependency and runs on any Node version.
+ * Resolves with the parsed response; rejects on a non-2xx status, a network error or a timeout.
+ */
+function sendWithResend(apiKey, payload) {
+  const body = JSON.stringify(payload);
+
+  return new Promise((resolve, reject) => {
+    const req = https.request({
+      hostname: 'api.resend.com',
+      path: '/emails',
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(body)
+      }
+    }, (res) => {
+      let data = '';
+      res.setEncoding('utf8');
+      res.on('data', (chunk) => { data += chunk; });
+      res.on('end', () => {
+        if (res.statusCode >= 200 && res.statusCode < 300) {
+          resolve(data ? JSON.parse(data) : {});
+        } else {
+          reject(new Error(`Resend responded ${res.statusCode}: ${data}`));
+        }
+      });
+    });
+
+    req.setTimeout(10000, () => req.destroy(new Error('Resend request timed out')));
+    req.on('error', reject);
+    req.write(body);
+    req.end();
+  });
 }
 
 module.exports = async function (context, req) {
@@ -68,17 +106,14 @@ module.exports = async function (context, req) {
       return;
     }
 
-    // Check for SendGrid API key
-    const apiKey = process.env.SENDGRID_API_KEY;
+    // Check for Resend API key
+    const apiKey = process.env.RESEND_API_KEY;
     if (!apiKey) {
-      context.log.error('SENDGRID_API_KEY not configured');
+      context.log.error('RESEND_API_KEY not configured');
       context.res.status = 500;
       context.res.body = { error: 'Email service not configured' };
       return;
     }
-
-    // Configure SendGrid
-    sgMail.setApiKey(apiKey);
 
     // Only an allow-listed value reaches the subject line, so arbitrary
     // submitted text can never be echoed into a mail header.
@@ -92,9 +127,9 @@ module.exports = async function (context, req) {
 
     // Prepare email
     const msg = {
-      to: 'xtendai@xtend-ai.com',
-      from: 'xtendai@xtend-ai.com', // Verified in SendGrid
-      replyTo: email,
+      to: ['xtendai@xtend-ai.com'],
+      from: 'xtendai@xtend-ai.com', // xtend-ai.com is a verified domain in Resend
+      reply_to: email,
       subject,
       text: `
 Interest: ${safeInterest || 'Not specified'}
@@ -139,7 +174,7 @@ Sent from xtend-ai.com contact form
     };
 
     // Send email
-    await sgMail.send(msg);
+    await sendWithResend(apiKey, msg);
 
     context.log.info(`Contact form email sent from ${email}`);
     context.res.status = 200;
